@@ -1,7 +1,7 @@
 // 🚀 index.js — Точка входа в систему SignalForge v2
 
 const config = require('./config/config');
-const { getTopVolatileSymbols } = require('./ws/volatilitySelector');
+const { selectTopVolatileSymbols } = require('./ws/volatilitySelector');
 const { connectToStreams } = require('./ws/smartWSManager');
 const logger = require('./utils/logger');
 
@@ -11,7 +11,7 @@ async function startBot() {
 
   async function updateAndSubscribe() {
     try {
-      const topSymbols = await getTopVolatileSymbols();
+      const topSymbols = await selectTopVolatileSymbols();
       logger.basic(`[volatility] Топ-${topSymbols.length} монет: ${topSymbols.join(', ')}`);
 
       // Подключение к WebSocket с топ-символами
