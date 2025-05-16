@@ -1,14 +1,31 @@
-// index.js
-const { DEBUG_LOG_LEVEL, INTERVAL, ENABLE_WEBHOOK } = require('./config/config');
-const { selectTopVolatileSymbols } = require('./ws/volatilitySelector');
-const { setupSymbolSubscriptions } = require('./ws/smartWSManager');
-const { logInfo } = require('./utils/logger');
+// 🚀 index.js — Точка входа в систему SignalForge v2
 
-(async () => {
-  logInfo('Запуск SignalForge v2...');
+const config = require('./config/config');
+const { getTopVolatileSymbols } = require('./ws/volatilitySelector');
+const { connectToStreams } = require('./ws/smartWSManager');
+const logger = require('./utils/logger');
 
-  const topSymbols = await selectTopVolatileSymbols();
-  logInfo(`Выбраны монеты: ${topSymbols.join(', ')}`);
+// 🔁 Цикл обновления волатильных монет
+async function startBot() {
+  logger.basic('🚀 Запуск SignalForge v2...');
 
-  setupSymbolSubscriptions(topSymbols);
-})();
+  async function updateAndSubscribe() {
+    try {
+      const topSymbols = await getTopVolatileSymbols();
+      logger.basic(`[volatility] Топ-${topSymbols.length} монет: ${topSymbols.join(', ')}`);
+
+      // Подключение к WebSocket с топ-символами
+      connectToStreams(topSymbols);
+    } catch (err) {
+      logger.error('[volatility] Ошибка при получении волатильных монет:', err.message);
+    }
+  }
+
+  // Первый запуск сразу
+  await updateAndSubscribe();
+
+  // Периодическое обновление по таймеру
+  setInterval(updateAndSubscribe, config.VOLATILITY_REFRESH_INTERVAL_SEC * 1000);
+}
+
+startBot();
