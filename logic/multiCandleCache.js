@@ -1,3 +1,4 @@
+// logic/multiCandleCache.js
 const config = require('../config/config');
 const { logVerbose } = require('../utils/logger');
 const { runBasicIndicators } = require('./strategyManager');
