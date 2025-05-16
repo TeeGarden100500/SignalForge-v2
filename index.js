@@ -19,7 +19,14 @@ async function startBot() {
       }
 
       logger.basic(`[volatility] Топ-${topSymbols.length} монет: ${topSymbols.join(', ')}`);
-      connectToStreams(topSymbols);
+
+      // 💥 Отдельная обработка ошибок подключения
+      try {
+        connectToStreams(topSymbols);
+      } catch (streamErr) {
+        logger.error('[streams] Ошибка при запуске WebSocket-потоков:', streamErr?.message || streamErr);
+      }
+
     } catch (err) {
       logger.error('[volatility] Ошибка при получении волатильных монет:', err?.message || err);
     }
