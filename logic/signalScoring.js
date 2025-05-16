@@ -15,7 +15,6 @@ module.exports = {
 const config = require('../config/config');
 const { logInfo } = require('../utils/logger');
 const strategies = require('../strategies/comboStrategies');
-const { getSignalStrength } = require('./signalScoring');
 
 function evaluateComboStrategies(context) {
   strategies.forEach(strategy => {
