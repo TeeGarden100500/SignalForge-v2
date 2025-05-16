@@ -7,8 +7,7 @@ let lastSelectionTime = 0;
 
 function selectTopVolatileSymbols() {
   return new Promise((resolve) => {
-    const ws = new WebSocket('wss://stream.binance.com:9443/ws/!ticker@arr');
-    const changes = [];
+    const ws = new WebSocket(config.BINANCE_STREAM_URL + '/!ticker@arr');
 
     ws.on('message', (data) => {
       const tickers = JSON.parse(data);
@@ -20,7 +19,7 @@ function selectTopVolatileSymbols() {
         .filter(t => t.s.endsWith('USDT'))
         .map(t => ({ symbol: t.s, percent: Math.abs(parseFloat(t.P)) }))
         .sort((a, b) => b.percent - a.percent)
-        .slice(0, config.VOLATILITY_TOP_COUNT);
+        .slice(0, config.VOLATILITY_TOP_N);
 
       const symbols = sorted.map(t => t.symbol);
       logVerbose(`Отобрано по волатильности: ${symbols.join(', ')}`);
