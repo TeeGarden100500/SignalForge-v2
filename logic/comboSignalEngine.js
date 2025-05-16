@@ -1,10 +1,11 @@
-// 🧠 comboSignalEngine.js — проверка срабатывания стратегий и логика вывода
+// 🧠 comboSignalEngine.js — проверка стратегий, логика вывода и рекомендации
 
 const comboStrategies = require('../strategies/comboStrategies');
 const config = require('../config/config');
 const logger = require('../utils/logger');
 const scoring = require('../core/signalScoring');
 const recorder = require('./signalRecorder');
+const recommender = require('../core/aiCrossRecommender');
 
 const signalStrengthRank = {
   'weak': 0,
@@ -25,18 +26,28 @@ function evaluateComboStrategies(symbol, tf, context) {
       // 🔎 Фильтрация по config.MIN_SIGNAL_STRENGTH
       const minStrength = config.MIN_SIGNAL_STRENGTH || 'weak';
       if (signalStrengthRank[strength] < signalStrengthRank[minStrength]) {
-        logger.verbose(\`[${symbol} | ${tf}] Сигнал '\${strategy.name}' отфильтрован (сила: \${strength} < \${minStrength})\`);
+        logger.verbose(`[${symbol} | ${tf}] Сигнал '${strategy.name}' отфильтрован (сила: ${strength} < ${minStrength})`);
         return;
       }
 
       const logMsg = [
-        \`\n[comboLog] \${strategy.message}\`,
-        \`↪ \${strategy.explanation}\`,
-        \`↪ Символ: \${symbol} | TF: \${tf} | Цена: \${price} | Сила: \${strength}\`
+        `\n[comboLog] ${strategy.message}`,
+        `↪ ${strategy.explanation}`,
+        `↪ Символ: ${symbol} | TF: ${tf} | Цена: ${price} | Сила: ${strength}`
       ].join('\n');
 
       logger.basic(logMsg);
 
+      // 💡 AI рекомендация
+      recommender.suggestCrossStrategy({
+        name: strategy.name,
+        symbol,
+        conditions,
+        direction: strategy.direction,
+        price
+      });
+
+      // 📤 Отправка в лог + webhook
       recorder.recordSignal({
         name: strategy.name,
         message: strategy.message,
