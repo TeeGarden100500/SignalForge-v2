@@ -7,7 +7,7 @@ let lastSelectionTime = 0;
 
 function selectTopVolatileSymbols() {
   return new Promise((resolve) => {
-    const ws = new WebSocket(config.BINANCE_STREAM_URL + '/!ticker@arr');
+    const ws = new WebSocket('wss://stream.binance.com:9443/ws/!ticker@arr');
 
     ws.on('message', (data) => {
       const tickers = JSON.parse(data);
