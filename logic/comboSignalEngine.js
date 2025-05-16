@@ -17,10 +17,11 @@ function evaluateComboStrategies(context) {
         timeframe: context.timeframe,
         direction: strategy.direction,
         message: strategy.message,
-        strength
+        strength,
+        price: context.price  // <-- Добавлена текущая цена
       };
 
-      logInfo(`[comboLog] 📢 [${strategy.name}] ${strategy.message} | ${context.symbol} | TF: ${context.timeframe} | Сила: ${strength}`);
+      logInfo(`[comboLog] 📢 [${strategy.name}] ${strategy.message} | ${context.symbol} | TF: ${context.timeframe} | Сила: ${strength} | Цена: ${context.price}`);
 
       recordSignal(logEntry);
     }
