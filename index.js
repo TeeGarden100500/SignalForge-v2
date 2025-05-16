@@ -12,12 +12,16 @@ async function startBot() {
   async function updateAndSubscribe() {
     try {
       const topSymbols = await selectTopVolatileSymbols();
-      logger.basic(`[volatility] Топ-${topSymbols.length} монет: ${topSymbols.join(', ')}`);
 
-      // Подключение к WebSocket с топ-символами
+      if (!Array.isArray(topSymbols) || topSymbols.length === 0) {
+        logger.error('[volatility] Получен пустой список монет или неверный формат.');
+        return;
+      }
+
+      logger.basic(`[volatility] Топ-${topSymbols.length} монет: ${topSymbols.join(', ')}`);
       connectToStreams(topSymbols);
     } catch (err) {
-      logger.error('[volatility] Ошибка при получении волатильных монет:', err.message);
+      logger.error('[volatility] Ошибка при получении волатильных монет:', err?.message || err);
     }
   }
 
