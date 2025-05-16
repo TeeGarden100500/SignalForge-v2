@@ -3,7 +3,7 @@
 const comboStrategies = require('../strategies/comboStrategies');
 const config = require('../config/config');
 const logger = require('../utils/logger');
-const scoring = require('../core/signalScoring');
+const scoring = require('./signalScoring');
 const recorder = require('./signalRecorder');
 const recommender = require('../core/aiCrossRecommender');
 
