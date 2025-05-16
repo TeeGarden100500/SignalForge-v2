@@ -6,6 +6,12 @@ const logger = require('../utils/logger');
 const scoring = require('../core/signalScoring');
 const recorder = require('./signalRecorder');
 
+const signalStrengthRank = {
+  'weak': 0,
+  'moderate': 1,
+  'strong': 2
+};
+
 function evaluateComboStrategies(symbol, tf, context) {
   const { conditions, price } = context;
 
@@ -15,15 +21,22 @@ function evaluateComboStrategies(symbol, tf, context) {
 
     if (matchRatio >= 0.9) {
       const strength = scoring.getSignalStrength(matchRatio);
+
+      // 🔎 Фильтрация по config.MIN_SIGNAL_STRENGTH
+      const minStrength = config.MIN_SIGNAL_STRENGTH || 'weak';
+      if (signalStrengthRank[strength] < signalStrengthRank[minStrength]) {
+        logger.verbose(\`[${symbol} | ${tf}] Сигнал '\${strategy.name}' отфильтрован (сила: \${strength} < \${minStrength})\`);
+        return;
+      }
+
       const logMsg = [
-        `\n[comboLog] ${strategy.message}`,
-        `↪ ${strategy.explanation}`,
-        `↪ Символ: ${symbol} | TF: ${tf} | Цена: ${price} | Сила: ${strength}`
+        \`\n[comboLog] \${strategy.message}\`,
+        \`↪ \${strategy.explanation}\`,
+        \`↪ Символ: \${symbol} | TF: \${tf} | Цена: \${price} | Сила: \${strength}\`
       ].join('\n');
 
       logger.basic(logMsg);
 
-      // Webhook + JSON лог
       recorder.recordSignal({
         name: strategy.name,
         message: strategy.message,
