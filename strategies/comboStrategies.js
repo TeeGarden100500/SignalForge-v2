@@ -1,63 +1,90 @@
-// strategies/comboStrategies.js
 module.exports = [
   {
-    name: 'Momentum Rebound',
-    conditions: ['RSI_LOW', 'EMA_ANGLE_UP', 'VOLUME_SPIKE'],
-    direction: 'long',
-    message: '🟢 [Momentum Rebound] Возможен быстрый отскок. Вход по рынку.'
+    "name": "Momentum Rebound",
+    "conditions": [
+      "RSI_LOW",
+      "EMA_ANGLE_UP",
+      "VOLUME_SPIKE"
+    ],
+    "direction": "long",
+    "message": "🟢 [Momentum Rebound] Возможен быстрый отскок. Вход по рынку.",
+    "explanation": "Цена перепродана (RSI), EMA направлена вверх, а объём усиливается — возможно началось движение."
   },
   {
-    name: 'Volume Breakout',
-    conditions: ['BREAKOUT_HIGH', 'VOLUME_SPIKE', 'ADX_STRONG'],
-    direction: 'long',
-    message: '🟢 [Volume Breakout] Пробой уровня с подтверждением объёма и тренда.'
+    "name": "Volume Breakout",
+    "conditions": [
+      "TOUCH_RESISTANCE",
+      "VOLUME_SPIKE",
+      "STRONG_TREND"
+    ],
+    "direction": "long",
+    "message": "🟢 [Volume Breakout] Возможен пробой уровня с ростом. Следи за импульсом.",
+    "explanation": "Цена у сопротивления, объём всплеск, тренд сильный — возможен прорыв вверх."
   },
   {
-    name: 'Exhaustion Top',
-    conditions: ['RSI_HIGH', 'VOLUME_SPIKE', 'DOJI_CANDLE'],
-    direction: 'short',
-    message: '🔴 [Exhaustion Top] Возможен откат после перегретого роста.'
+    "name": "Exhaustion Top",
+    "conditions": [
+      "RSI_HIGH",
+      "VOLUME_SPIKE",
+      "MACD_HIST_NEGATIVE"
+    ],
+    "direction": "short",
+    "message": "🔴 [Exhaustion Top] Перекупленность и ослабление. Возможен разворот.",
+    "explanation": "Цена перекуплена, объём высокий, MACD слабеет — признак разворота вниз."
   },
   {
-    name: 'Bullish Divergence',
-    conditions: ['RSI_DIVERGENCE_BULL'],
-    direction: 'long',
-    message: '🟢 [Bullish Divergence] Быча дивергенция на RSI. Возможен разворот.'
+    "name": "Bullish Divergence",
+    "conditions": [
+      "RSI_LOW",
+      "MACD_HIST_POSITIVE",
+      "EMA_CROSS_UP"
+    ],
+    "direction": "long",
+    "message": "🟢 [Bullish Divergence] Бычья дивергенция. Рассматривай вход.",
+    "explanation": "Индикаторы улучшаются при слабой цене — сигнал скрытого роста."
   },
   {
-    name: 'Bearish Crossover Trap',
-    conditions: ['MACD_CROSS_DOWN', 'RSI_MID', 'LOW_VOLUME'],
-    direction: 'short',
-    message: '🔴 [Bearish Crossover Trap] Ложный сигнал на снижение. Будь осторожен.'
+    "name": "FIBO Rebound",
+    "conditions": [
+      "TOUCH_FIBO",
+      "RSI_HIGH",
+      "VOLUME_SPIKE"
+    ],
+    "direction": "long",
+    "message": "🟢 [FIBO Rebound] Цена у уровня Фибоначчи. Возможен отскок.",
+    "explanation": "Цена касается ключевого уровня FIBO, объём высокий, RSI уверенный — возможен отскок вверх."
   },
   {
-    name: 'Mean Reversion Setup',
-    conditions: ['PRICE_ABOVE_MA', 'LOW_VOLUME'],
-    direction: 'short',
-    message: '🔴 [Mean Reversion] Цена далеко от MA при низком объёме. Возможен откат.'
+    "name": "Dead Volume Fall",
+    "conditions": [
+      "RSI_LOW",
+      "VOLUME_SPIKE",
+      "EMA_CROSS_DOWN"
+    ],
+    "direction": "short",
+    "message": "🔴 [Dead Volume Fall] Сигнал на падение. Слабый рынок + объём.",
+    "explanation": "Слабость в RSI, объём не поддерживает — цена может упасть."
   },
   {
-    name: 'Trend Acceleration',
-    conditions: ['EMA_CROSS', 'ADX_STRONG', 'GREEN_CANDLE'],
-    direction: 'long',
-    message: '🟢 [Trend Acceleration] Усиление тренда. Возможен импульс.'
+    "name": "Trend Acceleration",
+    "conditions": [
+      "EMA_CROSS_UP",
+      "STRONG_TREND",
+      "EMA_ANGLE_UP"
+    ],
+    "direction": "long",
+    "message": "🟢 [Trend Acceleration] Усиление восходящего тренда. Подтверждение импульса.",
+    "explanation": "EMA пересеклась вверх, тренд подтверждён ADX, угол EMA положительный — всё указывает на ускорение."
   },
   {
-    name: 'Dead Volume Fall',
-    conditions: ['PRICE_FALL', 'VOLUME_FADE', 'RSI_NEUTRAL'],
-    direction: 'short',
-    message: '🔴 [Dead Volume] Объёмы затухают при падении. Осторожно.'
-  },
-  {
-    name: 'Double Confirmation',
-    conditions: ['RSI_LOW', 'EMA_CROSS_UP', 'MACD_HIST_FLIP'],
-    direction: 'long',
-    message: '🟢 [Double Confirmation] Подтверждённый вход. RSI + EMA + MACD.'
-  },
-  {
-    name: 'FIBO Rebound',
-    conditions: ['TOUCH_FIBO', 'RSI_ABOVE_40', 'VOLUME_SPIKE'],
-    direction: 'long',
-    message: '🟢 [FIBO Rebound] Отскок от уровня Fibo + объём и RSI.'
+    "name": "Double Confirmation",
+    "conditions": [
+      "RSI_LOW",
+      "EMA_CROSS_UP",
+      "MACD_HIST_POSITIVE"
+    ],
+    "direction": "long",
+    "message": "🟢 [Double Confirmation] Подтверждённый вход. Индикаторы согласованы.",
+    "explanation": "Все три сигнала подтверждают рост: RSI, EMA и MACD."
   }
-];
+]
