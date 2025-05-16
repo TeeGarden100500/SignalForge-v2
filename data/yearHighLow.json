@@ -1,0 +1,58 @@
+{
+  "BTCUSDT": {
+    "high": 73750,
+    "low": 38900
+  },
+  "ETHUSDT": {
+    "high": 3850,
+    "low": 1720
+  },
+  "BNBUSDT": {
+    "high": 645,
+    "low": 245
+  },
+  "SOLUSDT": {
+    "high": 210,
+    "low": 83
+  },
+  "AVAXUSDT": {
+    "high": 65,
+    "low": 13
+  },
+  "DOGEUSDT": {
+    "high": 0.23,
+    "low": 0.056
+  },
+  "ADAUSDT": {
+    "high": 0.85,
+    "low": 0.35
+  },
+  "XRPUSDT": {
+    "high": 0.75,
+    "low": 0.42
+  },
+  "LINKUSDT": {
+    "high": 22.8,
+    "low": 5.9
+  },
+  "DOTUSDT": {
+    "high": 11.5,
+    "low": 3.8
+  },
+  "MATICUSDT": {
+    "high": 1.4,
+    "low": 0.48
+  },
+  "LTCUSDT": {
+    "high": 112,
+    "low": 57
+  },
+  "UNIUSDT": {
+    "high": 12.6,
+    "low": 3.9
+  },
+  "SHIBUSDT": {
+    "high": 4.5e-05,
+    "low": 7.6e-06
+  }
+}
