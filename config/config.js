@@ -11,7 +11,10 @@ module.exports = {
     LEVEL_2: '15m',   // Средний таймфрейм (например, для фильтрации)
     LEVEL_3: '1h'     // Старший таймфрейм (например, подтверждение)
   },
+  
   INTERVAL: '5m', // Основной рабочий интервал
+  MIN_SIGNAL_STRENGTH: 'moderate', // допустимо: 'weak' | 'moderate' | 'strong'
+  
 
   // ░░░ RSI ░░░
   RSI_PERIOD: 60,     // Период RSI
