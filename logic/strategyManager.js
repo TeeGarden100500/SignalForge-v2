@@ -5,6 +5,7 @@ const config = require('../config/config');
 const logger = require('../utils/logger');
 const fibonacci = require('../core/fibonacci');
 const yearHighLow = require('../data/yearHighLow.json');
+const manualLevels = require('../data/manualLevels.json');
 
 function calculateIndicators(candles, symbol, tf) {
   const closes = candles.map(c => parseFloat(c.close));
@@ -46,20 +47,34 @@ function calculateIndicators(candles, symbol, tf) {
   if (lastMACD && lastMACD.histogram > 0) result.conditions.push('MACD_HIST_POSITIVE');
   if (lastMACD && lastMACD.histogram < 0) result.conditions.push('MACD_HIST_NEGATIVE');
 
-  // ✅ Volume Spike (если есть объём в свечах)
+  // ✅ Volume Spike
   const volumes = candles.map(c => parseFloat(c.volume));
   const avgVolume = volumes.slice(-config.VOLUME_LOOKBACK).reduce((a, b) => a + b, 0) / config.VOLUME_LOOKBACK;
   const lastVolume = volumes[volumes.length - 1];
   if (lastVolume > avgVolume * config.VOLUME_SPIKE_MULTIPLIER) result.conditions.push('VOLUME_SPIKE');
 
-  // ✅ FIBO proximity check (использует yearHighLow.json)
+  // ✅ FIBO Proximity
   const yearly = yearHighLow[symbol];
   if (yearly && yearly.high && yearly.low && result.price) {
     const nearFibo = fibonacci.isNearFiboLevel(result.price, yearly.high, yearly.low);
     if (nearFibo) result.conditions.push('TOUCH_FIBO');
   }
 
-  // 🔍 Лог (если verbose)
+  // ✅ Manual Support/Resistance Levels
+  const manual = manualLevels[symbol];
+  const tolerance = config.FIBO_TOLERANCE_PERCENT / 100;
+  if (manual && result.price) {
+    manual.support?.forEach(level => {
+      const diff = Math.abs(result.price - level) / level;
+      if (diff <= tolerance) result.conditions.push('TOUCH_SUPPORT');
+    });
+    manual.resistance?.forEach(level => {
+      const diff = Math.abs(result.price - level) / level;
+      if (diff <= tolerance) result.conditions.push('TOUCH_RESISTANCE');
+    });
+  }
+
+  // 🔍 Лог
   logger.verbose(`[${symbol} | ${tf}] Условия: ${result.conditions.join(', ') || 'нет'} | Цена: ${result.price}`);
 
   return result;
