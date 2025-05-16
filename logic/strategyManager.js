@@ -4,6 +4,7 @@ const { RSI, EMA, MACD, ATR, ADX } = require('technicalindicators');
 const config = require('../config/config');
 const logger = require('../utils/logger');
 const fibonacci = require('../core/fibonacci');
+const breakoutDetector = require('../core/breakoutDetector');
 const yearHighLow = require('../data/yearHighLow.json');
 const manualLevels = require('../data/manualLevels.json');
 
@@ -20,7 +21,7 @@ function calculateIndicators(candles, symbol, tf) {
   const nowUTC = new Date().toISOString().slice(11, 16);
   const { start, end } = config.SIGNAL_TIME_WINDOW_UTC;
   if (nowUTC < start || nowUTC > end) {
-    logger.basic(`[${symbol} | ${tf}] Вне временного окна сигналов (${start}–${end})`);
+    logger.basic(\`[${symbol} | ${tf}] Вне временного окна сигналов (${start}–${end})\`);
     return result;
   }
 
@@ -86,15 +87,23 @@ function calculateIndicators(candles, symbol, tf) {
     }
   }
 
-  // ✅ Manual уровни
+  // ✅ Manual уровни + пробой
   const manual = manualLevels[symbol];
   const tol = config.FIBO_TOLERANCE_PERCENT / 100;
-  manual?.support?.forEach(lvl => {
-    if (Math.abs(result.price - lvl) / lvl <= tol) result.conditions.push('TOUCH_SUPPORT');
-  });
-  manual?.resistance?.forEach(lvl => {
-    if (Math.abs(result.price - lvl) / lvl <= tol) result.conditions.push('TOUCH_RESISTANCE');
-  });
+  if (manual && result.price) {
+    manual.support?.forEach(lvl => {
+      if (Math.abs(result.price - lvl) / lvl <= tol) result.conditions.push('TOUCH_SUPPORT');
+    });
+    manual.resistance?.forEach(lvl => {
+      if (Math.abs(result.price - lvl) / lvl <= tol) result.conditions.push('TOUCH_RESISTANCE');
+    });
+
+    // ➕ Проверка пробоя уровней
+    const breakouts = breakoutDetector.checkBreakout(candles, manual.resistance || [], 'resistance');
+    const breakdowns = breakoutDetector.checkBreakout(candles, manual.support || [], 'support');
+    breakouts.forEach(b => result.conditions.push(b.type));
+    breakdowns.forEach(b => result.conditions.push(b.type));
+  }
 
   // 🧾 Лог
   logger.verbose(`[${symbol} | ${tf}] Условия: ${result.conditions.join(', ') || 'нет'} | Цена: ${result.price}`);
