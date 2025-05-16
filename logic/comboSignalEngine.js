@@ -1,33 +1,41 @@
-logic/comboSignalEngine.js
+// 🧠 comboSignalEngine.js — проверка срабатывания стратегий и логика вывода
+
+const comboStrategies = require('../strategies/comboStrategies');
 const config = require('../config/config');
-const { logInfo } = require('../utils/logger');
-const strategies = require('../strategies/comboStrategies');
-const { getSignalStrength } = require('./signalScoring');
-const { recordSignal } = require('./signalRecorder');
+const logger = require('../utils/logger');
+const scoring = require('../core/signalScoring');
+const recorder = require('./signalRecorder');
 
-function evaluateComboStrategies(context) {
-  strategies.forEach(strategy => {
-    const matched = strategy.conditions.filter(cond => context.conditions.includes(cond));
-    const strength = getSignalStrength(matched.length, strategy.conditions.length);
+function evaluateComboStrategies(symbol, tf, context) {
+  const { conditions, price } = context;
 
-    if (matched.length === strategy.conditions.length) {
-      const logEntry = {
+  comboStrategies.forEach(strategy => {
+    const matched = strategy.conditions.filter(c => conditions.includes(c));
+    const matchRatio = matched.length / strategy.conditions.length;
+
+    if (matchRatio >= 0.9) {
+      const strength = scoring.getSignalStrength(matchRatio);
+      const logMsg = [
+        `\n[comboLog] ${strategy.message}`,
+        `↪ ${strategy.explanation}`,
+        `↪ Символ: ${symbol} | TF: ${tf} | Цена: ${price} | Сила: ${strength}`
+      ].join('\n');
+
+      logger.basic(logMsg);
+
+      // Webhook + JSON лог
+      recorder.recordSignal({
         name: strategy.name,
-        symbol: context.symbol,
-        timeframe: context.timeframe,
-        direction: strategy.direction,
         message: strategy.message,
+        explanation: strategy.explanation,
+        symbol,
+        timeframe: tf,
+        price,
         strength,
-        price: context.price  // <-- Добавлена текущая цена
-      };
-
-      logInfo(`[comboLog] 📢 [${strategy.name}] ${strategy.message} | ${context.symbol} | TF: ${context.timeframe} | Сила: ${strength} | Цена: ${context.price}`);
-
-      recordSignal(logEntry);
+        timestamp: new Date().toISOString()
+      });
     }
   });
 }
 
-module.exports = {
-  evaluateComboStrategies
-};
+module.exports = { evaluateComboStrategies };
