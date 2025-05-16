@@ -1,0 +1,16 @@
+{
+  "name": "signalforge-v2",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "technicalindicators": "^3.0.2",
+    "ws": "^8.13.0"
+  }
+}
