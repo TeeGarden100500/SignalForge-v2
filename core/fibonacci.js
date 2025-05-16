@@ -1,4 +1,4 @@
-core/fibonacci.js
+// core/fibonacci.js
 const config = require('../config/config');
 
 function getFiboLevels(high, low) {
