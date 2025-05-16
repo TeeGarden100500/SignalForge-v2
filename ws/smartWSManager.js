@@ -8,7 +8,6 @@ const { handleIncomingCandle } = require('../logic/multiCandleCache');
 let sockets = [];
 
 function connectToStreams(symbols) {
-  // ⛔ Отписка от предыдущих сокетов
   sockets.forEach(ws => {
     if (ws && ws.readyState === WebSocket.OPEN) {
       ws.close();
@@ -42,20 +41,23 @@ function connectToStreams(symbols) {
         ws.on('message', (msg) => {
           try {
             const json = JSON.parse(msg);
+
+            // ✅ добавлена безопасная проверка
+            if (!json || json.e !== 'kline' || !json.k || !json.k.x) return;
+
             const kline = json.k;
-            if (kline && kline.x) {
-              const candle = {
-                symbol: symbol,
-                tf: tf,
-                time: Number(kline.t),
-                open: kline.o,
-                high: kline.h,
-                low: kline.l,
-                close: kline.c,
-                volume: kline.v
-              };
-              handleIncomingCandle(candle);
-            }
+            const candle = {
+              symbol,
+              tf,
+              time: Number(kline.t),
+              open: kline.o,
+              high: kline.h,
+              low: kline.l,
+              close: kline.c,
+              volume: kline.v
+            };
+            handleIncomingCandle(candle);
+
           } catch (e) {
             logger.error(`[ws] Ошибка парсинга сообщения от ${symbol} (${tf}):`, e.message);
           }
