@@ -2,18 +2,27 @@ logic/comboSignalEngine.js
 const config = require('../config/config');
 const { logInfo } = require('../utils/logger');
 const strategies = require('../strategies/comboStrategies');
+const { getSignalStrength } = require('./signalScoring');
+const { recordSignal } = require('./signalRecorder');
 
 function evaluateComboStrategies(context) {
   strategies.forEach(strategy => {
-    const conditionsMet = strategy.conditions.every(cond => context.conditions.includes(cond));
+    const matched = strategy.conditions.filter(cond => context.conditions.includes(cond));
+    const strength = getSignalStrength(matched.length, strategy.conditions.length);
 
-    if (conditionsMet) {
-      const msg = `📢 [${strategy.name}] ${strategy.message} | ${context.symbol} | TF: ${context.timeframe}`;
-      logInfo(`[comboLog] ${msg}`);
+    if (matched.length === strategy.conditions.length) {
+      const logEntry = {
+        name: strategy.name,
+        symbol: context.symbol,
+        timeframe: context.timeframe,
+        direction: strategy.direction,
+        message: strategy.message,
+        strength
+      };
 
-      if (config.ENABLE_WEBHOOK) {
-        // Отправка на webhook — можно подключить later
-      }
+      logInfo(`[comboLog] 📢 [${strategy.name}] ${strategy.message} | ${context.symbol} | TF: ${context.timeframe} | Сила: ${strength}`);
+
+      recordSignal(logEntry);
     }
   });
 }
