@@ -21,7 +21,7 @@ function calculateIndicators(candles, symbol, tf) {
   const nowUTC = new Date().toISOString().slice(11, 16);
   const { start, end } = config.SIGNAL_TIME_WINDOW_UTC;
   if (nowUTC < start || nowUTC > end) {
-    logger.basic(\`[\${symbol} | \${tf}] Вне временного окна сигналов (\${start}-\${end})\`);
+    logger.basic(`[${symbol} | ${tf}] Вне временного окна сигналов (${start}-${end})`); // fixed
     return result;
   }
 
