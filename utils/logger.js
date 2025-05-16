@@ -20,5 +20,8 @@ function logError(message) {
 module.exports = {
   logInfo,
   logVerbose,
-  logError
+  logError,
+  basic: logInfo,
+  verbose: logVerbose,
+  error: logError
 };
