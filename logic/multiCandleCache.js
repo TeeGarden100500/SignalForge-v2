@@ -1,6 +1,7 @@
-// logic/multiCandleCache.js
 const config = require('../config/config');
 const { logVerbose } = require('../utils/logger');
+const { runBasicIndicators } = require('./strategyManager');
+const { evaluateComboStrategies } = require('./comboSignalEngine');
 
 const cache = {};
 
@@ -24,9 +25,17 @@ function handleIncomingCandle(symbol, interval, kline) {
 
   logVerbose(`Кэш обновлён: ${symbol} [${interval}] => ${candles.length} свечей`);
 
-  // Тут можно триггерить анализ при достижении MIN_CACHE_LENGTH, например:
-  if (candles.length >= config.RSI_PERIOD) {
-    // TODO: анализ индикаторов и стратегий
+  if (interval === config.TIMEFRAMES.LEVEL_1 && candles.length >= config.RSI_PERIOD) {
+    runBasicIndicators(symbol, candles);
+
+    // Тестовый контекст для проверки комбинаций
+    const context = {
+      symbol,
+      timeframe: interval,
+      price: entry.close,
+      conditions: ['RSI_LOW', 'EMA_CROSS_UP', 'MACD_HIST_FLIP'] // TODO: сюда подставлять реальные условия
+    };
+    evaluateComboStrategies(context);
   }
 }
 
