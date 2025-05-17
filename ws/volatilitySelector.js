@@ -38,7 +38,7 @@ function updateVolatilityRanking() {
   }
 
   if (results.length === 0) {
-    logger.warn('[volatility] ❌ Недостаточно данных. Перезапуск в следующем цикле...');
+    logger.verbose('[volatility] ❌ Недостаточно данных. Перезапуск в следующем цикле...');
     return;
   }
 
