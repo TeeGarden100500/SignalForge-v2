@@ -1,41 +1,79 @@
-
 const config = require('../config/config');
 const { logInfo, logVerbose, logError } = require('../utils/logger');
-const multiCandleCache = require('../logic/multiCandleCache');
+const { cache } = require('../logic/multiCandleCache');
 
-function startVolatilityLoop() {
+let topVolatileSymbols = [];
+let ready = false;
+let onReadyCallbacks = [];
+
+function calculateVolatility(candles) {
+    const highs = candles.map(c => parseFloat(c.high));
+    const lows = candles.map(c => parseFloat(c.low));
+    const maxHigh = Math.max(...highs);
+    const minLow = Math.min(...lows);
+    return ((maxHigh - minLow) / minLow) * 100;
+}
+
+function updateVolatilityRanking() {
     try {
-        const allSymbols = Object.keys(multiCandleCache.cache);
-        const volatilityScores = [];
+        const tf = config.TIMEFRAMES.LEVEL_1;
+        const required = config.VOLATILITY_LOOKBACK / 5;
+        const scores = [];
 
-        for (const symbol of allSymbols) {
-            const candles = multiCandleCache.cache[symbol]?.['5m'] || [];
+        for (const symbol in cache) {
+            const candles = cache[symbol]?.[tf];
+            const count = candles?.length || 0;
 
-            logVerbose(`[volatility] ${symbol} — накоплено свечей: ${candles.length}`);
+            logInfo(`[volatility] ${symbol} [${tf}] — ${count} свечей в кэше`);
 
-            if (candles.length < config.VOLATILITY_LOOKBACK / 5) {
-                logInfo(`[volatility] ⚠️ Недостаточно свечей по ${symbol}, требуется: ${config.VOLATILITY_LOOKBACK / 5}, сейчас: ${candles.length}`);
-                continue;
-            }
+            if (!candles || candles.length < required) continue;
 
-            const closes = candles.slice(-config.VOLATILITY_LOOKBACK / 5).map(c => c.close);
-            const max = Math.max(...closes);
-            const min = Math.min(...closes);
-            const volatility = ((max - min) / min) * 100;
-
-            volatilityScores.push({ symbol, volatility });
+            const recent = candles.slice(-required);
+            const vol = calculateVolatility(recent);
+            scores.push({ symbol, volatility: vol });
         }
 
-        volatilityScores.sort((a, b) => b.volatility - a.volatility);
-        const topSymbols = volatilityScores.slice(0, config.VOLATILITY_TOP_N);
+        if (scores.length === 0) {
+            logError('[volatility] ❌ Недостаточно данных. Перезапуск в следующем цикле...');
+            return;
+        }
 
-        logInfo(`[volatility] Топ-${config.VOLATILITY_TOP_N} монет: ${topSymbols.map(s => s.symbol).join(', ')}`);
-        return topSymbols.map(s => s.symbol);
+        scores.sort((a, b) => b.volatility - a.volatility);
+        topVolatileSymbols = scores.slice(0, config.VOLATILITY_TOP_N).map(s => s.symbol);
+        ready = true;
 
-    } catch (error) {
-        logError(`[volatility] ❌ Ошибка при получении волатильных монет: ${error.message}`);
-        return [];
+        logInfo(`[volatility] ✅ Топ-${config.VOLATILITY_TOP_N}: ${topVolatileSymbols.join(', ')}`);
+
+        onReadyCallbacks.forEach(cb => {
+            try {
+                cb(topVolatileSymbols);
+            } catch (e) {
+                logError(`[volatility] ❌ Ошибка в callback: ${e.message}`);
+            }
+        });
+
+        onReadyCallbacks = [];
+
+    } catch (err) {
+        logError(`[volatility] ❌ Ошибка updateVolatilityRanking: ${err.message}`);
     }
 }
 
-module.exports = { startVolatilityLoop };
+function startVolatilityLoop() {
+    updateVolatilityRanking();
+    setInterval(updateVolatilityRanking, config.VOLATILITY_REFRESH_INTERVAL_SEC * 1000);
+}
+
+function onReady(callback) {
+    if (ready) {
+        callback(topVolatileSymbols);
+    } else {
+        onReadyCallbacks.push(callback);
+    }
+}
+
+module.exports = {
+    startVolatilityLoop,
+    onReady,
+    getTopVolatileSymbols: () => topVolatileSymbols
+};
