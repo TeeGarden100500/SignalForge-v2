@@ -80,7 +80,7 @@ module.exports = {
   VOLATILITY_TOP_N: 5,     // Сколько монет отбирать по волатильности
   VOLATILITY_TOP_COUNT: 5, // (дублируется для совместимости)
   VOLATILITY_LOOKBACK: 1,  // Сколько минут учитывать при расчете волатильности
-  VOLATILITY_REFRESH_INTERVAL_SEC: 300, // Как часто пересчитывать волатильность (в секундах)
+  VOLATILITY_REFRESH_INTERVAL_SEC: 60, // Как часто пересчитывать волатильность (в секундах)
 
   // ░░░ Подписки WebSocket ░░░
   SUBSCRIPTION_REFRESH_INTERVAL_MS: 5 * 60 * 1000, // Обновление подписок каждые 5 мин
