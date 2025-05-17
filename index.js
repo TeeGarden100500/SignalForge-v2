@@ -13,19 +13,9 @@ function startBot() {
   logger.basic('[index] ⏳ Ожидание готовности волатильности (onReady)...');
 
   onReady((topSymbols) => {
-    if (!Array.isArray(topSymbols) || topSymbols.length === 0) {
-      logger.error('[index] ❌ Получен пустой список монет.');
-      return;
-    }
-
-    logger.basic(`[index] ✅ Готовность достигнута. Топ монет: ${topSymbols.join(', ')}`);
-
-    try {
-      connectToStreams(topSymbols);
-    } catch (streamErr) {
-      logger.error('[index] ❌ Ошибка при запуске WebSocket-потоков:', streamErr?.message || streamErr);
-    }
-  });
+  const debugList = ['BTCUSDT'];
+  connectToStreams(debugList);
+});
 }
 
 startBot();
