@@ -1,21 +1,17 @@
-// index.js — запуск SignalForge v2 с диагностикой
-
 const { startVolatilityLoop, onReady } = require('./ws/volatilitySelector');
 const { connectToStreams } = require('./ws/smartWSManager');
 const logger = require('./utils/logger');
 
-function startBot() {
-  logger.basic('🚀 Запуск SignalForge v2...');
+logger.logInfo('🚀 Запуск SignalForge...');
 
-  startVolatilityLoop((topSymbols) => {
-  logger.basic(`[index] 🔁 onReady сработал. Символы из волатильности: ${topSymbols?.join(', ')}`);
-  
-  const debugList = ['BTCUSDT'];
-  logger.basic(`[index] 🔁 Принудительная подписка на: ${debugList}`);
-  connectToStreams(debugList);
-});
-
-}
-
-startBot();
 startVolatilityLoop();
+
+onReady((topSymbols) => {
+    if (!topSymbols || topSymbols.length === 0) {
+        logger.logError('[index] ❌ Топ монет пуст. Возможно, нет данных в кэше.');
+        return;
+    }
+
+    logger.logInfo(`[index] ✅ Получены монеты: ${topSymbols.join(', ')}`);
+    connectToStreams(topSymbols);
+});
