@@ -1,44 +1,30 @@
-// 🚀 index.js — Точка входа в систему SignalForge v2
+// index.js — Точка запуска SignalForge v2
 
-const config = require('./config/config');
-const { selectTopVolatileSymbols } = require('./ws/volatilitySelector');
-const { startVolatilityLoop } = require('./ws/volatilitySelector');
+const { startVolatilityLoop, onReady } = require('./ws/volatilitySelector');
 const { connectToStreams } = require('./ws/smartWSManager');
 const logger = require('./utils/logger');
 
-// 🔁 Цикл обновления волатильных монет
-async function startBot() {
+function startBot() {
   logger.basic('🚀 Запуск SignalForge v2...');
 
-  async function updateAndSubscribe() {
-    try {
-      const topSymbols = await selectTopVolatileSymbols();
+  // запускаем сбор волатильности
+  startVolatilityLoop();
 
-      if (!Array.isArray(topSymbols) || topSymbols.length === 0) {
-        logger.error('[volatility] Получен пустой список монет или неверный формат.');
-        return;
-      }
-
-      logger.basic(`[volatility] Топ-${topSymbols.length} монет: ${topSymbols.join(', ')}`);
-
-      // 💥 Отдельная обработка ошибок подключения
-      try {
-        connectToStreams(topSymbols);
-      } catch (streamErr) {
-        logger.error('[streams] Ошибка при запуске WebSocket-потоков:', streamErr?.message || streamErr);
-      }
-
-    } catch (err) {
-      logger.error('[volatility] Ошибка при получении волатильных монет:', err?.message || err);
+  // ждём, пока будет готов топ волатильных монет
+  onReady((topSymbols) => {
+    if (!Array.isArray(topSymbols) || topSymbols.length === 0) {
+      logger.error('[volatility] Получен пустой список монет.');
+      return;
     }
-  }
 
-  // Первый запуск сразу
-  await updateAndSubscribe();
+    logger.basic(`[volatility] Топ-${topSymbols.length} монет: ${topSymbols.join(', ')}`);
 
-  // Периодическое обновление по таймеру
-  setInterval(updateAndSubscribe, config.VOLATILITY_REFRESH_INTERVAL_SEC * 1000);
+    try {
+      connectToStreams(topSymbols);
+    } catch (streamErr) {
+      logger.error('[streams] Ошибка при запуске WebSocket-потоков:', streamErr?.message || streamErr);
+    }
+  });
 }
 
 startBot();
-startVolatilityLoop();
