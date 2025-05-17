@@ -1,5 +1,6 @@
 const { getTopVolatilePairs } = require('./volatilitySelector');
 const { VOLATILITY_UPDATE_INTERVAL_HOURS } = require('./config');
+const { startCandleCollector } = require('./wsHandler');
 
 async function runVolatilityScanLoop() {
   await getTopVolatilePairs(); // первый запуск сразу
@@ -10,5 +11,8 @@ async function runVolatilityScanLoop() {
     await getTopVolatilePairs();
   }, intervalMs);
 }
-
+(async () => {
+  const topPairs = await getTopVolatilePairs();
+  startCandleCollector(topPairs);
+})();
 runVolatilityScanLoop();
