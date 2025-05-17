@@ -38,18 +38,18 @@ function updateVolatilityRanking() {
   logger.info(`[volatility] Топ-${config.VOLATILITY_TOP_N} монет: ${topVolatileSymbols.join(', ')}`);
 }
 
-function getTopVolatileSymbols() {
-  return topVolatileSymbols;
-}
-
 function startVolatilityLoop() {
   setTimeout(() => {
     updateVolatilityRanking(); // первый запуск
     setInterval(updateVolatilityRanking, config.VOLATILITY_REFRESH_INTERVAL_SEC * 1000);
   }, config.VOLATILITY_LOOKBACK * 60 * 1000); // старт после накопления
+
+  function getTopVolatileSymbols() {
+  return topVolatileSymbols;
+}
 }
 
 module.exports = {
+  startVolatilityLoop,
   getTopVolatileSymbols,
-  startVolatilityLoop
 };
