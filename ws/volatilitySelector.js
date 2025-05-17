@@ -1,59 +1,55 @@
-// volatilitySelector.js
-const WebSocket = require('ws');
+// ws/volatilitySelector.js — отбор топ-волатильных монет по локальному кэшу
+
 const config = require('../config/config');
-const { logVerbose, logError } = require('../utils/logger');
+const { cache } = require('../logic/multiCandleCache');
+const logger = require('../utils/logger');
 
-let lastSelectionTime = 0;
+let topVolatileSymbols = [];
 
-function selectTopVolatileSymbols() {
-  return new Promise((resolve) => {
-    const now = Date.now();
+function calculateVolatility(candles) {
+  const highs = candles.map(c => parseFloat(c.high));
+  const lows = candles.map(c => parseFloat(c.low));
 
-    if (now - lastSelectionTime < config.VOLATILITY_REFRESH_INTERVAL_SEC * 1000) {
-      logVerbose('[volatility] Пропущен повторный отбор (ещё не прошло время).');
-      return resolve([]);
-    }
+  const maxHigh = Math.max(...highs);
+  const minLow = Math.min(...lows);
 
-    const ws = new WebSocket('wss://stream.binance.com:9443/ws/!ticker@arr');
-    const fallback = setTimeout(() => {
-      logError('[volatility] Binance WS не ответил вовремя. Возврат пустого массива.');
-      ws.terminate();
-      resolve([]);
-    }, 5000);
+  return ((maxHigh - minLow) / minLow) * 100;
+}
 
-    ws.on('message', (data) => {
-      try {
-        const tickers = JSON.parse(data);
-        const filtered = tickers
-          .filter(t => t.s.endsWith('USDT'))
-          .map(t => ({ symbol: t.s, percent: Math.abs(parseFloat(t.P)) }))
-          .sort((a, b) => b.percent - a.percent)
-          .slice(0, config.VOLATILITY_TOP_N || 20);
+function updateVolatilityRanking() {
+  const tf = config.TIMEFRAMES.LEVEL_1; // допустим, '5m'
+  const requiredCandles = config.VOLATILITY_LOOKBACK / 5;
 
-        const symbols = filtered.map(t => t.symbol);
-        lastSelectionTime = now;
-        clearTimeout(fallback);
-        ws.close();
+  const results = [];
 
-        logVerbose(`[volatility] Отобрано по волатильности: ${symbols.join(', ')}`);
-        resolve(symbols);
-      } catch (err) {
-        clearTimeout(fallback);
-        ws.terminate();
-        logError('[volatility] Ошибка разбора данных Binance:', err.message);
-        resolve([]);
-      }
-    });
+  for (const symbol in cache) {
+    const candles = cache[symbol]?.[tf];
+    if (!candles || candles.length < requiredCandles) continue;
 
-    ws.on('error', (err) => {
-      clearTimeout(fallback);
-      ws.terminate();
-      logError('[volatility] Ошибка WebSocket Binance:', err.message);
-      resolve([]);
-    });
-  });
+    const recentCandles = candles.slice(-requiredCandles);
+    const vol = calculateVolatility(recentCandles);
+
+    results.push({ symbol, volatility: vol });
+  }
+
+  results.sort((a, b) => b.volatility - a.volatility);
+  topVolatileSymbols = results.slice(0, config.VOLATILITY_TOP_N).map(r => r.symbol);
+
+  logger.info(`[volatility] Топ-${config.VOLATILITY_TOP_N} монет: ${topVolatileSymbols.join(', ')}`);
+}
+
+function getTopVolatileSymbols() {
+  return topVolatileSymbols;
+}
+
+function startVolatilityLoop() {
+  setTimeout(() => {
+    updateVolatilityRanking(); // первый запуск
+    setInterval(updateVolatilityRanking, config.VOLATILITY_REFRESH_INTERVAL_SEC * 1000);
+  }, config.VOLATILITY_LOOKBACK * 60 * 1000); // старт после накопления
 }
 
 module.exports = {
-  selectTopVolatileSymbols
+  getTopVolatileSymbols,
+  startVolatilityLoop
 };
