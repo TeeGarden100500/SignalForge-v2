@@ -56,6 +56,13 @@ function connectToStreams(symbols) {
       close: parseFloat(kline.c),
       volume: parseFloat(kline.v)
     };
+    
+try {
+  logger.verbose(`[ws] Передано в handleIncomingCandle: ${JSON.stringify(candle)}`);
+  handleIncomingCandle(candle);
+} catch (err) {
+  logger.error(`[ws] Ошибка внутри handleIncomingCandle для ${symbol} (${tf}):`, err.message);
+}
 
     handleIncomingCandle(candle);
 
