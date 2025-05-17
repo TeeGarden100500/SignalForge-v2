@@ -10,7 +10,6 @@ const sockets = {};     // { BTCUSDT_5m: WebSocket }
 const LAST_UPDATE_TIMEOUT_MS = 1000 * 60 * 60 * 6; // 6 часов без свечей = удалить
 const lastUpdatedAt = {}; // { BTCUSDT_5m: timestamp }
 
-
 function log(...args) {
   if (DEBUG_LOG_LEVEL === 'verbose') {
     console.log(...args);
