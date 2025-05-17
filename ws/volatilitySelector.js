@@ -3,7 +3,7 @@ const config = require('../config/config');
 const { logInfo, logVerbose, logError } = require('../utils/logger');
 const multiCandleCache = require('../logic/multiCandleCache');
 
-function updateVolatilityRanking() {
+function startVolatilityLoop() {
     try {
         const allSymbols = Object.keys(multiCandleCache.cache);
         const volatilityScores = [];
@@ -38,4 +38,4 @@ function updateVolatilityRanking() {
     }
 }
 
-module.exports = { updateVolatilityRanking };
+module.exports = { startVolatilityLoop };
