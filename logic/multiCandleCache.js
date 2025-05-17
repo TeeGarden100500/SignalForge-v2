@@ -1,4 +1,5 @@
-// logic/multiCandleCache.js
+// logic/multiCandleCache.js — кэширование свечей с логами
+
 const config = require('../config/config');
 const { logVerbose } = require('../utils/logger');
 const { runBasicIndicators } = require('./strategyManager');
@@ -11,7 +12,7 @@ function handleIncomingCandle(candle) {
     const { symbol, interval, time, open, high, low, close, volume } = candle;
 
     if (!symbol || !interval) {
-      console.warn(`[cache] Пропущена свеча: отсутствует symbol или interval`);
+      console.warn(`[cache] ⚠️ Пропущена свеча: отсутствует symbol или interval`);
       return;
     }
 
@@ -32,7 +33,7 @@ function handleIncomingCandle(candle) {
     candles.push(entry);
     if (candles.length > config.MAX_CACHE_LENGTH) candles.shift();
 
-    logVerbose(`Кэш обновлён: ${symbol} [${interval}] => ${candles.length} свечей`);
+    logVerbose(`[cache] ✅ Кэш обновлён: ${symbol} [${interval}] => ${candles.length} свечей`);
 
     if (interval === config.TIMEFRAMES.LEVEL_1 && candles.length >= config.RSI_PERIOD) {
       runBasicIndicators(symbol, candles);
@@ -41,14 +42,14 @@ function handleIncomingCandle(candle) {
         symbol,
         timeframe: interval,
         price: close,
-        conditions: ['RSI_LOW', 'EMA_CROSS_UP', 'MACD_HIST_FLIP']
+        conditions: ['RSI_LOW', 'EMA_CROSS_UP', 'MACD_HIST_FLIP'] // временно
       };
 
       evaluateComboStrategies(context);
     }
 
   } catch (err) {
-    console.error(`[cache] Ошибка обработки свечи для ${candle?.symbol || '??'} (${candle?.interval || '??'}):`, err.message);
+    console.error(`[cache] ❌ Ошибка обработки свечи для ${candle?.symbol || '??'} (${candle?.interval || '??'}):`, err.message);
     console.debug(`[cache] Содержание свечи: ${JSON.stringify(candle)}`);
   }
 }
