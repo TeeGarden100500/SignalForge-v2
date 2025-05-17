@@ -3,10 +3,13 @@ const { DEBUG_LOG_LEVEL } = require('./config');
 const { TOP_N_PAIRS } = require('./config');
 
 const TIMEFRAMES = ['5m', '15m', '1h'];
-const CACHE_LIMIT = 100;
+const CACHE_LIMIT = 10;
 
 const candleCache = {}; // { BTCUSDT: { '5m': [], '15m': [], '1h': [] } }
 const sockets = {};     // { BTCUSDT_5m: WebSocket }
+const LAST_UPDATE_TIMEOUT_MS = 1000 * 60 * 60 * 6; // 6 часов без свечей = удалить
+const lastUpdatedAt = {}; // { BTCUSDT_5m: timestamp }
+
 
 function log(...args) {
   if (DEBUG_LOG_LEVEL === 'verbose') {
@@ -79,6 +82,32 @@ function startCandleCollector(pairs) {
 function getCandleCache() {
   return candleCache;
 }
+
+setInterval(() => {
+  const now = Date.now();
+
+  Object.entries(lastUpdatedAt).forEach(([key, lastUpdate]) => {
+    if (now - lastUpdate > LAST_UPDATE_TIMEOUT_MS) {
+      const [symbol, interval] = key.split('_');
+
+      // удалить из кэша
+      if (candleCache[symbol] && candleCache[symbol][interval]) {
+        delete candleCache[symbol][interval];
+      }
+
+      // удалить ws
+      if (sockets[key]) {
+        sockets[key].close();
+        delete sockets[key];
+      }
+
+      // удалить временную метку
+      delete lastUpdatedAt[key];
+
+      console.log(`🗑️ Удалён неактивный поток: ${key}`);
+    }
+  });
+}, 30 * 60 * 1000); // каждые 30 минут проверка
 
 module.exports = {
   startCandleCollector,
