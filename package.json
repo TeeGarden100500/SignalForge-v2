@@ -5,7 +5,7 @@
   "keywords": ["crypto", "trading bot", "Binance", "WebSocket", "RSI", "MACD"],
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node SignalForge_MINI_TEST.js"
   },
   "engines": {
     "node": ">=18.0.0"
