@@ -1,16 +1,13 @@
-const { startVolatilityLoop, onReady } = require('./ws/volatilitySelector');
-const { connectToStreams } = require('./ws/smartWSManager');
-const logger = require('./utils/logger');
+const { updateVolatilityRanking } = require('./ws/volatilitySelector');
+const { DEBUG_LOG_LEVEL } = require('./config');
+const logger = require('./core/logger');
 
-logger.logInfo('🚀 Запуск SignalForge v2...');
-startVolatilityLoop();
+function startBot() {
+  logger.info('[index] 🛰️ Запуск SignalForge v2...');
+  logger.info('[index] ☑️ Ожидание готовности волатильности (onReady)...');
 
-onReady((topSymbols) => {
-  if (!topSymbols || topSymbols.length === 0) {
-    logger.logError('[index] ❌ Топ монет пуст. Возможно, кэш ещё не заполнен.');
-    return;
-  }
+  // Запускаем расчёт каждые 60 секунд
+  setInterval(updateVolatilityRanking, 60000);
+}
 
-  logger.logInfo(`[index] ✅ Монеты для подписки: ${topSymbols.join(', ')}`);
-  connectToStreams(topSymbols);
-});
+startBot();
