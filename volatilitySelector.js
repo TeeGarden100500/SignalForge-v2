@@ -8,17 +8,22 @@ async function getTopVolatilePairs() {
 
     const filtered = response.data
       .filter(pair => pair.symbol.endsWith(PAIR_SUFFIX) && !pair.symbol.includes('UP') && !pair.symbol.includes('DOWN'))
-      .map(pair => {
-        const high = parseFloat(pair.highPrice);
-        const low = parseFloat(pair.lowPrice);
-        const volatility = ((high - low) / low) * 100;
-        return {
-          symbol: pair.symbol,
-          volatility: +volatility.toFixed(2),
-        };
-      })
-      .sort((a, b) => b.volatility - a.volatility)
-      .slice(0, TOP_N_PAIRS);
+     .map(pair => {
+    const high = parseFloat(pair.highPrice);
+    const low = parseFloat(pair.lowPrice);
+
+    if (!low || !high || isNaN(low) || isNaN(high) || low === 0) return null;
+
+    const volatility = ((high - low) / low) * 100;
+
+    return {
+    symbol: pair.symbol,
+    volatility: +volatility.toFixed(2),
+    };
+    })
+    .filter(Boolean) // удаляем null'ы
+    .sort((a, b) => b.volatility - a.volatility)
+    .slice(0, TOP_N_PAIRS);
 
     if (DEBUG_LOG_LEVEL !== 'none') {
       console.log(`📊 Топ ${TOP_N_PAIRS} волатильных пар:`);
