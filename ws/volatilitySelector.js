@@ -1,28 +1,82 @@
-// standalone_volatility_debug.js — Проверка структуры и наполнения кэша по символам (вручную)
+// ws/volatilitySelector.js — отбор топ-волатильных монет по локальному кэшу (debug-версия)
 
-const { cache } = require('./logic/multiCandleCache');
-const config = require('./config/config');
-const logger = require('./utils/logger');
+const config = require('../config/config');
+const { cache } = require('../logic/multiCandleCache');
+const logger = require('../utils/logger');
 
-function debugCache() {
-  const tf = config.TIMEFRAMES.LEVEL_1;
-  const requiredCandles = config.VOLATILITY_LOOKBACK / 5;
+let topVolatileSymbols = [];
+let ready = false;
+let onReadyCallbacks = [];
 
-  logger.basic(`[debug] 📊 Начинаем проверку кэша по таймфрейму ${tf}`);
-  const symbols = Object.keys(cache);
-  logger.basic(`[debug] 📦 Символов в кэше: ${symbols.length}`);
-
-  for (const symbol of symbols) {
-    const candles = cache[symbol]?.[tf];
-    const count = candles?.length || 0;
-
-    logger.basic(`[debug] ➜ ${symbol} [${tf}] — ${count} свечей`);
-    if (count) {
-      logger.verbose(`[debug] 🕯 Пример: ${JSON.stringify(candles[0])}`);
-    }
-  }
-
-  logger.basic(`[debug] ✅ Проверка завершена`);
+function calculateVolatility(candles) {
+  const highs = candles.map(c => parseFloat(c.high));
+  const lows = candles.map(c => parseFloat(c.low));
+  const maxHigh = Math.max(...highs);
+  const minLow = Math.min(...lows);
+  return ((maxHigh - minLow) / minLow) * 100;
 }
 
-debugCache();
+function updateVolatilityRanking() {
+  const tf = config.TIMEFRAMES.LEVEL_1;
+  const requiredCandles = config.VOLATILITY_LOOKBACK / 5;
+  const results = [];
+
+  logger.basic('[volatility] 🔍 Проверка кэша по символам...');
+  for (const symbol in cache) {
+    const candles = cache[symbol]?.[tf];
+    const count = candles?.length || 0;
+    logger.verbose(`[volatility] ${symbol} [${tf}] — свечей: ${count}`);
+
+    if (!candles || candles.length < requiredCandles) continue;
+
+    const recentCandles = candles.slice(-requiredCandles);
+    const vol = calculateVolatility(recentCandles);
+    results.push({ symbol, volatility: vol });
+  }
+
+  if (results.length === 0) {
+    logger.warn('[volatility] ❌ Недостаточно данных. Перезапуск в следующем цикле...');
+    return;
+  }
+
+  results.sort((a, b) => b.volatility - a.volatility);
+  topVolatileSymbols = results.slice(0, config.VOLATILITY_TOP_N).map(r => r.symbol);
+  ready = true;
+
+  logger.basic(`[volatility] ✅ Топ-${config.VOLATILITY_TOP_N} монет: ${topVolatileSymbols.join(', ')}`);
+
+  onReadyCallbacks.forEach(fn => {
+    try {
+      fn(topVolatileSymbols);
+    } catch (err) {
+      logger.error('[volatility] Ошибка в onReady callback:', err.message);
+    }
+  });
+  onReadyCallbacks = [];
+}
+
+function getTopVolatileSymbols() {
+  if (!ready) throw new Error('Volatility data not ready yet.');
+  return topVolatileSymbols;
+}
+
+function startVolatilityLoop() {
+  setTimeout(() => {
+    updateVolatilityRanking();
+    setInterval(updateVolatilityRanking, config.VOLATILITY_REFRESH_INTERVAL_SEC * 1000);
+  }, config.VOLATILITY_LOOKBACK * 60 * 1000);
+}
+
+function onReady(callback) {
+  if (ready) {
+    callback(topVolatileSymbols);
+  } else {
+    onReadyCallbacks.push(callback);
+  }
+}
+
+module.exports = {
+  getTopVolatileSymbols,
+  startVolatilityLoop,
+  onReady
+};
