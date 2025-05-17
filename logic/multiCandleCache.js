@@ -1,3 +1,12 @@
+// logic/multiCandleCache.js — кэширование свечей с логами
+
+const config = require('../config/config');
+const { logVerbose } = require('../utils/logger');
+const { runBasicIndicators } = require('./strategyManager');
+const { evaluateComboStrategies } = require('./comboSignalEngine');
+
+const cache = {};
+
 function handleIncomingCandle(candle) {
   const { symbol, tf: interval, time, open, high, low, close, volume } = candle;
 
@@ -13,4 +22,15 @@ function handleIncomingCandle(candle) {
   if (config.DEBUG_LOG_LEVEL === 'verbose') {
     logger.verbose(`[cache] ${symbol} [${interval}] => ${candles.length} свечей`);
   }
-}
+  }
+
+  } catch (err) {
+    console.error(`[cache] ❌ Ошибка обработки свечи для ${candle?.symbol || '??'} (${candle?.interval || '??'}):`, err.message);
+    console.debug(`[cache] Содержание свечи: ${JSON.stringify(candle)}`);
+  }
+  }
+
+module.exports = {
+  handleIncomingCandle,
+  cache
+};
