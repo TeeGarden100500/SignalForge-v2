@@ -58,7 +58,14 @@ function subscribeToKlines(symbol) {
       } catch (err) {
         console.error(`❌ Ошибка WS ${symbol} ${interval}:`, err.message);
       }
-    });
+        const { checkRSIStrategy } = require('./core/strategyRSI');
+
+        const result = checkRSIStrategy(symbol, candleCache[symbol][interval]);
+        if (result) {
+        console.log(`📢 Сигнал по стратегии ${result.strategy}:`, result.message);
+      }
+
+      });
 
     ws.on('error', err => {
       console.error(`❗ WS Error [${socketKey}]`, err.message);
@@ -107,6 +114,8 @@ setInterval(() => {
     }
   });
 }, 5 * 60 * 1000); // каждые 30 минут проверка на не активные свечи
+
+
 
 module.exports = {
   startCandleCollector,
