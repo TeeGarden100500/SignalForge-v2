@@ -8,7 +8,7 @@ const cache = {};
 
 function handleIncomingCandle(candle) {
   try {
-    const { symbol, tf: interval, time, open, high, low, close, volume } = candle;
+    const { symbol, interval, time, open, high, low, close, volume } = candle;
 
     if (!cache[symbol]) cache[symbol] = {};
     if (!cache[symbol][interval]) cache[symbol][interval] = [];
