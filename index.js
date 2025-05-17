@@ -1,5 +1,5 @@
 const { updateVolatilityRanking } = require('./ws/volatilitySelector');
-const { DEBUG_LOG_LEVEL } = require('./config');
+const { DEBUG_LOG_LEVEL } = require('..config/config.js');
 const logger = require('./core/logger');
 
 function startBot() {
