@@ -25,10 +25,10 @@ function updateVolatilityRanking() {
   for (const symbol in cache) {
     const candles = cache[symbol]?.[tf];
     const count = candles?.length || 0;
-    logger.verbose(`[volatility] ${symbol} [${tf}] — свечей: ${count}`);
+    logger.basic(`[volatility] ${symbol} [${tf}] — свечей: ${count}`);
 
     if (!candles || candles.length < requiredCandles) {
-      logger.verbose(`[volatility] ❗ Пропуск ${symbol} — недостаточно свечей (${candles?.length || 0}/${requiredCandles})`);
+      logger.basic(`[volatility] ❗ Пропуск ${symbol} — недостаточно свечей (${candles?.length || 0}/${requiredCandles})`);
       continue;
     }
 
@@ -38,7 +38,7 @@ function updateVolatilityRanking() {
   }
 
   if (results.length === 0) {
-    logger.verbose('[volatility] ❌ Недостаточно данных. Перезапуск в следующем цикле...');
+    logger.warn('[volatility] ❌ Недостаточно данных. Перезапуск в следующем цикле...');
     return;
   }
 
