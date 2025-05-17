@@ -6,19 +6,21 @@ const { evaluateComboStrategies } = require('./comboSignalEngine');
 
 const cache = {};
 
-function handleIncomingCandle(symbol, interval, kline) {
+function handleIncomingCandle(candle) {
   try {
+    const { symbol, tf: interval, time, open, high, low, close, volume } = candle;
+
     if (!cache[symbol]) cache[symbol] = {};
     if (!cache[symbol][interval]) cache[symbol][interval] = [];
 
     const entry = {
-      openTime: kline.t,
-      open: parseFloat(kline.o),
-      high: parseFloat(kline.h),
-      low: parseFloat(kline.l),
-      close: parseFloat(kline.c),
-      volume: parseFloat(kline.v),
-      closeTime: kline.T
+      openTime: time,
+      open,
+      high,
+      low,
+      close,
+      volume,
+      closeTime: time
     };
 
     const candles = cache[symbol][interval];
@@ -30,22 +32,21 @@ function handleIncomingCandle(symbol, interval, kline) {
     if (interval === config.TIMEFRAMES.LEVEL_1 && candles.length >= config.RSI_PERIOD) {
       runBasicIndicators(symbol, candles);
 
-      // Тестовый контекст для проверки комбинаций
       const context = {
         symbol,
         timeframe: interval,
-        price: entry.close,
-        conditions: ['RSI_LOW', 'EMA_CROSS_UP', 'MACD_HIST_FLIP'] // TODO: сюда подставлять реальные условия
+        price: close,
+        conditions: ['RSI_LOW', 'EMA_CROSS_UP', 'MACD_HIST_FLIP']
       };
+
       evaluateComboStrategies(context);
     }
 
   } catch (err) {
-    console.error(`[cache] Ошибка обработки свечи для ${symbol} (${interval}):`, err.message);
-    console.debug(`[cache] Содержание свечи: ${JSON.stringify(kline)}`);
+    console.error(`[cache] Ошибка обработки свечи для ${candle?.symbol || '??'} (${candle?.tf || '??'}):`, err.message);
+    console.debug(`[cache] Содержание свечи: ${JSON.stringify(candle)}`);
   }
 }
-
 
 module.exports = {
   handleIncomingCandle,
