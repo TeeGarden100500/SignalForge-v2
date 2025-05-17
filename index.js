@@ -10,12 +10,14 @@ function startBot() {
   // запускаем сбор волатильности
   startVolatilityLoop();
 
-  logger.basic('[index] ⏳ Ожидание готовности волатильности (onReady)...');
-
   onReady((topSymbols) => {
+  logger.basic(`[index] 🔁 onReady сработал. Символы из волатильности: ${topSymbols?.join(', ')}`);
+  
   const debugList = ['BTCUSDT'];
+  logger.basic(`[index] 🔁 Принудительная подписка на: ${debugList}`);
   connectToStreams(debugList);
 });
+
 }
 
 startBot();
