@@ -38,31 +38,32 @@ function connectToStreams(symbols) {
           logger.verbose(`[ws] Подключено: ${symbol} (${tf})`);
         });
 
-        ws.on('message', (msg) => {
-          try {
-            const json = JSON.parse(msg);
+       ws.on('message', (msg) => {
+  try {
+    const json = JSON.parse(msg);
 
-            if (!json || json.e !== 'kline' || !json.k || !json.k.x) return;
+    if (!json || json.e !== 'kline' || !json.k || !json.k.x) return;
 
-            const kline = json.k;
-            const candle = {
-              symbol,
-              tf,
-              time: Number(kline.t),
-              open: kline.o,
-              high: kline.h,
-              low: kline.l,
-              close: kline.c,
-              volume: kline.v
-            };
-            handleIncomingCandle(candle);
+    const kline = json.k;
 
-          } catch (e) {
-            logger.error(`[ws] Ошибка парсинга сообщения от ${symbol} (${tf}):`, e.message);
-            logger.verbose(`[ws] Содержание сообщения от ${symbol} (${tf}): ${msg}`);
-          }
-        });
+    const candle = {
+      symbol,
+      tf,
+      time: Number(kline.t),
+      open: parseFloat(kline.o),
+      high: parseFloat(kline.h),
+      low: parseFloat(kline.l),
+      close: parseFloat(kline.c),
+      volume: parseFloat(kline.v)
+    };
 
+    handleIncomingCandle(candle);
+
+  } catch (e) {
+    logger.error(`[ws] Ошибка парсинга сообщения от ${symbol} (${tf}):`, e.message);
+    logger.verbose(`[ws] Содержание сообщения от ${symbol} (${tf}): ${msg}`);
+  }
+});
         ws.on('error', (err) => {
           logger.error(`[ws] Ошибка WebSocket по ${symbol} (${tf}):`, err.message);
         });
