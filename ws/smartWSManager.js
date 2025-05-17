@@ -47,15 +47,16 @@ function connectToStreams(symbols) {
     const kline = json.k;
 
     const candle = {
-      symbol,
-      tf,
-      time: Number(kline.t),
-      open: parseFloat(kline.o),
-      high: parseFloat(kline.h),
-      low: parseFloat(kline.l),
-      close: parseFloat(kline.c),
-      volume: parseFloat(kline.v)
-    };
+  symbol,
+  tf,              // это нужно оставить
+  interval: tf,    // вот это добавляем для совместимости
+  time: Number(kline.t),
+  open: parseFloat(kline.o),
+  high: parseFloat(kline.h),
+  low: parseFloat(kline.l),
+  close: parseFloat(kline.c),
+  volume: parseFloat(kline.v)
+};
     
 try {
   logger.verbose(`[ws] Передано в handleIncomingCandle: ${JSON.stringify(candle)}`);
