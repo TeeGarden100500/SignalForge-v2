@@ -1,60 +1,16 @@
-// logic/multiCandleCache.js — кэширование свечей с логами
-
-const config = require('../config/config');
-const { logVerbose } = require('../utils/logger');
-const { runBasicIndicators } = require('./strategyManager');
-const { evaluateComboStrategies } = require('./comboSignalEngine');
-
-const cache = {};
-
 function handleIncomingCandle(candle) {
-  try {
-    const { symbol, interval, time, open, high, low, close, volume } = candle;
+  const { symbol, tf: interval, time, open, high, low, close, volume } = candle;
 
-    if (!symbol || !interval) {
-      console.warn(`[cache] ⚠️ Пропущена свеча: отсутствует symbol или interval`);
-      return;
-    }
+  if (!cache[symbol]) cache[symbol] = {};
+  if (!cache[symbol][interval]) cache[symbol][interval] = [];
 
-    if (!cache[symbol]) cache[symbol] = {};
-    if (!cache[symbol][interval]) cache[symbol][interval] = [];
+  const entry = { openTime: time, open, high, low, close, volume, closeTime: time };
+  const candles = cache[symbol][interval];
 
-    const entry = {
-      openTime: time,
-      open,
-      high,
-      low,
-      close,
-      volume,
-      closeTime: time
-    };
+  candles.push(entry);
+  if (candles.length > config.MAX_CACHE_LENGTH) candles.shift();
 
-    const candles = cache[symbol][interval];
-    candles.push(entry);
-    if (candles.length > config.MAX_CACHE_LENGTH) candles.shift();
-
-    logVerbose(`[cache] ✅ Кэш обновлён: ${symbol} [${interval}] => ${candles.length} свечей`);
-
-    if (interval === config.TIMEFRAMES.LEVEL_1 && candles.length >= config.RSI_PERIOD) {
-      runBasicIndicators(symbol, candles);
-
-      const context = {
-        symbol,
-        timeframe: interval,
-        price: close,
-        conditions: ['RSI_LOW', 'EMA_CROSS_UP', 'MACD_HIST_FLIP'] // временно
-      };
-
-      evaluateComboStrategies(context);
-    }
-
-  } catch (err) {
-    console.error(`[cache] ❌ Ошибка обработки свечи для ${candle?.symbol || '??'} (${candle?.interval || '??'}):`, err.message);
-    console.debug(`[cache] Содержание свечи: ${JSON.stringify(candle)}`);
+  if (config.DEBUG_LOG_LEVEL === 'verbose') {
+    logger.verbose(`[cache] ${symbol} [${interval}] => ${candles.length} свечей`);
   }
 }
-
-module.exports = {
-  handleIncomingCandle,
-  cache
-};
