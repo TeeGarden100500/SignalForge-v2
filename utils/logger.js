@@ -1,27 +1,28 @@
-// utils/logger.js
-const config = require('../config/config');
-
-function logInfo(message) {
-  if (['basic', 'verbose'].includes(config.DEBUG_LOG_LEVEL)) {
-    console.log(`[INFO] ${new Date().toISOString()} - ${message}`);
-  }
+function logBasic(message) {
+  console.log(`[INFO] ${message}`);
 }
 
 function logVerbose(message) {
-  if (config.DEBUG_LOG_LEVEL === 'verbose') {
-    console.log(`[VERBOSE] ${new Date().toISOString()} - ${message}`);
+  if (process.env.DEBUG_LOG_LEVEL === 'verbose') {
+    console.log(`[VERBOSE] ${message}`);
   }
 }
 
 function logError(message) {
-  console.error(`[ERROR] ${new Date().toISOString()} - ${message}`);
+  console.error(`[ERROR] ${message}`);
+}
+
+function logWarn(message) {
+  console.warn(`[WARN] ${message}`);
 }
 
 module.exports = {
-  logInfo,
+  basic: logBasic,
+  verbose: logVerbose,
+  error: logError,
+  warn: logWarn,
+  logInfo: logBasic,
   logVerbose,
   logError,
-  basic: logInfo,
-  verbose: logVerbose,
-  error: logError
+  logWarn
 };
