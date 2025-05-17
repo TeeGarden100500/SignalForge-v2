@@ -27,7 +27,10 @@ function updateVolatilityRanking() {
     const count = candles?.length || 0;
     logger.verbose(`[volatility] ${symbol} [${tf}] — свечей: ${count}`);
 
-    if (!candles || candles.length < requiredCandles) continue;
+    if (!candles || candles.length < requiredCandles) {
+      logger.verbose(`[volatility] ❗ Пропуск ${symbol} — недостаточно свечей (${candles?.length || 0}/${requiredCandles})`);
+      continue;
+    }
 
     const recentCandles = candles.slice(-requiredCandles);
     const vol = calculateVolatility(recentCandles);
