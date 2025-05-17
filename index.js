@@ -1,4 +1,4 @@
-// index.js — Точка запуска SignalForge v2
+// index.js — запуск SignalForge v2 с диагностикой
 
 const { startVolatilityLoop, onReady } = require('./ws/volatilitySelector');
 const { connectToStreams } = require('./ws/smartWSManager');
@@ -10,19 +10,20 @@ function startBot() {
   // запускаем сбор волатильности
   startVolatilityLoop();
 
-  // ждём, пока будет готов топ волатильных монет
+  logger.basic('[index] ⏳ Ожидание готовности волатильности (onReady)...');
+
   onReady((topSymbols) => {
     if (!Array.isArray(topSymbols) || topSymbols.length === 0) {
-      logger.error('[volatility] Получен пустой список монет.');
+      logger.error('[index] ❌ Получен пустой список монет.');
       return;
     }
 
-    logger.basic(`[volatility] Топ-${topSymbols.length} монет: ${topSymbols.join(', ')}`);
+    logger.basic(`[index] ✅ Готовность достигнута. Топ монет: ${topSymbols.join(', ')}`);
 
     try {
       connectToStreams(topSymbols);
     } catch (streamErr) {
-      logger.error('[streams] Ошибка при запуске WebSocket-потоков:', streamErr?.message || streamErr);
+      logger.error('[index] ❌ Ошибка при запуске WebSocket-потоков:', streamErr?.message || streamErr);
     }
   });
 }
