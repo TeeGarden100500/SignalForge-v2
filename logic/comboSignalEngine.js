@@ -6,6 +6,7 @@ const logger = require('../utils/logger');
 const scoring = require('./signalScoring');
 const recorder = require('./signalRecorder');
 const recommender = require('../core/aiCrossRecommender');
+const { getIndicators } = require('../core/indicatorStore');
 
 const signalStrengthRank = {
   'weak': 0,
@@ -14,7 +15,26 @@ const signalStrengthRank = {
 };
 
 function evaluateComboStrategies(symbol, tf, context) {
-  const { conditions, price } = context;
+  let { conditions, price } = context;
+
+  // Если conditions не заданы — собираем по данным из хранилища
+  if (!conditions || !Array.isArray(conditions) || conditions.length === 0) {
+    const ind = getIndicators(symbol, tf);
+    conditions = [];
+
+    if (ind?.rsi !== undefined) {
+      if (ind.rsi < config.RSI_LOW) conditions.push('RSI_LOW');
+      if (ind.rsi > config.RSI_HIGH) conditions.push('RSI_HIGH');
+    }
+
+    if (ind?.emaFast !== undefined && ind?.emaSlow !== undefined) {
+      if (ind.emaFast > ind.emaSlow) conditions.push('EMA_CROSS_UP');
+      if (ind.emaFast < ind.emaSlow) conditions.push('EMA_CROSS_DOWN');
+    }
+
+    if (ind?.macd?.histogram > 0) conditions.push('MACD_HIST_POSITIVE');
+    if (ind?.macd?.histogram < 0) conditions.push('MACD_HIST_NEGATIVE');
+  }
 
   comboStrategies.forEach(strategy => {
     const matched = strategy.conditions.filter(c => conditions.includes(c));
@@ -23,7 +43,6 @@ function evaluateComboStrategies(symbol, tf, context) {
     if (matchRatio >= 0.9) {
       const strength = scoring.getSignalStrength(matchRatio);
 
-      // 🔎 Фильтрация по config.MIN_SIGNAL_STRENGTH
       const minStrength = config.MIN_SIGNAL_STRENGTH || 'weak';
       if (signalStrengthRank[strength] < signalStrengthRank[minStrength]) {
         logger.verbose(`[${symbol} | ${tf}] Сигнал '${strategy.name}' отфильтрован (сила: ${strength} < ${minStrength})`);
@@ -38,7 +57,6 @@ function evaluateComboStrategies(symbol, tf, context) {
 
       logger.basic(logMsg);
 
-      // 💡 AI рекомендация
       recommender.suggestCrossStrategy({
         name: strategy.name,
         symbol,
@@ -47,7 +65,6 @@ function evaluateComboStrategies(symbol, tf, context) {
         price
       });
 
-      // 📤 Отправка в лог + webhook
       recorder.recordSignal({
         name: strategy.name,
         message: strategy.message,
