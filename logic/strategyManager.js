@@ -7,6 +7,7 @@ const fibonacci = require('../core/fibonacci');
 const breakoutDetector = require('../core/breakoutDetector');
 const yearHighLow = require('../data/yearHighLow.json');
 const manualLevels = require('../data/manualLevels.json');
+const { saveIndicators } = require('../core/indicatorStore');
 
 function calculateIndicators(candles, symbol, tf) {
   const closes = candles.map(c => parseFloat(c.close));
@@ -21,7 +22,7 @@ function calculateIndicators(candles, symbol, tf) {
   const nowUTC = new Date().toISOString().slice(11, 16);
   const { start, end } = config.SIGNAL_TIME_WINDOW_UTC;
   if (nowUTC < start || nowUTC > end) {
-    logger.basic(`[${symbol} | ${tf}] Вне временного окна сигналов (${start}-${end})`); // fixed
+    logger.basic(`[${symbol} | ${tf}] Вне временного окна сигналов (${start}-${end})`);
     return result;
   }
 
@@ -105,7 +106,14 @@ function calculateIndicators(candles, symbol, tf) {
     breakdowns.forEach(b => result.conditions.push(b.type));
   }
 
-  // 🧾 Лог
+  // 💾 Сохраняем индикаторы
+  saveIndicators(symbol, tf, {
+    rsi: lastRSI,
+    emaFast: f1,
+    emaSlow: s1,
+    macd: lastMACD
+  });
+
   logger.verbose(`[${symbol} | ${tf}] Условия: ${result.conditions.join(', ') || 'нет'} | Цена: ${result.price}`);
 
   return result;
