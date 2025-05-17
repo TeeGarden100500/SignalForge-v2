@@ -7,10 +7,7 @@ const logger = require('./utils/logger');
 function startBot() {
   logger.basic('🚀 Запуск SignalForge v2...');
 
-  // запускаем сбор волатильности
-  startVolatilityLoop();
-
-  onReady((topSymbols) => {
+  startVolatilityLoop((topSymbols) => {
   logger.basic(`[index] 🔁 onReady сработал. Символы из волатильности: ${topSymbols?.join(', ')}`);
   
   const debugList = ['BTCUSDT'];
