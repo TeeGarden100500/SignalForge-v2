@@ -1,4 +1,4 @@
-// ws/volatilitySelector.js — отбор топ-волатильных монет по локальному кэшу (с флагом ready)
+// ws/volatilitySelector.js — отбор топ-волатильных монет по локальному кэшу (debug-версия)
 
 const config = require('../config/config');
 const { cache } = require('../logic/multiCandleCache');
@@ -21,8 +21,12 @@ function updateVolatilityRanking() {
   const requiredCandles = config.VOLATILITY_LOOKBACK / 5;
   const results = [];
 
+  logger.basic('[volatility] 🔍 Проверка кэша по символам...');
   for (const symbol in cache) {
     const candles = cache[symbol]?.[tf];
+    const count = candles?.length || 0;
+    logger.verbose(`[volatility] ${symbol} [${tf}] — свечей: ${count}`);
+
     if (!candles || candles.length < requiredCandles) continue;
 
     const recentCandles = candles.slice(-requiredCandles);
@@ -31,7 +35,7 @@ function updateVolatilityRanking() {
   }
 
   if (results.length === 0) {
-    logger.error('[volatility] Ошибка при получении волатильных монет: недостаточно данных');
+    logger.warn('[volatility] ❌ Недостаточно данных. Перезапуск в следующем цикле...');
     return;
   }
 
@@ -39,9 +43,8 @@ function updateVolatilityRanking() {
   topVolatileSymbols = results.slice(0, config.VOLATILITY_TOP_N).map(r => r.symbol);
   ready = true;
 
-  logger.info(`[volatility] Топ-${config.VOLATILITY_TOP_N} монет: ${topVolatileSymbols.join(', ')}`);
+  logger.basic(`[volatility] ✅ Топ-${config.VOLATILITY_TOP_N} монет: ${topVolatileSymbols.join(', ')}`);
 
-  // Вызов отложенных подписок
   onReadyCallbacks.forEach(fn => {
     try {
       fn(topVolatileSymbols);
