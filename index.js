@@ -21,3 +21,4 @@ function startBot() {
 }
 
 startBot();
+startVolatilityLoop();
