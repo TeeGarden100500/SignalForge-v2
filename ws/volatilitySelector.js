@@ -1,4 +1,4 @@
-const config = require('../config');
+const config = require('..config/config.js');
 const logger = require('../core/logger');
 const cache = require('../logic/multiCandleCache');
 
