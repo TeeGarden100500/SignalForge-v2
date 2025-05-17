@@ -1,4 +1,4 @@
-// 🌐 smartWSManager.js — подписка на потоки с лимитом и защитой
+// 🌐 smartWSManager.js — подписка на потоки с лимитом и защитой + лог содержимого при ошибке
 
 const WebSocket = require('ws');
 const config = require('../config/config');
@@ -42,7 +42,6 @@ function connectToStreams(symbols) {
           try {
             const json = JSON.parse(msg);
 
-            // ✅ добавлена безопасная проверка
             if (!json || json.e !== 'kline' || !json.k || !json.k.x) return;
 
             const kline = json.k;
@@ -60,6 +59,7 @@ function connectToStreams(symbols) {
 
           } catch (e) {
             logger.error(`[ws] Ошибка парсинга сообщения от ${symbol} (${tf}):`, e.message);
+            logger.verbose(`[ws] Содержание сообщения от ${symbol} (${tf}): ${msg}`);
           }
         });
 
