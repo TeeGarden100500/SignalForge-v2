@@ -10,6 +10,11 @@ function handleIncomingCandle(candle) {
   try {
     const { symbol, interval, time, open, high, low, close, volume } = candle;
 
+    if (!symbol || !interval) {
+      console.warn(`[cache] Пропущена свеча: отсутствует symbol или interval`);
+      return;
+    }
+
     if (!cache[symbol]) cache[symbol] = {};
     if (!cache[symbol][interval]) cache[symbol][interval] = [];
 
@@ -43,7 +48,7 @@ function handleIncomingCandle(candle) {
     }
 
   } catch (err) {
-    console.error(`[cache] Ошибка обработки свечи для ${candle?.symbol || '??'} (${candle?.tf || '??'}):`, err.message);
+    console.error(`[cache] Ошибка обработки свечи для ${candle?.symbol || '??'} (${candle?.interval || '??'}):`, err.message);
     console.debug(`[cache] Содержание свечи: ${JSON.stringify(candle)}`);
   }
 }
