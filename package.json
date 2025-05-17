@@ -1,4 +1,4 @@
-{
+  {
   "name": "signalforge-v2",
   "version": "1.0.0",
   "description": "Отбор ТОП-50 волатильных пар по 24h свечам",
@@ -7,7 +7,7 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "axios": "^1.6.8",
-     "ws": "^8.15.1",
+  "axios": "^1.6.8",
+  "ws": "^8.15.1"
   }
-}
+  }
