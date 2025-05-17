@@ -2,6 +2,7 @@
 
 const config = require('./config/config');
 const { selectTopVolatileSymbols } = require('./ws/volatilitySelector');
+const { startVolatilityLoop } = require('./ws/volatilitySelector');
 const { connectToStreams } = require('./ws/smartWSManager');
 const logger = require('./utils/logger');
 
@@ -40,3 +41,4 @@ async function startBot() {
 }
 
 startBot();
+startVolatilityLoop();
