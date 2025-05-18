@@ -1,6 +1,7 @@
 const mockData = require('./testData/mock_candles_converted.json');
 const { checkRSIStrategy } = require('../core/strategyRSI');
 const { checkMACDStrategy } = require('../core/strategyMACD');
+const { checkVolumeSpikeStrategy } = require('../core/strategyVolumeSpike');
 
 console.log(`📥 Запуск мок-тестов по всем доступным парам...\n`);
 
@@ -26,5 +27,12 @@ Object.entries(mockData).forEach(([key, candles]) => {
     console.log(`📢 MACD Сигнал: ${macdResult.message}`);
   } else {
     console.log(`ℹ️ MACD: нет сигнала`);
+  }
+
+  const volumeResult = checkVolumeSpikeStrategy(symbol, candles, interval);
+  if (volumeResult) {
+    console.log(`📢 VOLUME SPIKE: ${volumeResult.message}`);
+  } else {
+    console.log(`ℹ️ Volume Spike: нет сигнала`);
   }
 });
