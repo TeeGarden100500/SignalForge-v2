@@ -63,6 +63,29 @@ function calculateMACD(candles, fastPeriod = 12, slowPeriod = 26, signalPeriod =
   };
 }
 
+function calculateAverageVolume(candles, period = 20) {
+  if (candles.length < period + 1) return null;
+  const recent = candles.slice(-1 - period, -1);
+  const avg = recent.reduce((sum, c) => sum + c.volume, 0) / period;
+  return +avg.toFixed(2);
+}
+
+function detectVolumeSpike(candles, factor = 2.0) {
+  const avgVolume = calculateAverageVolume(candles);
+  const lastVolume = candles.at(-1)?.volume;
+
+  if (!avgVolume || !lastVolume) return null;
+  const spike = lastVolume > avgVolume * factor;
+
+  return {
+    spike,
+    ratio: +(lastVolume / avgVolume).toFixed(2),
+    volume: lastVolume,
+    avgVolume
+  };
+}
+
+
 module.exports = {
   calculateRSI,
   calculateEMA,
