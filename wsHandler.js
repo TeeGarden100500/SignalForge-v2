@@ -127,12 +127,13 @@ setInterval(() => {
   Object.entries(candleCache).forEach(([symbol, timeframes]) => {
     Object.entries(timeframes).forEach(([interval, candles]) => {
       const limit = CACHE_LIMITS[interval] || 100;
-const remaining = Math.max(0, limit - candles.length);
+      const remaining = Math.max(0, limit - candles.length);
 
-log(`🕯️ [${symbol}][${interval}] Кэш: ${candles.length}/${limit} свечей (${remaining} до полной загрузки)`);
+      log(`🕯️ [${symbol}][${interval}] Кэш: ${candles.length}/${limit} свечей (${remaining} до полной загрузки)`);
 
-if (candles.length === limit) {
-  console.log(`✅ [${symbol}][${interval}] Кэш полностью загружен (${limit})`);
-}
-
+      if (candles.length === limit) {
+        console.log(`✅ [${symbol}][${interval}] Кэш полностью загружен (${limit})`);
+      }
+    });
+  });
 }, LOG_CACHE_INTERVAL_MS);
