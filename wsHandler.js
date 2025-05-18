@@ -1,9 +1,9 @@
 const WebSocket = require('ws');
 const { DEBUG_LOG_LEVEL } = require('./config');
 const { TOP_N_PAIRS } = require('./config');
+const { CACHE_LIMITS } = require('./config');
 
 const TIMEFRAMES = ['5m', '15m', '1h'];
-const CACHE_LIMIT = 10;
 
 const candleCache = {}; // { BTCUSDT: { '5m': [], '15m': [], '1h': [] } }
 const sockets = {};     // { BTCUSDT_5m: WebSocket }
@@ -55,7 +55,14 @@ function subscribeToKlines(symbol) {
 
         if (cache.length > CACHE_LIMIT) cache.shift();
 
-        log(`🕯️ [${symbol}][${interval}] Кэш: ${cache.length} свечей`);
+        const limit = CACHE_LIMITS[interval] || 100;
+        const remaining = Math.max(0, limit - cache.length);
+
+        log(`🕯️ [${symbol}][${interval}] Кэш: ${cache.length}/${limit} свечей (${remaining} до полной загрузки)`);
+        if (cache.length === limit) {
+          console.log(`✅ [${symbol}][${interval}] Кэш полностью загружен (${limit})`);
+        }
+        
       } catch (err) {
         console.error(`❌ Ошибка WS ${symbol} ${interval}:`, err.message);
       }
