@@ -70,7 +70,7 @@ function calculateAverageVolume(candles, period = 20) {
   return +avg.toFixed(2);
 }
 
-function detectVolumeSpike(candles, factor = 2.0) {
+function detectVolumeSpike(candles, factor = 1.5) {
   const avgVolume = calculateAverageVolume(candles);
   const lastVolume = candles.at(-1)?.volume;
 
