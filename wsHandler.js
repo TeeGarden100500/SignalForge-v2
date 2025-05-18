@@ -58,8 +58,6 @@ function subscribeToKlines(symbol) {
         const limit = CACHE_LIMITS[interval] || 100;
         const remaining = Math.max(0, limit - cache.length);
         
-        }
-        
       } catch (err) {
         console.error(`❌ Ошибка WS ${symbol} ${interval}:`, err.message);
       }
