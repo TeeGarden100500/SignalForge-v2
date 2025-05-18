@@ -2,6 +2,7 @@ const mockData = require('./testData/mock_candles_converted.json');
 const { checkRSIStrategy } = require('../core/strategyRSI');
 const { checkMACDStrategy } = require('../core/strategyMACD');
 const { checkVolumeSpikeStrategy } = require('../core/strategyVolumeSpike');
+const { checkEMACrossoverStrategy } = require('../core/strategyEMA');
 
 console.log(`📥 Запуск мок-тестов по всем доступным парам...\n`);
 
@@ -36,7 +37,6 @@ const volumeResult = checkVolumeSpikeStrategy(symbol, candles, interval);
     console.log(`ℹ️ Volume Spike: нет сигнала`);
   }
 
-const { checkEMACrossoverStrategy } = require('../core/strategyEMA');
 const emaResult = checkEMACrossoverStrategy(symbol, candles, interval);
 if (emaResult) {
   console.log(`📢 EMA CROSSOVER: ${emaResult.message}`);
