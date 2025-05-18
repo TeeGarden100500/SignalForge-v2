@@ -72,6 +72,14 @@ function subscribeToKlines(symbol) {
         if (macdSignal) {
           console.log(`📢 Сигнал по стратегии ${macdSignal.strategy}:`, macdSignal.message);
       }
+
+      const { checkVolumeSpikeStrategy } = require('./core/strategyVolumeSpike');
+
+      // ...
+      const volSpike = checkVolumeSpikeStrategy(symbol, candles, interval);
+      if (volSpike) {
+      console.log(`📢 VOLUME SPIKE:`, volSpike.message);
+      }
       });
 
     ws.on('error', err => {
