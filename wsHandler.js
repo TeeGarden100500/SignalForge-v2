@@ -8,6 +8,7 @@ const CACHE_LIMIT = 10;
 const candleCache = {}; // { BTCUSDT: { '5m': [], '15m': [], '1h': [] } }
 const sockets = {};     // { BTCUSDT_5m: WebSocket }
 const LAST_UPDATE_TIMEOUT_MS = 1000 * 60 * 60 * 6; // 6 часов без свечей = удалить
+const LOG_CACHE_INTERVAL_MS = 5 * 60 * 1000; // каждые 5 минут
 const lastUpdatedAt = {}; // { BTCUSDT_5m: timestamp }
 
 function log(...args) {
@@ -115,9 +116,18 @@ setInterval(() => {
   });
 }, 5 * 60 * 1000); // каждые 30 минут проверка на не активные свечи
 
-
-
 module.exports = {
   startCandleCollector,
   getCandleCache
 };
+
+setInterval(() => {
+  if (DEBUG_LOG_LEVEL !== 'verbose') return;
+
+  console.log(`\n🕒 Обзор кэша (каждые 5 минут):`);
+  Object.entries(candleCache).forEach(([symbol, timeframes]) => {
+    Object.entries(timeframes).forEach(([interval, candles]) => {
+      console.log(`🔹 [${symbol}][${interval}] Кэш: ${candles.length} свечей`);
+    });
+  });
+}, LOG_CACHE_INTERVAL_MS);
