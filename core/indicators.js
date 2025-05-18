@@ -107,6 +107,27 @@ function calculateEMAAngle(candles, period = 21, depth = 5) {
   };
 }
 
+function detectBreakout(candles, lookback = 20) {
+  if (candles.length < lookback + 1) return null;
+
+  const recent = candles.slice(-1 - lookback, -1);
+  const last = candles.at(-1);
+
+  const highestHigh = Math.max(...recent.map(c => c.high));
+  const lowestLow = Math.min(...recent.map(c => c.low));
+
+  const breakoutUp = last.close > highestHigh;
+  const breakoutDown = last.close < lowestLow;
+
+  return {
+    breakoutUp,
+    breakoutDown,
+    high: highestHigh,
+    low: lowestLow,
+    close: last.close
+  };
+}
+
 module.exports = {
   calculateRSI,
   calculateEMA,
