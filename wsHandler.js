@@ -57,10 +57,7 @@ function subscribeToKlines(symbol) {
 
         const limit = CACHE_LIMITS[interval] || 100;
         const remaining = Math.max(0, limit - cache.length);
-
-        log(`🕯️ [${symbol}][${interval}] Кэш: ${cache.length}/${limit} свечей (${remaining} до полной загрузки)`);
-        if (cache.length === limit) {
-          console.log(`✅ [${symbol}][${interval}] Кэш полностью загружен (${limit})`);
+        
         }
         
       } catch (err) {
@@ -134,7 +131,9 @@ setInterval(() => {
   console.log(`\n🕒 Обзор кэша (каждые 5 минут):`);
   Object.entries(candleCache).forEach(([symbol, timeframes]) => {
     Object.entries(timeframes).forEach(([interval, candles]) => {
-      console.log(`🔹 [${symbol}][${interval}] Кэш: ${candles.length} свечей`);
+       log(`🕯️ [${symbol}][${interval}] Кэш: ${cache.length}/${limit} свечей (${remaining} до полной загрузки)`);
+        if (cache.length === limit) {
+          console.log(`✅ [${symbol}][${interval}] Кэш полностью загружен (${limit})`);
     });
   });
 }, LOG_CACHE_INTERVAL_MS);
