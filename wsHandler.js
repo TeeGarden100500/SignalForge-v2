@@ -132,6 +132,5 @@ setInterval(() => {
        log(`🕯️ [${symbol}][${interval}] Кэш: ${cache.length}/${limit} свечей (${remaining} до полной загрузки)`);
         if (cache.length === limit) {
           console.log(`✅ [${symbol}][${interval}] Кэш полностью загружен (${limit})`);
-    });
   });
 }, LOG_CACHE_INTERVAL_MS);
