@@ -85,6 +85,27 @@ function detectVolumeSpike(candles, factor = 1.5) {
   };
 }
 
+function calculateEMAAngle(candles, period = 21, depth = 5) {
+  if (candles.length < period + depth) return null;
+
+  const currentCandles = candles.slice(-depth);
+  const firstSlice = candles.slice(-(depth + period), -period);
+  const lastSlice = candles.slice(-period);
+
+  const emaStart = calculateEMA(firstSlice, period);
+  const emaEnd = calculateEMA(lastSlice, period);
+
+  if (!emaStart || !emaEnd) return null;
+
+  const delta = emaEnd - emaStart;
+  const angle = +(delta / depth).toFixed(4); // "наклон за свечу"
+
+  return {
+    emaStart,
+    emaEnd,
+    angle
+  };
+}
 
 module.exports = {
   calculateRSI,
