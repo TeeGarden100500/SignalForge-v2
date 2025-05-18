@@ -53,7 +53,7 @@ function subscribeToKlines(symbol) {
         const cache = candleCache[symbol][interval];
         cache.push(candle);
 
-        if (cache.length > CACHE_LIMIT) cache.shift();
+        if (cache.length > CACHE_LIMITS) cache.shift();
         
       } catch (err) {
         console.error(`❌ Ошибка WS ${symbol} ${interval}:`, err.message);
