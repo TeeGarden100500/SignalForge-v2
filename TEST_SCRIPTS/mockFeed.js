@@ -3,6 +3,7 @@ const { checkRSIStrategy } = require('../core/strategyRSI');
 const { checkMACDStrategy } = require('../core/strategyMACD');
 const { checkVolumeSpikeStrategy } = require('../core/strategyVolumeSpike');
 const { checkEMACrossoverStrategy } = require('../core/strategyEMA');
+const { checkEMAAngleStrategy } = require('../core/strategyEMA');
 
 console.log(`📥 Запуск мок-тестов по всем доступным парам...\n`);
 
@@ -44,5 +45,11 @@ if (emaResult) {
   console.log(`ℹ️ EMA: нет сигнала`);
 }
 
+const emaAngle = checkEMAAngleStrategy(symbol, candles, interval);
+if (emaAngle) {
+  console.log(`📢 EMA ANGLE: ${emaAngle.message}`);
+} else {
+  console.log(`ℹ️ EMA угол: нет сигнала`);
+}
   
 });
