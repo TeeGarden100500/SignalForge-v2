@@ -112,4 +112,5 @@ module.exports = {
   calculateEMA,
   calculateMACD,
   detectVolumeSpike,
+  calculateEMAAngle
 };
