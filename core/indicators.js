@@ -89,5 +89,6 @@ function detectVolumeSpike(candles, factor = 1.5) {
 module.exports = {
   calculateRSI,
   calculateEMA,
-  calculateMACD
+  calculateMACD,
+  detectVolumeSpike,
 };
