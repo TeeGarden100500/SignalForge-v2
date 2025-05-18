@@ -24,6 +24,47 @@ function calculateRSI(candles, period = 14) {
   return +rsi.toFixed(2);
 }
 
+function calculateEMA(candles, period) {
+  if (candles.length < period) return null;
+
+  const k = 2 / (period + 1);
+  let ema = candles.slice(0, period).reduce((sum, c) => sum + c.close, 0) / period;
+
+  for (let i = period; i < candles.length; i++) {
+    ema = candles[i].close * k + ema * (1 - k);
+  }
+
+  return +ema.toFixed(4);
+}
+
+function calculateMACD(candles, fastPeriod = 12, slowPeriod = 26, signalPeriod = 9) {
+  if (candles.length < slowPeriod + signalPeriod) return null;
+
+  const macdLineArr = [];
+  for (let i = 0; i < candles.length; i++) {
+    const slice = candles.slice(0, i + 1);
+    const fastEMA = calculateEMA(slice, fastPeriod);
+    const slowEMA = calculateEMA(slice, slowPeriod);
+    if (fastEMA !== null && slowEMA !== null) {
+      macdLineArr.push(fastEMA - slowEMA);
+    }
+  }
+
+  if (macdLineArr.length < signalPeriod) return null;
+
+    const recentMACD = macdLineArr[macdLineArr.length - 1];
+    const signal = calculateEMA(macdLineArr.map(v => ({ close: v })), signalPeriod);
+    const histogram = recentMACD - signal;
+
+  return {
+    macd: +recentMACD.toFixed(4),
+    signal: +signal.toFixed(4),
+    histogram: +histogram.toFixed(4)
+  };
+}
+
 module.exports = {
-  calculateRSI
+  calculateRSI,
+  calculateEMA,
+  calculateMACD
 };
