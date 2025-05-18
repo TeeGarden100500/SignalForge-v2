@@ -2,6 +2,7 @@ const WebSocket = require('ws');
 const { DEBUG_LOG_LEVEL } = require('./config');
 const { TOP_N_PAIRS } = require('./config');
 const { CACHE_LIMITS } = require('./config');
+const { checkMACDStrategy } = require('./core/strategyMACD');
 
 const TIMEFRAMES = ['5m', '15m', '1h'];
 
@@ -59,12 +60,18 @@ function subscribeToKlines(symbol) {
         console.error(`❌ Ошибка WS ${symbol} ${interval}:`, err.message);
       }
         const { checkRSIStrategy } = require('./core/strategyRSI');
-
+        // ...
         const result = checkRSIStrategy(symbol, candleCache[symbol][interval]);
         if (result) {
         console.log(`📢 Сигнал по стратегии ${result.strategy}:`, result.message);
       }
-
+      
+        const { checkMACDStrategy } = require('./core/strategyMACD');
+        // ...
+        const macdSignal = checkMACDStrategy(symbol, candleCache[symbol][interval], interval);
+        if (macdSignal) {
+          console.log(`📢 Сигнал по стратегии ${macdSignal.strategy}:`, macdSignal.message);
+      }
       });
 
     ws.on('error', err => {
