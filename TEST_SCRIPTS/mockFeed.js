@@ -1,6 +1,6 @@
 const mockData = require('./testData/mock_candles_converted.json');
-const { checkRSIStrategy } = require('./core/strategyRSI');
-const { checkMACDStrategy } = require('./core/strategyMACD');
+const { checkRSIStrategy } = require('../core/strategyRSI');
+const { checkMACDStrategy } = require('../core/strategyMACD');
 
 console.log(`📥 Запуск мок-тестов по всем доступным парам...\n`);
 
