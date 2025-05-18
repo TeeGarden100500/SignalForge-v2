@@ -15,24 +15,34 @@ Object.entries(mockData).forEach(([key, candles]) => {
 
   console.log(`\n🧪 Проверка: ${symbol} [${interval}] (свечей: ${candles.length})`);
 
-  const rsiResult = checkRSIStrategy(symbol, candles);
+const rsiResult = checkRSIStrategy(symbol, candles);
   if (rsiResult) {
     console.log(`📢 RSI Сигнал: ${rsiResult.message}`);
   } else {
     console.log(`ℹ️ RSI: нет сигнала`);
   }
 
-  const macdResult = checkMACDStrategy(symbol, candles, interval);
+const macdResult = checkMACDStrategy(symbol, candles, interval);
   if (macdResult) {
     console.log(`📢 MACD Сигнал: ${macdResult.message}`);
   } else {
     console.log(`ℹ️ MACD: нет сигнала`);
   }
 
-  const volumeResult = checkVolumeSpikeStrategy(symbol, candles, interval);
+const volumeResult = checkVolumeSpikeStrategy(symbol, candles, interval);
   if (volumeResult) {
     console.log(`📢 VOLUME SPIKE: ${volumeResult.message}`);
   } else {
     console.log(`ℹ️ Volume Spike: нет сигнала`);
   }
+
+const { checkEMACrossoverStrategy } = require('../core/strategyEMA');
+const emaResult = checkEMACrossoverStrategy(symbol, candles, interval);
+if (emaResult) {
+  console.log(`📢 EMA CROSSOVER: ${emaResult.message}`);
+} else {
+  console.log(`ℹ️ EMA: нет сигнала`);
+}
+
+  
 });
