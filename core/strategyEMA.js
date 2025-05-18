@@ -1,4 +1,5 @@
 const { calculateEMA } = require('./indicators');
+const { calculateEMAAngle } = require('./indicators');
 
 let lastDirection = {}; // для хранения предыдущего пересечения
 
@@ -27,7 +28,25 @@ function checkEMACrossoverStrategy(symbol, candles, interval) {
     message: `${emoji} [${symbol}] EMA(9) ${direction === 'LONG' ? 'пересёк вверх' : 'пересёк вниз'} EMA(21)`
   };
 }
+function checkEMAAngleStrategy(symbol, candles, interval) {
+  const result = calculateEMAAngle(candles, 21, 5);
+  if (!result) return null;
+
+  const threshold = 0.01; // чувствительность (0.01 ≈ уверенный наклон)
+  const { angle } = result;
+
+  if (Math.abs(angle) < threshold) return null;
+
+  const trend = angle > 0 ? 'вверх ⬆️' : 'вниз ⬇️';
+  return {
+    symbol,
+    strategy: 'EMA_ANGLE',
+    message: `📈 [${symbol}] EMA(21) уверенно наклонён ${trend} (угол: ${angle})`
+  };
+}
+
 
 module.exports = {
-  checkEMACrossoverStrategy
+  checkEMACrossoverStrategy,
+  checkEMAAngleStrategy,
 };
