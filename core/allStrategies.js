@@ -1,0 +1,14 @@
+module.exports = {
+  checkRSIStrategy: require('./strategyRSI').checkRSIStrategy,
+  checkMACDStrategy: require('./strategyMACD').checkMACDStrategy,
+  checkVolumeSpikeStrategy: require('./strategyVolumeSpike').checkVolumeSpikeStrategy,
+  checkEMACrossoverStrategy: require('./strategyEMA').checkEMACrossoverStrategy,
+  checkEMAAngleStrategy: require('./strategyEMA').checkEMAAngleStrategy,
+  checkBreakoutStrategy: require('./strategyBreakout').checkBreakoutStrategy,
+  checkHighLowProximity: require('./strategyHighLow').checkHighLowProximity,
+  checkMeanReversionStrategy: require('./strategyMeanReversion').checkMeanReversionStrategy,
+  checkATRSpikeStrategy: require('./strategyATR').checkATRSpikeStrategy,
+  checkADXStrengthStrategy: require('./strategyADX').checkADXStrengthStrategy,
+  checkFiboProximityStrategy: require('./strategyFibo').checkFiboProximityStrategy,
+  checkDojiPattern: require('./strategyDoji')?.checkDojiPattern || (() => null) // опционально
+};
