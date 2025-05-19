@@ -10,7 +10,9 @@ const {
   checkATRSpikeStrategy,
   checkADXStrengthStrategy,
   checkFiboProximityStrategy,
-  checkDojiPattern // если появится
+  checkDojiPattern,
+  checkRSIHiddenBull,
+  checkMACDDivergence,
 } = require('./allStrategies'); // можно объединить импорты
 
 function applyStrategies(symbol, candles, interval) {
@@ -40,6 +42,9 @@ function applyStrategies(symbol, candles, interval) {
   add(checkATRSpikeStrategy(symbol, candles, interval), 'ATR_SPIKE');
   add(checkADXStrengthStrategy(symbol, candles, interval), 'ADX_TREND');
   add(checkFiboProximityStrategy(symbol, candles, interval), 'FIBO_TOUCH');
+  add(checkRSIHiddenBull(symbol, candles), 'RSI_HIDDEN_BULL');
+  add(checkMACDDivergence(symbol, candles), 'MACD_DIVERGENCE');
+
   // add(checkDojiPattern(candles), 'DOJI');
 
   return { signalTags, messages, results };
