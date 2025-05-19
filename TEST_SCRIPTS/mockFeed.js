@@ -126,7 +126,7 @@ if (atrSpike) {
 const adxSignal = checkADXStrengthStrategy(symbol, candles, interval);
 if (adxSignal) {
   console.log(`📢 ADX: ${adxSignal.message}`);
-  signalTags.push(adxResult.tag); //***********************************************
+  signalTags.push(adxSignal.tag); //***********************************************
 } else {
   console.log(`ℹ️ ADX: нет сигнала`);
 }
