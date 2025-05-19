@@ -1,0 +1,132 @@
+{
+  "MOCK_ATR_SPIKE_5m": [
+    {
+      "time": 1000000000,
+      "open": 100,
+      "high": 102,
+      "low": 97,
+      "close": 100,
+      "volume": 1000
+    },
+    {
+      "time": 1000300000,
+      "open": 100,
+      "high": 102,
+      "low": 97,
+      "close": 100,
+      "volume": 1000
+    },
+    {
+      "time": 1000600000,
+      "open": 100,
+      "high": 102,
+      "low": 97,
+      "close": 100,
+      "volume": 1000
+    },
+    {
+      "time": 1000900000,
+      "open": 100,
+      "high": 102,
+      "low": 97,
+      "close": 100,
+      "volume": 1000
+    },
+    {
+      "time": 1001200000,
+      "open": 100,
+      "high": 102,
+      "low": 97,
+      "close": 100,
+      "volume": 1000
+    },
+    {
+      "time": 1001500000,
+      "open": 100,
+      "high": 102,
+      "low": 97,
+      "close": 100,
+      "volume": 1000
+    },
+    {
+      "time": 1001800000,
+      "open": 100,
+      "high": 102,
+      "low": 97,
+      "close": 100,
+      "volume": 1000
+    },
+    {
+      "time": 1002100000,
+      "open": 100,
+      "high": 102,
+      "low": 97,
+      "close": 100,
+      "volume": 1000
+    },
+    {
+      "time": 1002400000,
+      "open": 100,
+      "high": 102,
+      "low": 97,
+      "close": 100,
+      "volume": 1000
+    },
+    {
+      "time": 1002700000,
+      "open": 100,
+      "high": 102,
+      "low": 97,
+      "close": 100,
+      "volume": 1000
+    },
+    {
+      "time": 1003000000,
+      "open": 100,
+      "high": 102,
+      "low": 97,
+      "close": 100,
+      "volume": 1000
+    },
+    {
+      "time": 1003300000,
+      "open": 100,
+      "high": 102,
+      "low": 97,
+      "close": 100,
+      "volume": 1000
+    },
+    {
+      "time": 1003600000,
+      "open": 100,
+      "high": 102,
+      "low": 97,
+      "close": 100,
+      "volume": 1000
+    },
+    {
+      "time": 1003900000,
+      "open": 100,
+      "high": 102,
+      "low": 97,
+      "close": 100,
+      "volume": 1000
+    },
+    {
+      "time": 1004200000,
+      "open": 100,
+      "high": 102,
+      "low": 97,
+      "close": 100,
+      "volume": 1000
+    },
+    {
+      "time": 1004500000,
+      "open": 100,
+      "high": 110,
+      "low": 95,
+      "close": 108,
+      "volume": 2000
+    }
+  ]
+}
