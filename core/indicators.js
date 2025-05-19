@@ -87,7 +87,7 @@ function detectVolumeSpike(candles, factor = 1.5) {
 
 function calculateEMAAngle(candles, period = 21, depth = 5) {
   if (candles.length < period + depth) return null;
-
+console.log("DEBUG: emaStart", emaStart, "emaEnd", emaEnd, "angle", angle); //********************************************
   const currentCandles = candles.slice(-depth);
   const firstSlice = candles.slice(-(depth + period), -period);
   const lastSlice = candles.slice(-period);
