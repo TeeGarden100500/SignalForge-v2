@@ -10,5 +10,5 @@ module.exports = {
   checkATRSpikeStrategy: require('./strategyATR').checkATRSpikeStrategy,
   checkADXStrengthStrategy: require('./strategyADX').checkADXStrengthStrategy,
   checkFiboProximityStrategy: require('./strategyFibo').checkFiboProximityStrategy,
-  checkDojiPattern: require('./strategyDoji')?.checkDojiPattern || (() => null) // опционально
+  checkDojiPattern: require('./strategyDoji')?.checkDojiPattern,
 };
