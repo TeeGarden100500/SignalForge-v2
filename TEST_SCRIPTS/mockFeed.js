@@ -59,11 +59,22 @@ if (breakout) {
 } else {
   console.log(`ℹ️ Breakout: нет сигнала`);
 }
-  const proximity = checkHighLowProximity(symbol, candles, interval);
-if (proximity) {
-  console.log(`📢 High/Low Proximity: ${proximity.message}`);
+  const { checkHighLowProximity } = require('../core/strategyHighLow');
+
+// Строгая чувствительность
+const proximityStrict = checkHighLowProximity(symbol, candles, interval, 'strict');
+if (proximityStrict) {
+  console.log(`📢 High/Low Proximity: ${proximityStrict.message}`);
 } else {
-  console.log(`ℹ️ High/Low: нет сигнала`);
+  console.log(`ℹ️ High/Low: нет сигнала [strict]`);
+}
+
+// Расширенная чувствительность
+const proximityLoose = checkHighLowProximity(symbol, candles, interval, 'loose');
+if (proximityLoose) {
+  console.log(`📢 High/Low Proximity (loose): ${proximityLoose.message}`);
+} else {
+  console.log(`ℹ️ High/Low: нет сигнала [loose]`);
 }
   
 });
