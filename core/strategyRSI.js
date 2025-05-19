@@ -5,7 +5,7 @@ function checkRSIStrategy(symbol, candles) {
 
   if (rsi === null) return null;
 
-  if (rsi < 30) {
+  if (rsi < 40) {
     return {
       symbol,
       strategy: 'RSI_REBOUND',
