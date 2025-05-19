@@ -238,6 +238,31 @@ function calculateADX(candles, period = 14) {
   };
 }
 
+function calculateFiboLevels(candles, depth = 30) {
+  if (candles.length < depth) return null;
+
+  const slice = candles.slice(-depth);
+  const high = Math.max(...slice.map(c => c.high));
+  const low = Math.min(...slice.map(c => c.low));
+
+  const diff = high - low;
+
+  const levels = {
+    "0.236": +(high - diff * 0.236).toFixed(4),
+    "0.382": +(high - diff * 0.382).toFixed(4),
+    "0.5": +(high - diff * 0.5).toFixed(4),
+    "0.618": +(high - diff * 0.618).toFixed(4),
+    "0.786": +(high - diff * 0.786).toFixed(4)
+  };
+
+  return {
+    high,
+    low,
+    levels
+  };
+}
+
+
 
 module.exports = {
   calculateRSI,
@@ -250,4 +275,5 @@ module.exports = {
   calculateMeanReversion,
   calculateATR,
   calculateADX,
+  calculateFiboLevels,
 };
