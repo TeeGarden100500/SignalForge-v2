@@ -1,4 +1,9 @@
 const mockData = require('./testData/mock_candles_converted.json');
+const mockData = require('./testData/mock_atr_spike.json');
+
+
+
+
 const { checkRSIStrategy } = require('../core/strategyRSI');
 const { checkMACDStrategy } = require('../core/strategyMACD');
 const { checkVolumeSpikeStrategy } = require('../core/strategyVolumeSpike');
