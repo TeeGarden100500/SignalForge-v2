@@ -46,7 +46,7 @@ Object.entries(mockData).forEach(([key, candles]) => {
 const rsiResult = checkRSIStrategy(symbol, candles);
   if (rsiResult) {
     console.log(`📢 RSI Сигнал: ${rsiResult.message}`);
-    signalTags.push(rsiResult.tag);  //******************************************
+    signalTags.push(rsiResult.strategy);  //******************************************
   } else {
     console.log(`ℹ️ RSI: нет сигнала`);
   }
