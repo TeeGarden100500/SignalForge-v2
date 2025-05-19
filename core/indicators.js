@@ -86,24 +86,26 @@ function detectVolumeSpike(candles, factor = 1.5) {
 }
 
 function calculateEMAAngle(candles, period = 21, depth = 5) {
-  if (candles.length < period + depth) return null;
-console.log("DEBUG: emaStart", emaStart, "emaEnd", emaEnd, "angle", angle); //********************************************
-  const currentCandles = candles.slice(-depth);
-  const firstSlice = candles.slice(-(depth + period), -period);
-  const lastSlice = candles.slice(-period);
+  const requiredCandles = period + depth;
+  if (candles.length < requiredCandles) return null;
 
-  const emaStart = calculateEMA(firstSlice, period);
-  const emaEnd = calculateEMA(lastSlice, period);
+  // Выделяем отрезки
+  const firstSegment = candles.slice(-requiredCandles, -depth); // первые period свечей
+  const lastSegment = candles.slice(-period);                   // последние period свечей
 
-  if (!emaStart || !emaEnd) return null;
+  // Вычисляем EMA на начальном и конечном отрезке
+  const emaStart = calculateEMA(firstSegment, period);
+  const emaEnd = calculateEMA(lastSegment, period);
+
+  if (emaStart == null || emaEnd == null) return null;
 
   const delta = emaEnd - emaStart;
-  const angle = +(delta / depth).toFixed(4); // "наклон за свечу"
+  const angle = +(delta / depth).toFixed(4); // Наклон EMA между отрезками
 
   return {
     emaStart,
     emaEnd,
-    angle
+    angle,
   };
 }
 
