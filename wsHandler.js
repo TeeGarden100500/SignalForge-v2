@@ -76,9 +76,12 @@ function subscribeToKlines(symbol) {
       const { checkVolumeSpikeStrategy } = require('./core/strategyVolumeSpike');
 
       // ...
+      const candles = candleCache[symbol]?.[interval];
+      if (!candles || candles.length < 10) return;
+
       const volSpike = checkVolumeSpikeStrategy(symbol, candles, interval);
       if (volSpike) {
-      console.log(`📢 VOLUME SPIKE:`, volSpike.message);
+      log(`📢 VolumeSpike [${symbol} ${interval}]: ${volSpike.message}`);
       }
       });
 
