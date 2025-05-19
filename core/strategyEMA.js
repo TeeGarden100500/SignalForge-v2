@@ -37,7 +37,7 @@ function checkEMAAngleStrategy(symbol, candles, interval) {
 
   if (Math.abs(angle) < threshold) return null;
 
-  const trend = angle > 0 ? 'вверх ⬆️' : 'вниз ⬇️';
+  const trend = angle > 0.001 ? 'вверх ⬆️' : 'вниз ⬇️';
   return {
     symbol,
     strategy: 'EMA_ANGLE',
