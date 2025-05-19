@@ -38,6 +38,35 @@ function calculateEMA(candles, period) {
   return +ema.toFixed(4);
 }
 
+function calculateEMAAngle(candles, period = 21, depth = 5) {
+  if (candles.length < period + depth) return null;
+
+  const currentCandles = candles.slice(-depth);
+  const firstSlice = candles.slice(-(depth + period), -period);
+  const lastSlice = candles.slice(-period);
+
+  const emaStart = calculateEMA(firstSlice, period);
+  const emaEnd = calculateEMA(lastSlice, period);
+
+  // 👇 Вставь сюда логирование:
+  console.log(`📊 [DEBUG] total candles: ${candles.length}`);
+  console.log(`📊 [DEBUG] firstSlice:`, firstSlice.map(c => c.close));
+  console.log(`📊 [DEBUG] lastSlice:`, lastSlice.map(c => c.close));
+  console.log(`📊 [DEBUG] emaStart: ${emaStart}, emaEnd: ${emaEnd}`);
+
+  if (!emaStart || !emaEnd) return null;
+
+  const delta = emaEnd - emaStart;
+  const angle = +(delta / depth).toFixed(4); // наклон
+
+  console.log(`📊 [DEBUG] angle: ${angle}`);
+
+  return {
+    emaStart,
+    emaEnd,
+    angle,
+  };
+}
 
 function calculateMACD(candles, fastPeriod = 12, slowPeriod = 26, signalPeriod = 9) {
   if (candles.length < slowPeriod + signalPeriod) return null;
@@ -84,36 +113,6 @@ function detectVolumeSpike(candles, factor = 1.5) {
     ratio: +(lastVolume / avgVolume).toFixed(2),
     volume: lastVolume,
     avgVolume
-  };
-}
-
-function calculateEMAAngle(candles, period = 21, depth = 5) {
-  if (candles.length < period + depth) return null;
-
-  const currentCandles = candles.slice(-depth);
-  const firstSlice = candles.slice(-(depth + period), -period);
-  const lastSlice = candles.slice(-period);
-
-  const emaStart = calculateEMA(firstSlice, period);
-  const emaEnd = calculateEMA(lastSlice, period);
-
-  // 👇 Вставь сюда логирование:
-  console.log(`📊 [DEBUG] total candles: ${candles.length}`);
-  console.log(`📊 [DEBUG] firstSlice:`, firstSlice.map(c => c.close));
-  console.log(`📊 [DEBUG] lastSlice:`, lastSlice.map(c => c.close));
-  console.log(`📊 [DEBUG] emaStart: ${emaStart}, emaEnd: ${emaEnd}`);
-
-  if (!emaStart || !emaEnd) return null;
-
-  const delta = emaEnd - emaStart;
-  const angle = +(delta / depth).toFixed(4); // наклон
-
-  console.log(`📊 [DEBUG] angle: ${angle}`);
-
-  return {
-    emaStart,
-    emaEnd,
-    angle,
   };
 }
 
@@ -277,9 +276,9 @@ function calculateFiboLevels(candles, depth = 30) {
 module.exports = {
   calculateRSI,
   calculateEMA,
+  calculateEMAAngle,
   calculateMACD,
   detectVolumeSpike,
-  calculateEMAAngle,
   detectBreakout,
   detectHighLowProximity,
   calculateMeanReversion,
