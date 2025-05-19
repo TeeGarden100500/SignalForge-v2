@@ -49,6 +49,7 @@ const rsiResult = checkRSIStrategy(symbol, candles);
 const macdResult = checkMACDStrategy(symbol, candles, interval);
   if (macdResult) {
     console.log(`📢 MACD Сигнал: ${macdResult.message}`);
+    signalTags.push(macdResult.tag); //******************************************
   } else {
     console.log(`ℹ️ MACD: нет сигнала`);
   }
@@ -64,6 +65,7 @@ const volumeResult = checkVolumeSpikeStrategy(symbol, candles, interval);
 const emaResult = checkEMACrossoverStrategy(symbol, candles, interval);
 if (emaResult) {
   console.log(`📢 EMA CROSSOVER: ${emaResult.message}`);
+  signalTags.push(emaCross.tag); //****************************************
 } else {
   console.log(`ℹ️ EMA: нет сигнала`);
 }
@@ -78,6 +80,7 @@ if (emaAngle) {
   const breakout = checkBreakoutStrategy(symbol, candles, interval);
 if (breakout) {
   console.log(`📢 BREAKOUT: ${breakout.message}`);
+  signalTags.push("BREAKOUT"); //************************************************
 } else {
   console.log(`ℹ️ Breakout: нет сигнала`);
 }
@@ -87,6 +90,7 @@ if (breakout) {
 const proximityStrict = checkHighLowProximity(symbol, candles, interval, 'strict');
 if (proximityStrict) {
   console.log(`📢 High/Low Proximity: ${proximityStrict.message}`);
+  signalTags.push(hlResult.tag); //********************************************
 } else {
   console.log(`ℹ️ High/Low: нет сигнала [strict]`);
 }
@@ -95,6 +99,7 @@ if (proximityStrict) {
 const proximityLoose = checkHighLowProximity(symbol, candles, interval, 'loose');
 if (proximityLoose) {
   console.log(`📢 High/Low Proximity (loose): ${proximityLoose.message}`);
+  signalTags.push(hlResult.tag); //***********************************************
 } else {
   console.log(`ℹ️ High/Low: нет сигнала [loose]`);
 }
@@ -102,6 +107,7 @@ if (proximityLoose) {
 const meanRev = checkMeanReversionStrategy(symbol, candles, interval);
 if (meanRev) {
   console.log(`📢 Mean Reversion: ${meanRev.message}`);
+  signalTags.push(meanRev.tag); //*************************************************
 } else {
   console.log(`ℹ️ Mean Rev: нет сигнала`);
 }
@@ -109,6 +115,7 @@ if (meanRev) {
 const atrSpike = checkATRSpikeStrategy(symbol, candles, interval);
 if (atrSpike) {
   console.log(`📢 ATR: ${atrSpike.message}`);
+  signalTags.push("ATR_SPIKE"); //*************************************************
 } else {
   console.log(`ℹ️ ATR: нет сигнала`);
 }
@@ -116,6 +123,7 @@ if (atrSpike) {
 const adxSignal = checkADXStrengthStrategy(symbol, candles, interval);
 if (adxSignal) {
   console.log(`📢 ADX: ${adxSignal.message}`);
+  signalTags.push(adxResult.tag); //***********************************************
 } else {
   console.log(`ℹ️ ADX: нет сигнала`);
 }
@@ -123,24 +131,14 @@ if (adxSignal) {
 const fiboSignal = checkFiboProximityStrategy(symbol, candles, interval);
 if (fiboSignal) {
   console.log(`📢 FIBO: ${fiboSignal.message}`);
+  signalTags.push("FIBO_TOUCH"); //***********************************************
 } else {
   console.log(`ℹ️ FIBO: нет сигнала`);
 }
-
-//*******************************************************************************************
-
-// Примеры:
-if (rsiResult) signalTags.push("RSI_LOW");
-if (emaAngle) signalTags.push("EMA_ANGLE_UP");
-if (volSpike) signalTags.push("VOLUME_SPIKE");
-// и т.д.
 
 const combos = checkComboStrategies(symbol, signalTags);
 combos.forEach(c => {
   console.log(`🔗 COMBO: ${c.message}`);
   });
-//*******************************************************************************************
 
-  
-  
 });
