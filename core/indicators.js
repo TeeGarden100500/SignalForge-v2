@@ -157,4 +157,5 @@ module.exports = {
   detectVolumeSpike,
   calculateEMAAngle,
   detectBreakout,
+  detectHighLowProximity
 };
