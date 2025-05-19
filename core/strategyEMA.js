@@ -28,24 +28,27 @@ function checkEMACrossoverStrategy(symbol, candles, interval) {
     message: `${emoji} [${symbol}] EMA(9) ${direction === 'LONG' ? 'пересёк вверх' : 'пересёк вниз'} EMA(21)`
   };
 }
-function checkEMAAngleStrategy(symbol, candles, interval) {
-  const result = calculateEMAAngle(candles, 21, 5);
+function checkEMAAngleStrategy(candles, period = 21, depth = 5) {
+  const requiredCandles = period + depth;
+  if (candles.length < requiredCandles) return null;
 
-  if (!result || !result.angle) {
-    console.log(`[EMA DEBUG] No angle result for ${symbol}`);
-    return null;
-  }
+  // Выделяем отрезки
+  const firstSegment = candles.slice(-requiredCandles, -depth); // первые period свечей
+  const lastSegment = candles.slice(-period);                   // последние period свечей
 
-  const { angle } = result;
-  const threshold = 0.01;
+  // Вычисляем EMA на начальном и конечном отрезке
+  const emaStart = calculateEMA(firstSegment, period);
+  const emaEnd = calculateEMA(lastSegment, period);
 
-  if (Math.abs(angle) < threshold) return null;
+  if (emaStart == null || emaEnd == null) return null;
 
-  const trend = angle > 0 ? 'вверх 📈' : 'вниз 📉';
+  const delta = emaEnd - emaStart;
+  const angle = +(delta / depth).toFixed(4); // Наклон EMA между отрезками
+
   return {
-    symbol,
-    strategy: 'EMA_ANGLE',
-    message: `📈 [${symbol}] EMA(21) уверенно наклонён ${trend} (угол: ${angle})`
+    emaStart,
+    emaEnd,
+    angle,
   };
 }
 
