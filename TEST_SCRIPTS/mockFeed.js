@@ -75,7 +75,7 @@ if (emaResult) {
   console.log(`ℹ️ EMA: нет сигнала`);
 }
 
-const emaAngle = checkEMAAngleStrategy(symbol, candles, interval);
+const emaAngleResult = checkEMAAngleStrategy(symbol, candles, interval);
 if (emaAngleResult) {
   console.log('📐', emaAngleResult.message);
   signalTags.push(emaAngleResult.strategy);
