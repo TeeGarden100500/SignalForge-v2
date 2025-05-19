@@ -1,7 +1,7 @@
 const comboStrategies = [
   {
     name: "Momentum Rebound",
-    conditions: ["RSI_OVERBOUGHT", "EMA_ANGLE_UP", "VOLUME_SPIKE"],
+    conditions: ["RSI_OVERBOUGHT", "EMA_ANGLE", "VOLUME_SPIKE"],
     direction: "long",
     message: "🟢 [Momentum Rebound] Возможен быстрый отскок. Вход по рынку."
   },
