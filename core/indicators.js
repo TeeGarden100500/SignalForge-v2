@@ -150,6 +150,22 @@ function detectHighLowProximity(candles, lookback = 20, threshold = 10) {
   };
 }
 
+function calculateMeanReversion(candles, maPeriod = 20) {
+  if (candles.length < maPeriod + 1) return null;
+
+  const slice = candles.slice(-maPeriod);
+  const close = candles.at(-1).close;
+  const avg = slice.reduce((sum, c) => sum + c.close, 0) / maPeriod;
+
+  const deviation = ((close - avg) / avg) * 100;
+
+  return {
+    deviation: +deviation.toFixed(2),
+    close,
+    ma: +avg.toFixed(2)
+  };
+}
+
 module.exports = {
   calculateRSI,
   calculateEMA,
@@ -158,4 +174,5 @@ module.exports = {
   calculateEMAAngle,
   detectBreakout,
   detectHighLowProximity,
+  calculateMeanReversion,
 };
