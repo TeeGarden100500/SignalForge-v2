@@ -6,7 +6,7 @@ function checkMeanReversionStrategy(symbol, candles, interval) {
 
   const { deviation, close, ma } = result;
 
-  const threshold = 3.0; // % от среднего
+  const threshold = 2.0; // % от среднего
 
   if (deviation >= threshold) {
     return {
