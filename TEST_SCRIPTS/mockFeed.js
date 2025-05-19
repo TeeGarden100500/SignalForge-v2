@@ -3,6 +3,8 @@ const mock2 = require('./testData/mock_atr_spike.json');
 const mock3 = require('./testData/mock_adx_trend_flat.json');
 const mock4 = require('./testData/mock_fibo_touch.json');
 const mock5 = require('./testData/mock_combo_momentum.json');
+const mock6 = require('./testData/mock_ema_debug.json');
+
 
 
 const mockData = {
@@ -11,8 +13,8 @@ const mockData = {
   ...mock3,
   ...mock4,
   ...mock5,
+  ...mock6,  
 };
-
 
 const { checkRSIStrategy } = require('../core/strategyRSI');
 const { checkMACDStrategy } = require('../core/strategyMACD');
