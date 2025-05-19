@@ -93,7 +93,7 @@ if (breakout) {
 const proximityStrict = checkHighLowProximity(symbol, candles, interval, 'strict');
 if (proximityStrict) {
   console.log(`📢 High/Low Proximity: ${proximityStrict.message}`);
-  signalTags.push(hlResult.tag); //********************************************
+  signalTags.push(proximityStrict.tag);  // ********************************************
 } else {
   console.log(`ℹ️ High/Low: нет сигнала [strict]`);
 }
@@ -102,7 +102,7 @@ if (proximityStrict) {
 const proximityLoose = checkHighLowProximity(symbol, candles, interval, 'loose');
 if (proximityLoose) {
   console.log(`📢 High/Low Proximity (loose): ${proximityLoose.message}`);
-  signalTags.push(hlResult.tag); //***********************************************
+  signalTags.push(proximityLoose.tag); //******************************************
 } else {
   console.log(`ℹ️ High/Low: нет сигнала [loose]`);
 }
