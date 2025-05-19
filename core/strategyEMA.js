@@ -28,31 +28,25 @@ function checkEMACrossoverStrategy(symbol, candles, interval) {
     message: `${emoji} [${symbol}] EMA(9) ${direction === 'LONG' ? 'пересёк вверх' : 'пересёк вниз'} EMA(21)`
   };
 }
-function checkEMAAngleStrategy(candles, period = 21, depth = 5) {
-  const requiredCandles = period + depth;
-  if (candles.length < requiredCandles) return null;
-
-  // Выделяем отрезки
-  const firstSegment = candles.slice(-requiredCandles, -depth); // первые period свечей
-  const lastSegment = candles.slice(-period);                   // последние period свечей
-
-  // Вычисляем EMA на начальном и конечном отрезке
-  const emaStart = calculateEMA(firstSegment, period);
-  const emaEnd = calculateEMA(lastSegment, period);
-
-  if (emaStart == null || emaEnd == null) return null;
-
-  const delta = emaEnd - emaStart;
-  const angle = +(delta / depth).toFixed(4); // Наклон EMA между отрезками
-
+function checkEMAAngleStrategy(symbol, candles, interval) {
+  const result = calculateEMAAngle(candles, 21, 5);
+  if (!result) {
+    console.log(`[DEBUG] EMA angle result is NULL for ${symbol}`);
+    // return null;
+  }
+  const { angle } = result;
+  const threshold = 0.01;
+  if (Math.abs(angle) < threshold) {
+    console.log(`[DEBUG] angle too small: ${angle}`);
+    return null;
+  }
+  const trend = angle > 0 ? 'вверх ⏫' : 'вниз ⏬';
   return {
-    emaStart,
-    emaEnd,
-    angle,
+    symbol,
+    strategy: 'EMA_ANGLE',
+    message: `📈 [${symbol}] EMA(21) уверенно наклонён ${trend} (угол: ${angle})`
   };
 }
-
-
 
 module.exports = {
   checkEMACrossoverStrategy,
