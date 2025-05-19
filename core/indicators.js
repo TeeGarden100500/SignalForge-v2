@@ -128,7 +128,7 @@ function detectBreakout(candles, lookback = 20) {
   };
 }
 
-function detectHighLowProximity(candles, lookback = 20, threshold = 1.5) {
+function detectHighLowProximity(candles, lookback = 20, threshold = 10) {
   if (candles.length < lookback + 1) return null;
 
   const recent = candles.slice(-1 - lookback, -1);
