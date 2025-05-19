@@ -13,7 +13,7 @@ const comboStrategies = [
   },
   {
     name: "Exhaustion Top",
-    conditions: ["RSI_HIGH", "VOLUME_SPIKE", "DOJI"],
+    conditions: ["RSI_OVERBOUGHT", "VOLUME_SPIKE", "DOJI"],
     direction: "short",
     message: "🔻 [Exhaustion Top] Перекупленность и выгорание — возможен разворот."
   },
