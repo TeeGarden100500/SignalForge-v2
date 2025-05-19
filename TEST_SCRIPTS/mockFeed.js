@@ -1,6 +1,6 @@
 const mockData = require('./testData/mock_candles_converted.json');
 const mockData = require('./testData/mock_atr_spike.json');
-
+const mockData = require('./testData/mock_adx_trend_flat.json');
 
 
 
