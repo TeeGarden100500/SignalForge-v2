@@ -25,10 +25,11 @@ function calculateRSI(candles, period = 14) {
 }
 
 function calculateEMA(candles, period) {
-  if (candles.length < period) return null;
+  if (!Array.isArray(candles) || candles.length < period) return null;
+
+  let ema = candles.slice(0, period).reduce((sum, o) => sum + o.close, 0) / period;
 
   const k = 2 / (period + 1);
-  let ema = candles.slice(0, period).reduce((sum, c) => sum + c.close, 0) / period;
 
   for (let i = period; i < candles.length; i++) {
     ema = candles[i].close * k + ema * (1 - k);
