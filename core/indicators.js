@@ -166,6 +166,27 @@ function calculateMeanReversion(candles, maPeriod = 20) {
   };
 }
 
+function calculateATR(candles, period = 14) {
+  if (candles.length < period + 1) return null;
+
+  const trValues = [];
+
+  for (let i = 1; i <= period; i++) {
+    const prev = candles[candles.length - i - 1];
+    const curr = candles[candles.length - i];
+
+    const highLow = curr.high - curr.low;
+    const highClose = Math.abs(curr.high - prev.close);
+    const lowClose = Math.abs(curr.low - prev.close);
+
+    const trueRange = Math.max(highLow, highClose, lowClose);
+    trValues.push(trueRange);
+  }
+
+  const atr = trValues.reduce((sum, val) => sum + val, 0) / period;
+  return +atr.toFixed(4);
+}
+
 module.exports = {
   calculateRSI,
   calculateEMA,
@@ -175,4 +196,5 @@ module.exports = {
   detectBreakout,
   detectHighLowProximity,
   calculateMeanReversion,
+  calculateATR,
 };
