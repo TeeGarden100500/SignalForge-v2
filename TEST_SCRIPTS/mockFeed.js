@@ -1,7 +1,15 @@
 const mockData = require('./testData/mock_candles_converted.json');
 const mockData = require('./testData/mock_atr_spike.json');
 const mockData = require('./testData/mock_adx_trend_flat.json');
+const mock1 = require('./testData/mock_candles_converted.json');
+const mock2 = require('./testData/mock_atr_spike.json');
+const mock3 = require('./testData/mock_adx_trend_flat.json');
 
+const mockData = {
+  ...mock1,
+  ...mock2,
+  ...mock3
+};
 
 
 const { checkRSIStrategy } = require('../core/strategyRSI');
