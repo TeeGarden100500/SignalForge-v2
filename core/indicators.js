@@ -38,7 +38,7 @@ function calculateEMA(candles, period) {
   return +ema.toFixed(4);
 }
 
-function calculateEMAAngle(candles, period = 21, depth = 5) {
+function calculateEMAAngle(candles, period = 21, depth = 21) {
   if (candles.length < period + depth) return null;
 
   const currentCandles = candles.slice(-depth);
