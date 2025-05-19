@@ -187,6 +187,58 @@ function calculateATR(candles, period = 14) {
   return +atr.toFixed(4);
 }
 
+function calculateADX(candles, period = 14) {
+  if (candles.length < period + 1) return null;
+
+  let prevHigh = candles[0].high;
+  let prevLow = candles[0].low;
+  let prevClose = candles[0].close;
+
+  const trList = [];
+  const plusDM = [];
+  const minusDM = [];
+
+  for (let i = 1; i <= period; i++) {
+    const curr = candles[i];
+    const high = curr.high;
+    const low = curr.low;
+
+    const upMove = high - prevHigh;
+    const downMove = prevLow - low;
+
+    const tr = Math.max(
+      high - low,
+      Math.abs(high - prevClose),
+      Math.abs(low - prevClose)
+    );
+
+    trList.push(tr);
+    plusDM.push(upMove > downMove && upMove > 0 ? upMove : 0);
+    minusDM.push(downMove > upMove && downMove > 0 ? downMove : 0);
+
+    prevHigh = high;
+    prevLow = low;
+    prevClose = curr.close;
+  }
+
+  const tr14 = trList.reduce((sum, v) => sum + v, 0);
+  const plusDM14 = plusDM.reduce((sum, v) => sum + v, 0);
+  const minusDM14 = minusDM.reduce((sum, v) => sum + v, 0);
+
+  const plusDI = (plusDM14 / tr14) * 100;
+  const minusDI = (minusDM14 / tr14) * 100;
+
+  const dx = Math.abs(plusDI - minusDI) / (plusDI + minusDI) * 100;
+  const adx = +dx.toFixed(2);
+
+  return {
+    adx,
+    plusDI: +plusDI.toFixed(2),
+    minusDI: +minusDI.toFixed(2)
+  };
+}
+
+
 module.exports = {
   calculateRSI,
   calculateEMA,
@@ -197,4 +249,5 @@ module.exports = {
   detectHighLowProximity,
   calculateMeanReversion,
   calculateATR,
+  calculateADX,
 };
