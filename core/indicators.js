@@ -128,6 +128,28 @@ function detectBreakout(candles, lookback = 20) {
   };
 }
 
+function detectHighLowProximity(candles, lookback = 20, threshold = 1.5) {
+  if (candles.length < lookback + 1) return null;
+
+  const recent = candles.slice(-1 - lookback, -1);
+  const last = candles.at(-1);
+
+  const high = Math.max(...recent.map(c => c.high));
+  const low = Math.min(...recent.map(c => c.low));
+
+  const close = last.close;
+  const nearHigh = ((high - close) / high) * 100 <= threshold;
+  const nearLow = ((close - low) / low) * 100 <= threshold;
+
+  return {
+    nearHigh,
+    nearLow,
+    high,
+    low,
+    close
+  };
+}
+
 module.exports = {
   calculateRSI,
   calculateEMA,
