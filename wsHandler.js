@@ -3,6 +3,7 @@ const { DEBUG_LOG_LEVEL } = require('./config');
 const { TOP_N_PAIRS } = require('./config');
 const { CACHE_LIMITS } = require('./config');
 const { checkMACDStrategy } = require('./core/strategyMACD');
+const { applyStrategies } = require('./core/applyStrategies');
 
 const TIMEFRAMES = ['5m', '15m', '1h'];
 
@@ -59,30 +60,16 @@ function subscribeToKlines(symbol) {
       } catch (err) {
         console.error(`❌ Ошибка WS ${symbol} ${interval}:`, err.message);
       }
-        const { checkRSIStrategy } = require('./core/strategyRSI');
-        // ...
-        const result = checkRSIStrategy(symbol, candleCache[symbol][interval]);
-        if (result) {
-        console.log(`📢 Сигнал по стратегии ${result.strategy}:`, result.message);
-      }
-      
-        const { checkMACDStrategy } = require('./core/strategyMACD');
-        // ...
-        const macdSignal = checkMACDStrategy(symbol, candleCache[symbol][interval], interval);
-        if (macdSignal) {
-          console.log(`📢 Сигнал по стратегии ${macdSignal.strategy}:`, macdSignal.message);
-      }
+const candles = candleCache[symbol]?.[interval];
+  if (!candles || candles.length < 10) return;
 
-      const { checkVolumeSpikeStrategy } = require('./core/strategyVolumeSpike');
+  const { signalTags, messages } = applyStrategies(symbol, candles, interval);
+  messages.forEach(msg => log(`📢 ${msg}`));
 
-      // ...
-      const candles = candleCache[symbol]?.[interval];
-      if (!candles || candles.length < 10) return;
-
-      const volSpike = checkVolumeSpikeStrategy(symbol, candles, interval);
-      if (volSpike) {
-      log(`📢 VolumeSpike [${symbol} ${interval}]: ${volSpike.message}`);
-      }
+  const combos = checkComboStrategies(symbol, signalTags);
+  combos.forEach(combo => {
+    console.log(`🔗 COMBO: ${combo.message}`);
+      });
       });
 
     ws.on('error', err => {
