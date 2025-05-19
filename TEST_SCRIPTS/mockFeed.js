@@ -13,6 +13,7 @@ const { checkBreakoutStrategy } = require('../core/strategyBreakout');
 const { checkHighLowProximity } = require('../core/strategyHighLow');
 const { checkMeanReversionStrategy } = require('../core/strategyMeanReversion');
 const { checkATRSpikeStrategy } = require('../core/strategyATR');
+const { checkADXStrengthStrategy } = require('../core/strategyADX');
 
 console.log(`📥 Запуск мок-тестов по всем доступным парам...\n`);
 
@@ -96,6 +97,13 @@ if (atrSpike) {
   console.log(`📢 ATR: ${atrSpike.message}`);
 } else {
   console.log(`ℹ️ ATR: нет сигнала`);
+}
+
+const adxSignal = checkADXStrengthStrategy(symbol, candles, interval);
+if (adxSignal) {
+  console.log(`📢 ADX: ${adxSignal.message}`);
+} else {
+  console.log(`ℹ️ ADX: нет сигнала`);
 }
   
 });
