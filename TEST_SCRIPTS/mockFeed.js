@@ -76,10 +76,11 @@ if (emaResult) {
 }
 
 const emaAngle = checkEMAAngleStrategy(symbol, candles, interval);
-if (emaAngle) {
-  console.log(`📢 EMA ANGLE: ${emaAngle.message}`);
-  signalTags.push(emaResult.tag); //*****************************************
-} else {
+if (emaAngleResult) {
+  console.log('📐', emaAngleResult.message);
+  signalTags.push(emaAngleResult.strategy);
+} 
+else {
   console.log(`ℹ️ EMA угол: нет сигнала`);
 }
   const breakout = checkBreakoutStrategy(symbol, candles, interval);
