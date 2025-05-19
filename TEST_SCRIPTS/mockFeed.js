@@ -143,6 +143,7 @@ if (fiboSignal) {
 }
 
 const combos = checkComboStrategies(symbol, signalTags);
+console.log('📌 COMBO TAGS:', signalTags);
 combos.forEach(c => {
   console.log(`🔗 COMBO: ${c.message}`);
   });
