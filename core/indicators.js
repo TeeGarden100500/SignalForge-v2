@@ -24,18 +24,34 @@ function calculateRSI(candles, period = 14) {
   return +rsi.toFixed(2);
 }
 
-function calculateEMA(candles, period) {
-  if (!Array.isArray(candles) || candles.length < period) return null;
+function calculateEMAAngle(candles, period = 21, depth = 5) {
+  if (candles.length < period + depth) return null;
 
-  let ema = candles.slice(0, period).reduce((sum, o) => sum + o.close, 0) / period;
+  const currentCandles = candles.slice(-depth);
+  const firstSlice = candles.slice(-(depth + period), -period);
+  const lastSlice = candles.slice(-period);
 
-  const k = 2 / (period + 1);
+  const emaStart = calculateEMA(firstSlice, period);
+  const emaEnd = calculateEMA(lastSlice, period);
 
-  for (let i = period; i < candles.length; i++) {
-    ema = candles[i].close * k + ema * (1 - k);
-  }
+  // 👇 Вставь сюда логирование:
+  console.log(`📊 [DEBUG] total candles: ${candles.length}`);
+  console.log(`📊 [DEBUG] firstSlice:`, firstSlice.map(c => c.close));
+  console.log(`📊 [DEBUG] lastSlice:`, lastSlice.map(c => c.close));
+  console.log(`📊 [DEBUG] emaStart: ${emaStart}, emaEnd: ${emaEnd}`);
 
-  return +ema.toFixed(4);
+  if (!emaStart || !emaEnd) return null;
+
+  const delta = emaEnd - emaStart;
+  const angle = +(delta / depth).toFixed(4); // наклон
+
+  console.log(`📊 [DEBUG] angle: ${angle}`);
+
+  return {
+    emaStart,
+    emaEnd,
+    angle,
+  };
 }
 
 function calculateMACD(candles, fastPeriod = 12, slowPeriod = 26, signalPeriod = 9) {
