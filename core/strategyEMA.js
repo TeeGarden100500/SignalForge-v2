@@ -29,7 +29,7 @@ function checkEMACrossoverStrategy(symbol, candles, interval) {
   };
 }
 function checkEMAAngleStrategy(symbol, candles, interval) {
-  const result = calculateEMAAngle(candles, 21, 21);
+  const result = calculateEMAAngle(candles, 21, 5);
 
   if (!result) {
     console.log(`[DEBUG] EMA angle result is NULL for ${symbol}`);
@@ -37,7 +37,7 @@ function checkEMAAngleStrategy(symbol, candles, interval) {
   }
 
   const { angle, emaStart, emaEnd } = result;
-  const threshold = 0.01;
+  const threshold = 0.001;
 
   console.log(`[DEBUG] EMA для ${symbol} | Start: ${emaStart}, End: ${emaEnd}, Angle: ${angle}`);
 
