@@ -19,6 +19,7 @@ const { checkHighLowProximity } = require('../core/strategyHighLow');
 const { checkMeanReversionStrategy } = require('../core/strategyMeanReversion');
 const { checkATRSpikeStrategy } = require('../core/strategyATR');
 const { checkADXStrengthStrategy } = require('../core/strategyADX');
+const { checkFiboProximityStrategy } = require('../core/strategyFibo');
 
 console.log(`📥 Запуск мок-тестов по всем доступным парам...\n`);
 
@@ -109,6 +110,13 @@ if (adxSignal) {
   console.log(`📢 ADX: ${adxSignal.message}`);
 } else {
   console.log(`ℹ️ ADX: нет сигнала`);
+}
+
+const fiboSignal = checkFiboProximityStrategy(symbol, candles, interval);
+if (fiboSignal) {
+  console.log(`📢 FIBO: ${fiboSignal.message}`);
+} else {
+  console.log(`ℹ️ FIBO: нет сигнала`);
 }
   
 });
