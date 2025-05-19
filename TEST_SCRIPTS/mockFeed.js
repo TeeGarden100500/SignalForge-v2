@@ -6,6 +6,7 @@ const { checkEMACrossoverStrategy } = require('../core/strategyEMA');
 const { checkEMAAngleStrategy } = require('../core/strategyEMA');
 const { checkBreakoutStrategy } = require('../core/strategyBreakout');
 const { checkHighLowProximity } = require('../core/strategyHighLow');
+const { checkMeanReversionStrategy } = require('../core/strategyMeanReversion');
 
 console.log(`📥 Запуск мок-тестов по всем доступным парам...\n`);
 
@@ -75,6 +76,13 @@ if (proximityLoose) {
   console.log(`📢 High/Low Proximity (loose): ${proximityLoose.message}`);
 } else {
   console.log(`ℹ️ High/Low: нет сигнала [loose]`);
+}
+
+const meanRev = checkMeanReversionStrategy(symbol, candles, interval);
+if (meanRev) {
+  console.log(`📢 Mean Reversion: ${meanRev.message}`);
+} else {
+  console.log(`ℹ️ Mean Rev: нет сигнала`);
 }
   
 });
