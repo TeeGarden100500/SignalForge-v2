@@ -1,4 +1,4 @@
-const { comboStrategies } = require('./comboStrategies');
+const { comboStrategies } = require('../comboStrategies');
 
 function checkComboStrategies(symbol, signals) {
   const fired = [];
