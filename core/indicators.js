@@ -87,7 +87,7 @@ function detectVolumeSpike(candles, factor = 1.5) {
   };
 }
 
-function calculateEMA(candles, period = 21, depth = 5) {
+function calculateEMAAngle(candles, period = 21, depth = 5) {
   if (candles.length < period + depth) return null;
 
   const currentCandles = candles.slice(-depth);
