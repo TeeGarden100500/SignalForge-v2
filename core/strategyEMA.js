@@ -30,16 +30,22 @@ function checkEMACrossoverStrategy(symbol, candles, interval) {
 }
 function checkEMAAngleStrategy(symbol, candles, interval) {
   const result = calculateEMAAngle(candles, 21, 5);
+
   if (!result) {
     console.log(`[DEBUG] EMA angle result is NULL for ${symbol}`);
-    // return null;
-  }
-  const { angle } = result;
-  const threshold = 0.01;
-  if (Math.abs(angle) < threshold) {
-    console.log(`[DEBUG] angle too small: ${angle}`);
     return null;
   }
+
+  const { angle, emaStart, emaEnd } = result;
+  const threshold = 0.01;
+
+  console.log(`[DEBUG] EMA для ${symbol} | Start: ${emaStart}, End: ${emaEnd}, Angle: ${angle}`);
+
+  if (Math.abs(angle) < threshold) {
+    console.log(`[DEBUG] Angle слишком мал для ${symbol}: ${angle}`);
+    return null;
+  }
+
   const trend = angle > 0 ? 'вверх ⏫' : 'вниз ⏬';
   return {
     symbol,
