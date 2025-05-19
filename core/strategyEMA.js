@@ -32,12 +32,12 @@ function checkEMAAngleStrategy(symbol, candles, interval) {
   const result = calculateEMAAngle(candles, 21, 5);
   if (!result) return null;
 
-  const threshold = 0.1; // чувствительность (0.01 ≈ уверенный наклон)
+  const threshold = 0.01; // чувствительность (0.01 ≈ уверенный наклон)
   const { angle } = result;
 
   if (Math.abs(angle) < threshold) return null;
 
-  const trend = angle > 0.001 ? 'вверх ⬆️' : 'вниз ⬇️';
+  const trend = angle > 0 ? 'вверх ⬆️' : 'вниз ⬇️';
   return {
     symbol,
     strategy: 'EMA_ANGLE',
