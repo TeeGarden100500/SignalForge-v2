@@ -10,5 +10,8 @@ module.exports = {
   checkATRSpikeStrategy: require('./strategyATR').checkATRSpikeStrategy,
   checkADXStrengthStrategy: require('./strategyADX').checkADXStrengthStrategy,
   checkFiboProximityStrategy: require('./strategyFibo').checkFiboProximityStrategy,
-  checkDojiPattern: require('./strategyDoji')?.checkDojiPattern,
+  checkDojiPattern: require('./strategyDoji').checkDojiPattern,
+  checkRSIHiddenBull: require('./strategyRSIHiddenBull').checkRSIHiddenBull,
+  checkMACDDivergence: require('./strategyMACDDivergence').checkMACDDivergence,
+
 };
