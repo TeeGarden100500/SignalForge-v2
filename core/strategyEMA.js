@@ -30,20 +30,25 @@ function checkEMACrossoverStrategy(symbol, candles, interval) {
 }
 function checkEMAAngleStrategy(symbol, candles, interval) {
   const result = calculateEMAAngle(candles, 21, 5);
-  if (!result) return null;
 
-  const threshold = 0.001; // чувствительность (0.01 ≈ уверенный наклон)
+  if (!result || !result.angle) {
+    console.log(`[EMA DEBUG] No angle result for ${symbol}`);
+    return null;
+  }
+
   const { angle } = result;
+  const threshold = 0.01;
 
   if (Math.abs(angle) < threshold) return null;
 
-  const trend = angle > 0 ? 'вверх ⬆️' : 'вниз ⬇️';
+  const trend = angle > 0 ? 'вверх 📈' : 'вниз 📉';
   return {
     symbol,
     strategy: 'EMA_ANGLE',
     message: `📈 [${symbol}] EMA(21) уверенно наклонён ${trend} (угол: ${angle})`
   };
 }
+
 
 
 module.exports = {
