@@ -6,8 +6,14 @@ function checkMACDDivergence(symbol, candles) {
   const priceNow = candles.at(-1).close;
   const pricePrev = candles.at(-4).close;
 
-  const { macd: macdNow } = calculateMACD(candles.slice(-2));
-  const { macd: macdPrev } = calculateMACD(candles.slice(-5, -3));
+  const macdSeries = calculateMACD(candles);
+if (!Array.isArray(macdSeries) || macdSeries.length < 2) {
+  console.log(`[DEBUG] MACD Divergence: недостаточно данных для ${symbol}`);
+  return null;
+}
+
+const macdPrev = macdSeries.at(-2).macd;
+const macdNow = macdSeries.at(-1).macd;
 
   if (priceNow < pricePrev && macdNow > macdPrev) {
     return {
