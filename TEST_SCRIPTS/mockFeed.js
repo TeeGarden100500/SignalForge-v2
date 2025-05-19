@@ -5,6 +5,7 @@ const { checkVolumeSpikeStrategy } = require('../core/strategyVolumeSpike');
 const { checkEMACrossoverStrategy } = require('../core/strategyEMA');
 const { checkEMAAngleStrategy } = require('../core/strategyEMA');
 const { checkBreakoutStrategy } = require('../core/strategyBreakout');
+const { checkHighLowProximity } = require('../core/strategyHighLow');
 
 console.log(`📥 Запуск мок-тестов по всем доступным парам...\n`);
 
@@ -57,6 +58,12 @@ if (breakout) {
   console.log(`📢 BREAKOUT: ${breakout.message}`);
 } else {
   console.log(`ℹ️ Breakout: нет сигнала`);
+}
+  const proximity = checkHighLowProximity(symbol, candles, interval);
+if (proximity) {
+  console.log(`📢 High/Low Proximity: ${proximity.message}`);
+} else {
+  console.log(`ℹ️ High/Low: нет сигнала`);
 }
   
 });
