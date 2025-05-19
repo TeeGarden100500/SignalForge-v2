@@ -13,7 +13,7 @@ function checkRSIStrategy(symbol, candles) {
     };
   }
 
-  if (rsi > 70) {
+  if (rsi > 60) {
     return {
       symbol,
       strategy: 'RSI_OVERBOUGHT',
