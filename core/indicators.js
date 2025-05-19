@@ -24,35 +24,20 @@ function calculateRSI(candles, period = 14) {
   return +rsi.toFixed(2);
 }
 
-function calculateEMAAngle(candles, period = 21, depth = 5) {
-  if (candles.length < period + depth) return null;
+function calculateEMA(candles, period) {
+  if (!Array.isArray(candles) || candles.length < period) return null;
 
-  const currentCandles = candles.slice(-depth);
-  const firstSlice = candles.slice(-(depth + period), -period);
-  const lastSlice = candles.slice(-period);
+  let ema = candles.slice(0, period).reduce((sum, o) => sum + o.close, 0) / period;
 
-  const emaStart = calculateEMA(firstSlice, period);
-  const emaEnd = calculateEMA(lastSlice, period);
+  const k = 2 / (period + 1);
 
-  // 👇 Вставь сюда логирование:
-  console.log(`📊 [DEBUG] total candles: ${candles.length}`);
-  console.log(`📊 [DEBUG] firstSlice:`, firstSlice.map(c => c.close));
-  console.log(`📊 [DEBUG] lastSlice:`, lastSlice.map(c => c.close));
-  console.log(`📊 [DEBUG] emaStart: ${emaStart}, emaEnd: ${emaEnd}`);
+  for (let i = period; i < candles.length; i++) {
+    ema = candles[i].close * k + ema * (1 - k);
+  }
 
-  if (!emaStart || !emaEnd) return null;
-
-  const delta = emaEnd - emaStart;
-  const angle = +(delta / depth).toFixed(4); // наклон
-
-  console.log(`📊 [DEBUG] angle: ${angle}`);
-
-  return {
-    emaStart,
-    emaEnd,
-    angle,
-  };
+  return +ema.toFixed(4);
 }
+
 
 function calculateMACD(candles, fastPeriod = 12, slowPeriod = 26, signalPeriod = 9) {
   if (candles.length < slowPeriod + signalPeriod) return null;
@@ -102,22 +87,28 @@ function detectVolumeSpike(candles, factor = 1.5) {
   };
 }
 
-function calculateEMAAngle(candles, period = 21, depth = 5) {
-  const requiredCandles = period + depth;
-  if (candles.length < requiredCandles) return null;
+function calculateEMA(candles, period = 21, depth = 5) {
+  if (candles.length < period + depth) return null;
 
-  // Выделяем отрезки
-  const firstSegment = candles.slice(-requiredCandles, -depth); // первые period свечей
-  const lastSegment = candles.slice(-period);                   // последние period свечей
+  const currentCandles = candles.slice(-depth);
+  const firstSlice = candles.slice(-(depth + period), -period);
+  const lastSlice = candles.slice(-period);
 
-  // Вычисляем EMA на начальном и конечном отрезке
-  const emaStart = calculateEMA(firstSegment, period);
-  const emaEnd = calculateEMA(lastSegment, period);
+  const emaStart = calculateEMA(firstSlice, period);
+  const emaEnd = calculateEMA(lastSlice, period);
 
-  if (emaStart == null || emaEnd == null) return null;
+  // 👇 Вставь сюда логирование:
+  console.log(`📊 [DEBUG] total candles: ${candles.length}`);
+  console.log(`📊 [DEBUG] firstSlice:`, firstSlice.map(c => c.close));
+  console.log(`📊 [DEBUG] lastSlice:`, lastSlice.map(c => c.close));
+  console.log(`📊 [DEBUG] emaStart: ${emaStart}, emaEnd: ${emaEnd}`);
+
+  if (!emaStart || !emaEnd) return null;
 
   const delta = emaEnd - emaStart;
-  const angle = +(delta / depth).toFixed(4); // Наклон EMA между отрезками
+  const angle = +(delta / depth).toFixed(4); // наклон
+
+  console.log(`📊 [DEBUG] angle: ${angle}`);
 
   return {
     emaStart,
