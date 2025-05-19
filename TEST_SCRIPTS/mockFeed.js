@@ -54,7 +54,7 @@ const rsiResult = checkRSIStrategy(symbol, candles);
 const macdResult = checkMACDStrategy(symbol, candles, interval);
   if (macdResult) {
     console.log(`📢 MACD Сигнал: ${macdResult.message}`);
-    signalTags.push(macdResult.tag); //******************************************
+    signalTags.push(macdResult.strategy); //******************************************
   } else {
     console.log(`ℹ️ MACD: нет сигнала`);
   }
@@ -70,7 +70,7 @@ const volumeResult = checkVolumeSpikeStrategy(symbol, candles, interval);
 const emaResult = checkEMACrossoverStrategy(symbol, candles, interval);
 if (emaResult) {
   console.log(`📢 EMA CROSSOVER: ${emaResult.message}`);
-  signalTags.push(emaCross.tag); //****************************************
+  signalTags.push(emaCross.strategy); //****************************************
 } else {
   console.log(`ℹ️ EMA: нет сигнала`);
 }
@@ -96,7 +96,7 @@ if (breakout) {
 const proximityStrict = checkHighLowProximity(symbol, candles, interval, 'strict');
 if (proximityStrict) {
   console.log(`📢 High/Low Proximity: ${proximityStrict.message}`);
-  signalTags.push(proximityStrict.tag);  // ********************************************
+  signalTags.push(proximityStrict.strategy);  // ********************************************
 } else {
   console.log(`ℹ️ High/Low: нет сигнала [strict]`);
 }
@@ -105,7 +105,7 @@ if (proximityStrict) {
 const proximityLoose = checkHighLowProximity(symbol, candles, interval, 'loose');
 if (proximityLoose) {
   console.log(`📢 High/Low Proximity (loose): ${proximityLoose.message}`);
-  signalTags.push(proximityLoose.tag); //******************************************
+  signalTags.push(proximityLoose.strategy); //******************************************
 } else {
   console.log(`ℹ️ High/Low: нет сигнала [loose]`);
 }
@@ -113,7 +113,7 @@ if (proximityLoose) {
 const meanRev = checkMeanReversionStrategy(symbol, candles, interval);
 if (meanRev) {
   console.log(`📢 Mean Reversion: ${meanRev.message}`);
-  signalTags.push(meanRev.tag); //*************************************************
+  signalTags.push(meanRev.strategy); //*************************************************
 } else {
   console.log(`ℹ️ Mean Rev: нет сигнала`);
 }
@@ -129,7 +129,7 @@ if (atrSpike) {
 const adxSignal = checkADXStrengthStrategy(symbol, candles, interval);
 if (adxSignal) {
   console.log(`📢 ADX: ${adxSignal.message}`);
-  signalTags.push(adxSignal.tag); //***********************************************
+  signalTags.push(adxSignal.strategy); //***********************************************
 } else {
   console.log(`ℹ️ ADX: нет сигнала`);
 }
