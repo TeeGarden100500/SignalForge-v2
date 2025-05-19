@@ -1,11 +1,13 @@
 const mock1 = require('./testData/mock_candles_converted.json');
 const mock2 = require('./testData/mock_atr_spike.json');
 const mock3 = require('./testData/mock_adx_trend_flat.json');
+const mock4 = require('./testData/mock_fibo_touch.json');
 
 const mockData = {
   ...mock1,
   ...mock2,
-  ...mock3
+  ...mock3,
+  ...mock4,
 };
 
 
