@@ -22,8 +22,11 @@ const { checkMeanReversionStrategy } = require('../core/strategyMeanReversion');
 const { checkATRSpikeStrategy } = require('../core/strategyATR');
 const { checkADXStrengthStrategy } = require('../core/strategyADX');
 const { checkFiboProximityStrategy } = require('../core/strategyFibo');
+const { checkComboStrategies } = require('../core/checkCombo');
 
 console.log(`📥 Запуск мок-тестов по всем доступным парам...\n`);
+
+const signalTags = [];
 
 Object.entries(mockData).forEach(([key, candles]) => {
   if (!Array.isArray(candles) || candles.length === 0) {
@@ -38,6 +41,7 @@ Object.entries(mockData).forEach(([key, candles]) => {
 const rsiResult = checkRSIStrategy(symbol, candles);
   if (rsiResult) {
     console.log(`📢 RSI Сигнал: ${rsiResult.message}`);
+    signalTags.push(rsiResult.tag);  //******************************************
   } else {
     console.log(`ℹ️ RSI: нет сигнала`);
   }
@@ -52,6 +56,7 @@ const macdResult = checkMACDStrategy(symbol, candles, interval);
 const volumeResult = checkVolumeSpikeStrategy(symbol, candles, interval);
   if (volumeResult) {
     console.log(`📢 VOLUME SPIKE: ${volumeResult.message}`);
+              signalTags.push("VOLUME_SPIKE"); //************************************
   } else {
     console.log(`ℹ️ Volume Spike: нет сигнала`);
   }
@@ -66,6 +71,7 @@ if (emaResult) {
 const emaAngle = checkEMAAngleStrategy(symbol, candles, interval);
 if (emaAngle) {
   console.log(`📢 EMA ANGLE: ${emaAngle.message}`);
+  signalTags.push(emaResult.tag);*****************************************
 } else {
   console.log(`ℹ️ EMA угол: нет сигнала`);
 }
@@ -120,5 +126,21 @@ if (fiboSignal) {
 } else {
   console.log(`ℹ️ FIBO: нет сигнала`);
 }
+
+//*******************************************************************************************
+
+// Примеры:
+if (rsiResult) signalTags.push("RSI_LOW");
+if (emaAngle) signalTags.push("EMA_ANGLE_UP");
+if (volSpike) signalTags.push("VOLUME_SPIKE");
+// и т.д.
+
+const combos = checkComboStrategies(symbol, signalTags);
+combos.forEach(c => {
+  console.log(`🔗 COMBO: ${c.message}`);
+  });
+//*******************************************************************************************
+
+  
   
 });
