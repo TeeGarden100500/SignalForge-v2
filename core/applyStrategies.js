@@ -3,7 +3,7 @@ const {
   checkRSIHiddenBull,
   checkMACDStrategy,
   checkVolumeSpikeStrategy,
-  checkEMACrossoverStrategy,
+  checkEMACrossStrategy,
   checkEMAAngleStrategy,
   checkBreakoutStrategy,
   checkHighLowProximity,
@@ -54,7 +54,7 @@ function applyStrategies(symbol, candles, interval) {
 
   add(checkFiboProximityStrategy(symbol, candles, interval), 'FIBO_TOUCH');
   
-  add(checkEMACrossoverStrategy(symbol, candles, interval), 'EMA_CROSS');
+  add(checkEMACrossStrategy(symbol, candles, interval), 'EMA_CROSS');
   add(checkEMAAngleStrategy(symbol, candles, interval), 'EMA_ANGLE');
 
   add(checkDojiPattern(candles), 'DOJI');
