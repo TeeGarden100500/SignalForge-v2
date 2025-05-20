@@ -13,6 +13,7 @@ function checkFiboProximityStrategy(symbol, candles, interval) {
       return {
         symbol,
         strategy: 'FIBO_TOUCH',
+        tag: 'FIBO_TOUCH',
         message: `📐 [${symbol}] Цена рядом с FIBO ${label} (${close} ≈ ${price})`
       };
     }
