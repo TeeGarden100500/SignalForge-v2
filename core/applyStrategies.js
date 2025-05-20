@@ -13,6 +13,8 @@ const {
   checkDojiPattern,
   checkRSIHiddenBull,
   checkMACDDivergence,
+  checkDojiStrategy,
+  
 } = require('./allStrategies'); // можно объединить импорты
 
 function applyStrategies(symbol, candles, interval) {
@@ -47,6 +49,8 @@ function applyStrategies(symbol, candles, interval) {
   add(checkFiboProximityStrategy(symbol, candles, interval), 'FIBO_TOUCH');
   add(checkRSIHiddenBull(symbol, candles), 'RSI_HIDDEN_BULL');
   add(checkMACDDivergence(symbol, candles), 'MACD_DIVERGENCE');
+  add(checkDojiStrategy(symbol, candles, interval), 'DOJI');
+
 
   // add(checkDojiPattern(candles), 'DOJI');
 
