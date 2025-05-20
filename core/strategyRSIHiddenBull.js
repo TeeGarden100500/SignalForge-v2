@@ -1,3 +1,5 @@
+const { calculateRSI } = require('./indicators');
+
 function checkRSIHiddenBull(symbol, candles) {
   if (candles.length < 5) return null;
 
