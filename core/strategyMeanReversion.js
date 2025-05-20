@@ -29,3 +29,6 @@ function checkMeanReversionStrategy(symbol, candles, interval) {
 
   return null;
 }
+module.exports = {
+  checkMeanReversionStrategy,
+};
