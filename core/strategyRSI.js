@@ -24,7 +24,8 @@ function checkRSIStrategy(symbol, candles) {
   }
 
   // Простейшая заглушка: если RSI поднялся, а цена упала — дивергенция
-    if (rsiNow < rsiPrev - 10) {
+const rsiNow = rsi;
+if (rsiNow < rsiPrev - 10) {
   return {
     symbol,
     strategy: 'RSI_DROP',
