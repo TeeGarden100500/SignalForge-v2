@@ -22,4 +22,4 @@ function checkVolumeSpikeStrategy(symbol, candles, interval) {
  
 module.exports = {
   checkVolumeSpikeStrategy
-};
+}
