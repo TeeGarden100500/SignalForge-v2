@@ -34,11 +34,12 @@ function applyStrategies(symbol, candles, interval) {
   };
 
   add(checkRSIStrategy(symbol, candles), 'RSI_OVERBOUGHT');
+  add(checkRSIStrategy(symbol, candles), 'RSI_OVERSOLD');
+  add(checkRSIHiddenBull(symbol, candles), 'RSI_HIDDEN_BULL');
   add(checkMACDStrategy(symbol, candles, interval), 'MACD');
   add(checkVolumeSpikeStrategy(symbol, candles, interval), 'VOLUME_SPIKE');
   add(checkEMACrossoverStrategy(symbol, candles, interval), 'EMA_CROSS');
   add(checkEMAAngleStrategy(symbol, candles, interval), 'EMA_ANGLE');
-  add(checkBreakoutStrategy(symbol, candles, interval), 'BREAKOUT');
 
   add(checkHighLowProximity(symbol, candles, interval, 'strict'), 'PROX_HIGH');
   add(checkHighLowProximity(symbol, candles, interval, 'loose'), 'PROX_HIGH_L');
@@ -47,12 +48,11 @@ function applyStrategies(symbol, candles, interval) {
   add(checkATRSpikeStrategy(symbol, candles, interval), 'ATR_SPIKE');
   add(checkADXStrengthStrategy(symbol, candles, interval), 'ADX_TREND');
   add(checkFiboProximityStrategy(symbol, candles, interval), 'FIBO_TOUCH');
-  add(checkRSIHiddenBull(symbol, candles), 'RSI_HIDDEN_BULL');
   add(checkMACDDivergence(symbol, candles), 'MACD_DIVERGENCE');
   add(checkDojiStrategy(symbol, candles, interval), 'DOJI');
+  add(checkBreakoutStrategy(symbol, candles), 'BREAKOUT');
 
-
-  // add(checkDojiPattern(candles), 'DOJI');
+  
 
   return { signalTags, messages, results };
 }
