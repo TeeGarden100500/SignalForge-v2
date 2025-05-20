@@ -22,7 +22,8 @@ function checkRSIStrategy(symbol, candles) {
       message: `🔴 [${symbol}] RSI = ${rsi} → Возможен откат (перекупленность)`,
     };
   }
-// Простейшая заглушка: если RSI поднялся, а цена упала — дивергенция
+
+  // Простейшая заглушка: если RSI поднялся, а цена упала — дивергенция
 if (candles.length >= 3) {
   const [c1, c2, c3] = candles.slice(-3);
   if (c3.rsi > c2.rsi && c3.close < c2.close) {
@@ -33,6 +34,15 @@ if (candles.length >= 3) {
       tag: 'RSI_HIDDEN_BULL',
     };
   }
+}
+  
+  if (rsiNow < rsiPrev - 10) {
+  return {
+    symbol,
+    strategy: 'RSI_DROP',
+    tag: 'RSI_DROP',
+    message: `📉 [${symbol}] Резкое падение RSI: с ${rsiPrev.toFixed(2)} до ${rsiNow.toFixed(2)}`
+  };
 }
 
   return null;
