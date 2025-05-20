@@ -32,7 +32,7 @@ function subscribeToKlines(symbol) {
     sockets[socketKey] = ws;
 
     ws.on('open', () => {
-      log(`🔌 [WS] Подключено: ${socketKey}`);
+//      log(`🔌 [WS] Подключено: ${socketKey}`);
     });
 
     ws.on('message', (data) => {
