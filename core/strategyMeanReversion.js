@@ -1,3 +1,5 @@
+const { calculateMeanReversion } = require('./indicators');
+
 function checkMeanReversionStrategy(symbol, candles, interval) {
   const result = calculateMeanReversion(candles);
   if (!result) return null;
