@@ -23,7 +23,18 @@ function checkMeanReversionStrategy(symbol, candles, interval) {
       message: `🟦 [${symbol}] Цена ниже MA на ${Math.abs(deviation)}% (${close} < ${ma})`
     };
   }
+  
+    const deviation = ((last.close - ma20) / ma20) * 100;
 
+  if (deviation > 3) {
+    return {
+    symbol,
+    strategy: 'MEAN_REVERSION',
+    tag: 'MEAN_REVERS_UP',
+    message: `🟦 [${symbol}] Цена выше MA на ${deviation.toFixed(2)}% (${last.close} > ${ma20})`
+    };
+  }
+ 
   return null;
 }
 
