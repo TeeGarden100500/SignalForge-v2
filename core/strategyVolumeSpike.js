@@ -7,6 +7,7 @@ function checkVolumeSpikeStrategy(symbol, candles, interval) {
   return {
     symbol,
     strategy: 'VOLUME_SPIKE',
+    tag: 'VOLUME_SPIKE',
     message: `⚡ [${symbol}] Объём выше нормы в ${result.ratio}× (${result.volume} против среднего ${result.avgVolume})`
   };
 }
