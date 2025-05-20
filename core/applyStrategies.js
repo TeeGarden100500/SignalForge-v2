@@ -52,10 +52,6 @@ function applyStrategies(symbol, candles, interval) {
   add(checkBreakoutStrategy(symbol, candles), 'BREAKOUT');
   add(checkDojiPattern(candles), 'DOJI');
 
-
-
-  
-
   return { signalTags, messages, results };
 }
 
