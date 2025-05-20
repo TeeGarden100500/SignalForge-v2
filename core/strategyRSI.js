@@ -5,18 +5,20 @@ function checkRSIStrategy(symbol, candles) {
 
   if (rsi === null) return null;
 
-  if (rsi < 40) {
+  if (rsi < 30) {
     return {
       symbol,
-      strategy: 'RSI_REBOUND',
+      strategy: 'RSI_OVERSOLD',
+      tag: 'RSI_OVERSOLD',
       message: `🟢 [${symbol}] RSI = ${rsi} → Возможен отскок (перепроданность)`,
     };
   }
 
-  if (rsi > 60) {
+  if (rsi > 70) {
     return {
       symbol,
       strategy: 'RSI_OVERBOUGHT',
+      tag: 'RSI_OVERBOUGHT',
       message: `🔴 [${symbol}] RSI = ${rsi} → Возможен откат (перекупленность)`,
     };
   }
