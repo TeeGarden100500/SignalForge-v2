@@ -15,7 +15,31 @@ function checkDojiPattern(candles) {
     };
   }
 
+return null;
+}
+
+function checkDojiStrategy(symbol, candles, interval) {
+  if (!Array.isArray(candles) || candles.length < 1) return null;
+
+  const last = candles[candles.length - 1];
+  const bodySize = Math.abs(last.open - last.close);
+  const candleRange = last.high - last.low;
+
+  const bodyRatio = bodySize / candleRange;
+
+  if (bodyRatio < 0.1) {
+    return {
+      symbol,
+      strategy: 'DOJI_DETECTOR',
+      tag: 'DOJI',
+      message: `⚠️ [${symbol}] Свеча Doji: тело = ${bodySize.toFixed(4)} (${(bodyRatio * 100).toFixed(1)}%)`
+    };
+  }
+
   return null;
 }
 
-module.exports = { checkDojiPattern };
+module.exports = { 
+checkDojiPattern, 
+checkDojiStrategy,                 
+};
