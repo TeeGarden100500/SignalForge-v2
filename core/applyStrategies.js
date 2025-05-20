@@ -15,7 +15,7 @@ const {
   checkMACDDivergence,
 } = require('./allStrategies'); // можно объединить импорты
 
-function applyStrategies(symbol, candles, interval) {
+function applyStrategies(symbol, candle, interval) {
   const signalTags = [];
   const messages = [];
   const results = [];
