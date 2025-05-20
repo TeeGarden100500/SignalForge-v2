@@ -4,6 +4,8 @@ const { TOP_N_PAIRS } = require('./config');
 const { CACHE_LIMITS } = require('./config');
 const { checkMACDStrategy } = require('./core/strategyMACD');
 const { applyStrategies } = require('./core/applyStrategies');
+const { checkComboStrategies } = require('./core/checkCombo');
+
 
 const TIMEFRAMES = ['5m', '15m', '1h'];
 
