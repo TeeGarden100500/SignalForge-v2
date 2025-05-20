@@ -24,18 +24,27 @@ function calculateRSI(candles, period = 14) {
   return +rsi.toFixed(2);
 }
 
-function calculateEMA(candles, period) {
-  if (!Array.isArray(candles) || candles.length < period) return null;
-
-  let ema = candles.slice(0, period).reduce((sum, o) => sum + o.close, 0) / period;
-
+function calculateEMA(prices, period) {
   const k = 2 / (period + 1);
+  let ema = [];
+  let sum = 0;
 
-  for (let i = period; i < candles.length; i++) {
-    ema = candles[i].close * k + ema * (1 - k);
+  for (let i = 0; i < prices.length; i++) {
+    const price = prices[i];
+
+    if (i < period) {
+      sum += price;
+      ema.push(null); // Недостаточно данных
+    } else if (i === period) {
+      const sma = sum / period;
+      ema.push(sma);
+    } else {
+      const prev = ema[ema.length - 1];
+      const current = price * k + prev * (1 - k);
+      ema.push(current);
+    }
   }
-
-  return +ema.toFixed(4);
+  return ema;
 }
 
 function calculateEMAAngle(candles, period = 21, depth = 21) {
