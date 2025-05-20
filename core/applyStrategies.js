@@ -40,7 +40,6 @@ function applyStrategies(symbol, candles, interval) {
   
   add(checkMACDStrategy(symbol, candles, interval), 'MACD_CROSS_UP');
   add(checkMACDStrategy(symbol, candles, interval), 'MACD_CROSS_DOWN');
-  add(checkMACDStrategy(symbol, candles, interval), 'MACD_DIVERGENCE');
   add(checkMACDDivergence(symbol, candles), 'MACD_DIVERGENCE');
   
   add(checkVolumeSpikeStrategy(symbol, candles, interval), 'VOLUME_SPIKE');
