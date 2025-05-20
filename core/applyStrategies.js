@@ -35,27 +35,39 @@ function applyStrategies(symbol, candles, interval) {
 
   add(checkRSIStrategy(symbol, candles), 'RSI_OVERBOUGHT');
   add(checkRSIStrategy(symbol, candles), 'RSI_OVERSOLD');
-  add(checkRSIStrategy(symbol, candles), 'RSI_HIDDEN_BULL'); 
   add(checkRSIStrategy(symbol, candles), 'RSI_DROP');
+  add(checkRSIHiddenBull(symbol, candles), 'RSI_HIDDEN_BULL'); 
   
-  add(checkMACDStrategy(symbol, candles, interval), 'MACD');
+  add(checkMACDStrategy(symbol, candles, interval), 'MACD_CROSS_UP');
+  add(checkMACDStrategy(symbol, candles, interval), 'MACD_CROSS_DOWN');
+  add(checkMACDStrategy(symbol, candles, interval), 'MACD_DIVERGENCE');
+  add(checkMACDDivergence(symbol, candles), 'MACD_DIVERGENCE');
+  
   add(checkVolumeSpikeStrategy(symbol, candles, interval), 'VOLUME_SPIKE');
+  add(checkVolumeSpikeStrategy(symbol, candles, interval), 'VOLUME_DROP');
+
+  add(checkMeanReversionStrategy(symbol, candles, interval), 'MEAN_REVERS_UP');
+  add(checkMeanReversionStrategy(symbol, candles, interval), 'MEAN_REVERS_DOWN');
+
+  add(checkHighLowProximity(symbol, candles, interval, 'strict'), 'PROX_HIGH');
+  add(checkHighLowProximity(symbol, candles, interval, 'loose'), 'PROX_LOW');
+
+  add(checkFiboProximityStrategy(symbol, candles, interval), 'FIBO_TOUCH');
+  
   add(checkEMACrossoverStrategy(symbol, candles, interval), 'EMA_CROSS');
   add(checkEMAAngleStrategy(symbol, candles, interval), 'EMA_ANGLE');
 
-  add(checkHighLowProximity(symbol, candles, interval, 'strict'), 'PROX_HIGH');
-  add(checkHighLowProximity(symbol, candles, interval, 'loose'), 'PROX_HIGH_L');
-
-  add(checkMeanReversionStrategy(symbol, candles, interval), 'MEAN_REVERS_UP');
-  add(checkATRSpikeStrategy(symbol, candles, interval), 'ATR_SPIKE');
-  add(checkADXStrengthStrategy(symbol, candles, interval), 'ADX_TREND');
-  add(checkFiboProximityStrategy(symbol, candles, interval), 'FIBO_TOUCH');
-  add(checkMACDDivergence(symbol, candles), 'MACD_DIVERGENCE');
-  add(checkDojiStrategy(symbol, candles, interval), 'DOJI');
-  add(checkBreakoutStrategy(symbol, candles), 'BREAKOUT');
   add(checkDojiPattern(candles), 'DOJI');
+
   add(checkGreenCandle(symbol, candles), 'GREEN_CANDLE');
 
+  add(checkBreakoutStrategy(symbol, candles), 'BREAKOUT_UP');
+  add(checkBreakoutStrategy(symbol, candles), 'BREAKOUT_DOWN');
+
+  add(checkATRSpikeStrategy(symbol, candles, interval), 'ATR_SPIKE');
+  
+  add(checkADXStrengthStrategy(symbol, candles, interval), 'ADX_TREND');
+  add(checkADXStrengthStrategy(symbol, candles, interval), 'ADX_FLAT');
 
   
   return { signalTags, messages, results };
