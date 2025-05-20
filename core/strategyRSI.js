@@ -25,7 +25,9 @@ function checkRSIStrategy(symbol, candles) {
 
   // Простейшая заглушка: если RSI поднялся, а цена упала — дивергенция
 const rsiNow = rsi;
-if (rsiNow < rsiPrev - 10) {
+const rsiPrev = calculateRSI(candles.slice(0, -1)); // Добавляем эту строку
+
+if (rsiPrev !== null && rsiNow < rsiPrev - 10) {
   return {
     symbol,
     strategy: 'RSI_DROP',
@@ -33,7 +35,6 @@ if (rsiNow < rsiPrev - 10) {
     message: `📉 [${symbol}] Резкое падение RSI: с ${rsiPrev.toFixed(2)} до ${rsiNow.toFixed(2)}`
   };
 }
-
   return null;
 }
 
