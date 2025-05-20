@@ -1,5 +1,6 @@
 const {
   checkRSIStrategy,
+  checkRSIHiddenBull,
   checkMACDStrategy,
   checkVolumeSpikeStrategy,
   checkEMACrossoverStrategy,
@@ -10,7 +11,6 @@ const {
   checkATRSpikeStrategy,
   checkADXStrengthStrategy,
   checkFiboProximityStrategy,
-  checkRSIHiddenBull,
   checkMACDDivergence,
   checkDojiPattern,
   
@@ -51,6 +51,7 @@ function applyStrategies(symbol, candles, interval) {
   add(checkDojiStrategy(symbol, candles, interval), 'DOJI');
   add(checkBreakoutStrategy(symbol, candles), 'BREAKOUT');
   add(checkDojiPattern(candles), 'DOJI');
+
 
 
   
