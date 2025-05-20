@@ -7,7 +7,7 @@ const comboStrategies = [
   },
   {
     name: "Volume Breakout",
-    conditions: ["BREAKOUT", "VOLUME_SPIKE", "ADX_TREND"],
+    conditions: ["BREAKOUT_UP", "VOLUME_SPIKE", "ADX_TREND"],
     direction: "long",
     message: "📈 [Volume Breakout] Пробой с объёмом. Рассматривай вход на импульсе."
   },
@@ -25,13 +25,13 @@ const comboStrategies = [
   },
   {
     name: "Mean Reversion Setup",
-    conditions: ["MEAN_REVERS_UP", "VOLUME_LOW"],
+    conditions: ["MEAN_REVERS_UP", "VOLUME_DROP"],
     direction: "short",
     message: "🟡 [Mean Reversion] Цена выше нормы. Ожидается возврат к MA."
   },
   {
     name: "Dead Volume Fall",
-    conditions: ["RSI_DROP", "VOLUME_DROP", "EMA_ANGLE_DOWN"],
+    conditions: ["RSI_DROP", "VOLUME_DROP", "EMA_ANGLE"],
     direction: "short",
     message: "🔻 [Dead Volume Fall] Объём падает на спаде — снижение может усилиться."
   }
