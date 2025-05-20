@@ -11,7 +11,7 @@ function checkBreakoutStrategy(symbol, candles) {
     return {
       symbol,
       strategy: 'BREAKOUT',
-      tag: 'BREAKOUT',
+      tag: 'BREAKOUT_UP',
       message: `🚀 [${symbol}] Пробой вверх! Цена ${current.high} выше HIGH ${prevHigh}`
     };
   }
@@ -20,7 +20,7 @@ function checkBreakoutStrategy(symbol, candles) {
     return {
       symbol,
       strategy: 'BREAKOUT',
-      tag: 'BREAKOUT',
+      tag: 'BREAKOUT_DOWN',
       message: `🔻 [${symbol}] Пробой вниз! Цена ${current.low} ниже LOW ${prevLow}`
     };
   }
