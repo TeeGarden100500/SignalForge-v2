@@ -7,17 +7,19 @@ function checkADXStrengthStrategy(symbol, candles, interval) {
   const { adx } = result;
 
   if (adx > 25) {
-    return {
-      symbol,
-      strategy: 'ADX_TREND',
-      message: `⚡ [${symbol}] Сильный тренд! ADX = ${adx}`
-    };
-  }
+  return {
+    symbol,
+    strategy: 'ADX',
+    tag: 'ADX_TREND',
+    message: `📈 [${symbol}] Сильный тренд: ADX = ${adx.toFixed(2)}`
+  };
+}
 
   if (adx < 20) {
     return {
       symbol,
-      strategy: 'ADX_FLAT',
+      strategy: 'ADX',
+      tag: 'ADX_FLAT',
       message: `💤 [${symbol}] Флэт/слабый тренд. ADX = ${adx}`
     };
   }
