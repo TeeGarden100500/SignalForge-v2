@@ -3,31 +3,37 @@ const { calculateEMAAngle } = require('./indicators');
 
 let lastDirection = {}; // для хранения предыдущего пересечения
 
-function checkEMACrossoverStrategy(symbol, candles, interval) {
-  if (candles.length < 30) return null;
+function checkEMACrossStrategy(symbol, candles) {
+  if (!Array.isArray(candles) || candles.length < 22) return null;
 
-  const short = calculateEMA(candles, 9);
-  const long = calculateEMA(candles, 21);
-  if (!short || !long) return null;
+  const closes = candles.map(c => c.close);
+  const emaShort = calculateEMA(closes, 9);
+  const emaLong = calculateEMA(closes, 21);
 
-  const key = `${symbol}_${interval}`;
-  const prev = lastDirection[key];
-  const current = short > long ? 'above' : 'below';
+  const prevCross = emaShort.at(-2) - emaLong.at(-2);
+  const currentCross = emaShort.at(-1) - emaLong.at(-1);
 
-  // сохраняем новое направление
-  lastDirection[key] = current;
+  if (prevCross < 0 && currentCross > 0) {
+    return {
+      symbol,
+      strategy: 'EMA_CROSS',
+      tag: 'EMA_CROSS',
+      message: `🔼 [${symbol}] EMA пересекла вверх: EMA9 > EMA21`
+    };
+  }
 
-  if (!prev || prev === current) return null;
+  if (prevCross > 0 && currentCross < 0) {
+    return {
+      symbol,
+      strategy: 'EMA_CROSS',
+      tag: 'EMA_CROSS',
+      message: `🔽 [${symbol}] EMA пересекла вниз: EMA9 < EMA21`
+    };
+  }
 
-  const direction = current === 'above' ? 'LONG' : 'SHORT';
-  const emoji = direction === 'LONG' ? '🟢' : '🔴';
-
-  return {
-    symbol,
-    strategy: 'EMA_CROSSOVER',
-    message: `${emoji} [${symbol}] EMA(9) ${direction === 'LONG' ? 'пересёк вверх' : 'пересёк вниз'} EMA(21)`
-  };
+  return null;
 }
+
 function checkEMAAngleStrategy(symbol, candles, interval) {
   const result = calculateEMAAngle(candles, 21, 21);
 
