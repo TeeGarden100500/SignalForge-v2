@@ -96,6 +96,8 @@ function calculateMACD(candles, fastPeriod = 12, slowPeriod = 26, signalPeriod =
 
 function calculateAverageVolume(candles, period = 20) {
   if (candles.length < period + 1) return null;
+  console.log(`[DEBUG] Тип candles:`, typeof candles);
+  console.log(`[DEBUG] Прототип candles:`, Object.prototype.toString.call(candles));
   const recent = candles.slice(-1 - period, -1);
   const avg = recent.reduce((sum, c) => sum + c.volume, 0) / period;
   return +avg.toFixed(2);
