@@ -11,6 +11,7 @@ function checkHighLowProximity(symbol, candles, interval, mode = 'strict') {
     return {
       symbol,
       strategy: mode === 'loose' ? 'PROX_HIGH_L' : 'PROX_HIGH',
+      tag: 'PROX_HIGH',
       message: `🟠 [${symbol}] Цена рядом с HIGH (${close} ≈ ${high}) [${mode}]`
     };
   }
@@ -19,6 +20,7 @@ function checkHighLowProximity(symbol, candles, interval, mode = 'strict') {
     return {
       symbol,
       strategy: mode === 'loose' ? 'PROX_LOW_L' : 'PROX_LOW',
+      tag: 'PROX_LOW',
       message: `🔵 [${symbol}] Цена рядом с LOW (${close} ≈ ${low}) [${mode}]`
     };
   }
