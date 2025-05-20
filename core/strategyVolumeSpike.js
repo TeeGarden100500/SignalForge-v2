@@ -11,15 +11,15 @@ function checkVolumeSpikeStrategy(symbol, candles, interval) {
     message: `⚡ [${symbol}] Объём выше нормы в ${result.ratio}× (${result.volume} против среднего ${result.avgVolume})`
   };
   
-  if (volume < avgVolume * 0.5) {
+  if (volume < prevVolume * 0.5) {
   return {
     symbol,
-    strategy: 'VOLUME_LOW',
-    tag: 'VOLUME_LOW',
-    message: `💤 [${symbol}] Объём ниже нормы: ${volume.toFixed(2)} против среднего ${avgVolume.toFixed(2)}`
+    strategy: 'VOLUME_DROP',
+    tag: 'VOLUME_DROP',
+    message: `📉 [${symbol}] Объём резко снизился: ${volume.toFixed(2)} < ${prevVolume.toFixed(2)}`
   };
 }
-
+ 
 module.exports = {
   checkVolumeSpikeStrategy
 };
