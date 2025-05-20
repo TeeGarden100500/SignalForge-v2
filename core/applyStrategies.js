@@ -14,6 +14,7 @@ const {
   checkRSIHiddenBull,
   checkMACDDivergence,
   checkDojiStrategy,
+  checkDojiPattern,
   
 } = require('./allStrategies'); // можно объединить импорты
 
@@ -51,6 +52,8 @@ function applyStrategies(symbol, candles, interval) {
   add(checkMACDDivergence(symbol, candles), 'MACD_DIVERGENCE');
   add(checkDojiStrategy(symbol, candles, interval), 'DOJI');
   add(checkBreakoutStrategy(symbol, candles), 'BREAKOUT');
+  add(checkDojiPattern(candles), 'DOJI');
+
 
   
 
