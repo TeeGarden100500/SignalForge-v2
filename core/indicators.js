@@ -92,16 +92,20 @@ function calculateMACD(candles, fastPeriod = 12, slowPeriod = 26, signalPeriod =
 
   if (macdLineArr.length < signalPeriod) return null;
 
-    const recentMACD = macdLineArr[macdLineArr.length - 1];
-    const signal = calculateEMA(macdLineArr.map(v => ({ close: v })), signalPeriod);
-    const histogram = recentMACD - signal;
+    const recentMACD = macdLineArr.at(-1);
+  const signalSeries = calculateEMA(macdLineArr.map(v => ({ close: v })), signalPeriod);
+  const signal = signalSeries?.at(-1); // Проверка на наличие
+
+  if (signal == null) return null;
+
+  const histogram = recentMACD - signal;
 
   return {
     macd: +recentMACD.toFixed(4),
     signal: +signal.toFixed(4),
     histogram: +histogram.toFixed(4)
   };
-}
+  }
 
 function calculateAverageVolume(candles, period = 20) {
   if (candles.length < period + 1) return null;
