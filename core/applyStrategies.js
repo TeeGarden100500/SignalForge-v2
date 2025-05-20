@@ -46,8 +46,8 @@ function applyStrategies(symbol, candles, interval) {
   add(checkVolumeSpikeStrategy(symbol, candles, interval), 'VOLUME_SPIKE');
   add(checkVolumeSpikeStrategy(symbol, candles, interval), 'VOLUME_DROP');
 
-  add(strategies.checkMeanReversionStrategy(symbol, candles, interval), 'MEAN_REVERS_UP');
-  add(strategies.checkMeanReversionStrategy(symbol, candles, interval), 'MEAN_REVERS_DOWN');
+  add(checkMeanReversionStrategy(symbol, candles, interval), 'MEAN_REVERS_UP');
+  add(checkMeanReversionStrategy(symbol, candles, interval), 'MEAN_REVERS_DOWN');
 
   add(checkHighLowProximity(symbol, candles, interval, 'strict'), 'PROX_HIGH');
   add(checkHighLowProximity(symbol, candles, interval, 'loose'), 'PROX_LOW');
