@@ -10,10 +10,8 @@ const {
   checkATRSpikeStrategy,
   checkADXStrengthStrategy,
   checkFiboProximityStrategy,
-  checkDojiPattern,
   checkRSIHiddenBull,
   checkMACDDivergence,
-  checkDojiStrategy,
   checkDojiPattern,
   
 } = require('./allStrategies'); // можно объединить импорты
