@@ -36,7 +36,7 @@ function applyStrategies(symbol, candles, interval) {
   add(checkRSIStrategy(symbol, candles), 'RSI_OVERBOUGHT');
   add(checkRSIStrategy(symbol, candles), 'RSI_OVERSOLD');
   add(checkRSIStrategy(symbol, candles), 'RSI_HIDDEN_BULL'); 
-  add(checkRSIHiddenBull(symbol, candles), 'RSI_DROP');
+  add(checkRSIStrategy(symbol, candles), 'RSI_DROP');
   
   add(checkMACDStrategy(symbol, candles, interval), 'MACD');
   add(checkVolumeSpikeStrategy(symbol, candles, interval), 'VOLUME_SPIKE');
