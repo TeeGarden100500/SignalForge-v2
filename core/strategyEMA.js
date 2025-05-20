@@ -22,15 +22,6 @@ function checkEMACrossStrategy(symbol, candles) {
     };
   }
 
-  if (prevCross > 0 && currentCross < 0) {
-    return {
-      symbol,
-      strategy: 'EMA_CROSS',
-      tag: 'EMA_CROSS',
-      message: `🔽 [${symbol}] EMA пересекла вниз: EMA9 < EMA21`
-    };
-  }
-
   return null;
 }
 
@@ -56,6 +47,7 @@ function checkEMAAngleStrategy(symbol, candles, interval) {
   return {
     symbol,
     strategy: 'EMA_ANGLE',
+    tag: 'EMA_ANGLE',
     message: `📈 [${symbol}] EMA(21) уверенно наклонён ${trend} (угол: ${angle})`
   };
 }
