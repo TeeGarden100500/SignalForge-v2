@@ -17,5 +17,5 @@ module.exports = {
   checkBreakoutStrategy: require('./strategyBreakout').checkBreakoutStrategy,
   checkDojiPattern: require('./strategyDoji').checkDojiPattern,
   checkRSIHiddenBull: require('./strategyRSIHiddenBull').checkRSIHiddenBull,
-
+  checkGreenCandle: require('./strategyCandlePatterns').checkGreenCandle,
 };
