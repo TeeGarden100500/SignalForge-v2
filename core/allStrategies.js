@@ -15,5 +15,7 @@ module.exports = {
   checkMACDDivergence: require('./strategyMACDDivergence').checkMACDDivergence,
   checkDojiStrategy: require('./strategyDoji').checkDojiStrategy,
   checkBreakoutStrategy: require('./strategyBreakout').checkBreakoutStrategy,
+  checkDojiPattern: require('./strategyDoji').checkDojiPattern,
+
 
 };
