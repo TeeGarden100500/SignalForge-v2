@@ -2,7 +2,7 @@ module.exports = {
   checkRSIStrategy: require('./strategyRSI').checkRSIStrategy,
   checkMACDStrategy: require('./strategyMACD').checkMACDStrategy,
   checkVolumeSpikeStrategy: require('./strategyVolumeSpike').checkVolumeSpikeStrategy,
-  checkEMACrossoverStrategy: require('./strategyEMA').checkEMACrossoverStrategy,
+  checkEMACrossStrategy: require('./strategyEMA').checkEMACrossStrategy,
   checkEMAAngleStrategy: require('./strategyEMA').checkEMAAngleStrategy,
   checkBreakoutStrategy: require('./strategyBreakout').checkBreakoutStrategy,
   checkHighLowProximity: require('./strategyHighLow').checkHighLowProximity,
