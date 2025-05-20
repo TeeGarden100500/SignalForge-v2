@@ -16,9 +16,9 @@ const {
 } = require('./allStrategies'); // можно объединить импорты
 
 function applyStrategies(symbol, candles, interval) {
-  console.log('[DEBUG] candles type:', typeof candles);
-  console.log('[DEBUG] Array.isArray:', Array.isArray(candles));
-  console.log('[DEBUG] Raw candles:', candles);
+//  console.log('[DEBUG] candles type:', typeof candles);
+//  console.log('[DEBUG] Array.isArray:', Array.isArray(candles));
+//  console.log('[DEBUG] Raw candles:', candles);
   const signalTags = [];
   const messages = [];
   const results = [];
