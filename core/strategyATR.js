@@ -21,12 +21,13 @@ function checkATRSpikeStrategy(symbol, candles, interval) {
     return {
       symbol,
       strategy: 'ATR_SPIKE',
+      tag: 'ATR_SPIKE',
       message: `💥 [${symbol}] Волатильность выше нормы: TR = ${currTR.toFixed(2)}, ATR = ${atr.toFixed(2)} (${spikeRatio.toFixed(2)}x)`
     };
   }
 
   return null;
-}
+  }
 
 module.exports = {
   checkATRSpikeStrategy
