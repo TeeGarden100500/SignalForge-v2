@@ -14,6 +14,6 @@ module.exports = {
   checkRSIHiddenBull: require('./strategyRSIHiddenBull').checkRSIHiddenBull,
   checkMACDDivergence: require('./strategyMACDDivergence').checkMACDDivergence,
   checkDojiStrategy: require('./strategyDoji').checkDojiStrategy,
-
+  checkBreakoutStrategy: require('./strategyBreakout').checkBreakoutStrategy,
 
 };
