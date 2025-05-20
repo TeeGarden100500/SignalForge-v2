@@ -53,6 +53,6 @@ function checkEMAAngleStrategy(symbol, candles, interval) {
 }
 
 module.exports = {
-  checkEMACrossoverStrategy,
+  checkEMACrossStrategy,
   checkEMAAngleStrategy,
 };
