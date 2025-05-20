@@ -1,3 +1,5 @@
+const { detectVolumeSpike } = require('./indicators');
+
 function checkVolumeSpikeStrategy(symbol, candles, interval) {
   const result = detectVolumeSpike(candles);
   if (!result || !result.spike) return null;
