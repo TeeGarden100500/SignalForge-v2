@@ -4,7 +4,7 @@ function checkMeanReversionStrategy(symbol, candles, interval) {
     const result = calculateMeanReversion(candles);
     if (!result) return null;
 
-    const { deviation, close, ma } = result;
+    const deviation = ((last.close - ma20) / ma20) * 100;
 
     const threshold = 2.0; // % от среднего
 
@@ -17,8 +17,6 @@ function checkMeanReversionStrategy(symbol, candles, interval) {
     };
     }
   
-    const deviation = ((last.close - ma20) / ma20) * 100;
-
   if (deviation > 3) {
     return {
     symbol,
