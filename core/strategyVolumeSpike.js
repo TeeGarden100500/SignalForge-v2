@@ -1,8 +1,7 @@
-// const { detectVolumeSpike } = require('./indicators');
+const { detectVolumeSpike } = require('./indicators');
 
 function checkVolumeSpikeStrategy(symbol, candles, interval) {
-  // --- СТАРАЯ ЛОГИКА ---
-  /*
+
   const result = detectVolumeSpike(candles);
   if (!result || !result.spike) return null;
 
@@ -24,24 +23,6 @@ function checkVolumeSpikeStrategy(symbol, candles, interval) {
     tag: 'VOLUME_SPIKE',
     message: `⚡ [${symbol}] Объём выше нормы в ${result.ratio}× (${result.volume} против среднего ${result.avgVolume})`
   };
-  */
-
-  // --- ЭМУЛЯЦИЯ ---
-  console.log(`[SIMULATION] ${symbol}: FORCED VOLUME_SPIKE + VOLUME_DROP`);
-  return [
-    {
-      symbol,
-      strategy: 'VOLUME_SPIKE',
-      tag: 'VOLUME_SPIKE',
-      message: `⚡ [${symbol}] (SIMULATED) Объём выше нормы`
-    },
-    {
-      symbol,
-      strategy: 'VOLUME_DROP',
-      tag: 'VOLUME_DROP',
-      message: `📉 [${symbol}] (SIMULATED) Объём ниже нормы`
-    }
-  ];
 }
 
 module.exports = {
