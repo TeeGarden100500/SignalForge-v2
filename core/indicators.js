@@ -1,6 +1,6 @@
 
 function calculateRSI(candles, period = 14) {
-  return true; // [SIMULATED]
+  return Array(20).fill(50); // [SIMULATED]
 }
 
 
