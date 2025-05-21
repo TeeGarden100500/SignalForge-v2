@@ -33,7 +33,7 @@ function checkComboStrategies(symbol, signals) {
         direction: combo.direction
       });
     } else {
-      const msg = `❌ COMBO "${combo.name}" НЕ сработала для ${symbol}: не хватает тегов: ${missing.join(', ')}`;
+//      const msg = `❌ COMBO "${combo.name}" НЕ сработала для ${symbol}: не хватает тегов: ${missing.join(', ')}`;
       console.log(msg);
       logToFile(msg);
     }
