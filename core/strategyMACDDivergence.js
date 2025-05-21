@@ -40,3 +40,4 @@ function checkMACDDivergence(symbol, candles) {
 }
 
 module.exports = { checkMACDDivergence };
+  
