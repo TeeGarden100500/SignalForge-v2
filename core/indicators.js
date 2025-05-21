@@ -116,20 +116,32 @@ function calculateAverageVolume(candles, period = 20) {
   return +avg.toFixed(2);
 }
 
+//function detectVolumeSpike(candles, factor = 1.5) {
+//  const avgVolume = calculateAverageVolume(candles);
+//  const lastVolume = candles.at(-1)?.volume;
+
+//  if (!avgVolume || !lastVolume) return null;
+//  const spike = lastVolume > avgVolume * factor;
+
+//  return {
+//    spike,
+//    ratio: +(lastVolume / avgVolume).toFixed(2),
+//    volume: lastVolume,
+//    avgVolume
+// };
+// ****************************************************************************
 function detectVolumeSpike(candles, factor = 1.5) {
   const avgVolume = calculateAverageVolume(candles);
   const lastVolume = candles.at(-1)?.volume;
 
-  if (!avgVolume || !lastVolume) return null;
-  const spike = lastVolume > avgVolume * factor;
-
   return {
-    spike,
-    ratio: +(lastVolume / avgVolume).toFixed(2),
-    volume: lastVolume,
-    avgVolume
+    spike: true, // мок: всегда сигнал
+    ratio: lastVolume && avgVolume ? +(lastVolume / avgVolume).toFixed(2) : 2.0,
+    volume: lastVolume ?? 100000,
+    avgVolume: avgVolume ?? 50000
   };
 }
+// **************************************************************************
 
 function detectBreakout(candles, lookback = 20) {
   if (candles.length < lookback + 1) return null;
