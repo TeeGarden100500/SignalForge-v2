@@ -6,7 +6,7 @@ function checkFiboProximityStrategy(symbol, candles, interval) {
 
   const { levels } = fibo;
   const close = candles.at(-1).close;
-  const threshold = close * 1.5; // 0.5% отклонение
+  const threshold = close * 0.15; // 0.5% отклонение
 
   for (const [label, price] of Object.entries(levels)) {
     if (Math.abs(close - price) <= threshold) {
