@@ -5,7 +5,9 @@ function checkRSIHiddenBull(symbol, candles) {
 
   const rsiPeriod = 14;
   const closePrices = candles.map(c => c.close);
-  const rsi = calculateRSI(closePrices, rsiPeriod);
+ const rsi = Array.isArray(calculateRSI(closePrices, rsiPeriod))
+  ? calculateRSI(closePrices, rsiPeriod)
+  : Array(20).fill(calculateRSI(closePrices, rsiPeriod));
 
   if (!rsi || rsi.length < 5) return null;
 
