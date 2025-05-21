@@ -7,7 +7,7 @@ const comboStrategies = [
   },
   {
     name: "Volume Breakout",
-    conditions: ["BREAKOUT", "VOLUME_SPIKE", "ADX"],
+    conditions: ["BREAKOUT", "VOLUME_SPIKE", "ADX_TREND"],
     direction: "long",
     message: "📈 [Volume Breakout] Пробой с объёмом. Рассматривай вход на импульсе."
   },
