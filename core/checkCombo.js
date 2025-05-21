@@ -7,11 +7,11 @@ const logFilePath = path.join(__dirname, '../logs/combo_debug.log');
 // Убедимся, что папка logs существует
 if (!fs.existsSync(path.dirname(logFilePath))) {
   fs.mkdirSync(path.dirname(logFilePath), { recursive: true });
-}
+    }
 
 function logToFile(message) {
   fs.appendFileSync(logFilePath, message + '\n');
-}
+    }
 
 function checkComboStrategies(symbol, signals) {
   const fired = [];
@@ -32,12 +32,13 @@ function checkComboStrategies(symbol, signals) {
         message: combo.message,
         direction: combo.direction
       });
-//   } else {
+     } 
+//     else {
 //      const msg = `❌ COMBO "${combo.name}" НЕ сработала для ${symbol}: не хватает тегов: ${missing.join(', ')}`;
 //      console.log(msg);
 //      logToFile(msg);
 //    }
-  }
+      }
 
   const summary = `📊 Проверено COMBO стратегий: ${total} | Сработало: ${firedCount}`;
   console.log(summary);
@@ -45,7 +46,7 @@ function checkComboStrategies(symbol, signals) {
   logToFile(''); // пустая строка-разделитель
 
   return fired;
-}
+      }
 
 module.exports = {
   checkComboStrategies
