@@ -27,7 +27,7 @@ function checkRSIStrategy(symbol, candles) {
 const rsiNow = rsi;
 const rsiPrev = calculateRSI(candles.slice(0, -1)); // Добавляем эту строку
 
-if (rsiPrev !== null && rsiNow < rsiPrev - 10) {
+if (rsiPrev !== null && rsiNow < rsiPrev - 5) {
   return {
     symbol,
     strategy: 'RSI_DROP',
