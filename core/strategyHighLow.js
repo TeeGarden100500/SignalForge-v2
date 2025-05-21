@@ -7,23 +7,23 @@ function checkHighLowProximity(symbol, candles, interval, mode = 'strict') {
 
   const { nearHigh, nearLow, high, low, close } = result;
 
-  if (nearHigh) {
-    return {
-      symbol,
-      strategy: mode === 'loose' ? 'PROX_HIGH_L' : 'PROX_HIGH',
-      tag: 'PROX_HIGH',
-      message: `🟠 [${symbol}] Цена рядом с HIGH (${close} ≈ ${high}) [${mode}]`
-    };
-  }
+if (nearHigh) {
+  return {
+    symbol,
+    strategy: mode === 'loose' ? 'PROX_HIGH_L' : 'PROX_HIGH',
+    tag: mode === 'loose' ? 'PROX_HIGH_L' : 'PROX_HIGH',
+    message: `🟠 [${symbol}] Цена рядом с HIGH (${close} ≈ ${high}) [${mode}]`
+  };
+}
 
-  if (nearLow) {
-    return {
-      symbol,
-      strategy: mode === 'loose' ? 'PROX_LOW_L' : 'PROX_LOW',
-      tag: 'PROX_LOW',
-      message: `🔵 [${symbol}] Цена рядом с LOW (${close} ≈ ${low}) [${mode}]`
-    };
-  }
+if (nearLow) {
+  return {
+    symbol,
+    strategy: mode === 'loose' ? 'PROX_LOW_L' : 'PROX_LOW',
+    tag: mode === 'loose' ? 'PROX_LOW_L' : 'PROX_LOW',
+    message: `🔵 [${symbol}] Цена рядом с LOW (${close} ≈ ${low}) [${mode}]`
+  };
+}
 
   return null;
 }
