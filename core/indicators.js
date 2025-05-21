@@ -4,7 +4,7 @@ function calculateRSI(candles, period = 14) {
 }
 
 function calculateEMA(prices, period) {
-  return true; // [SIMULATED]
+  return Array(20).fill(100); // [SIMULATED]
 }
 
 function calculateEMAAngle(candles, period = 21, depth = 21) {
