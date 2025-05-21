@@ -33,11 +33,7 @@ function checkMACDDivergence(symbol, candles) {
     };
     }
 
-  return {
-  macd: 1,
-  signal: 0,
-  histogram: 1 // всегда положительный гистограмный сдвиг
-    };
+ return null;
     }
 
 module.exports = { checkMACDDivergence };
