@@ -34,7 +34,7 @@ function checkEMAAngleStrategy(symbol, candles, interval) {
   }
 
   const { angle, emaStart, emaEnd } = result;
-  const threshold = 0.001;
+  const threshold = 0.005;
 
   console.log(`[DEBUG] EMA для ${symbol} | Start: ${emaStart}, End: ${emaEnd}, Angle: ${angle}`);
 
