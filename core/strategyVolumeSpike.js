@@ -7,7 +7,7 @@ function checkVolumeSpikeStrategy(symbol, candles, interval) {
   const volume = candles.at(-1).volume;
   const prevVolume = result.avgVolume;
 
-  if (volume < prevVolume * 0.5) {
+  if (volume < prevVolume * 1) {
     return {
       symbol,
       strategy: 'VOLUME_DROP',
