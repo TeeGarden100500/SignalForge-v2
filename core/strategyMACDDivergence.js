@@ -10,7 +10,7 @@ function checkMACDDivergence(symbol, candles) {
   if (!Array.isArray(macdSeries) || macdSeries.length < 2) {
     console.log(`[DEBUG] MACD Divergence: недостаточно данных для ${symbol}`);
     return null;
-  }
+    }
 
   const macdPrev = macdSeries.at(-2).macd;
   const macdNow = macdSeries.at(-1).macd;
@@ -22,7 +22,7 @@ function checkMACDDivergence(symbol, candles) {
       tag: 'MACD_DIVERGENCE',
       message: `🟢 [${symbol}] MACD Дивергенция: цена падает, MACD растет — возможный отскок`
     };
-  }
+    }
 
   if (priceNow > pricePrev && macdNow < macdPrev) {
     return {
@@ -31,13 +31,14 @@ function checkMACDDivergence(symbol, candles) {
       tag: 'MACD_DIVERGENCE',
       message: `🔴 [${symbol}] MACD Дивергенция: цена растет, MACD падает — возможный разворот вниз`
     };
-  }
+    }
 
   return {
   macd: 1,
   signal: 0,
   histogram: 1 // всегда положительный гистограмный сдвиг
-}
+    };
+    }
 
 module.exports = { checkMACDDivergence };
   
