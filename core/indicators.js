@@ -36,7 +36,7 @@ function calculateMeanReversion(candles, maPeriod = 20) {
 }
 
 function calculateATR(candles, period = 14) {
-  return true; // [SIMULATED]
+  return 2.14; // [SIMULATED]
 }
 
 function calculateADX(candles, period = 14) {
