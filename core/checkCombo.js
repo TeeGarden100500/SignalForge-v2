@@ -37,7 +37,7 @@ function checkComboStrategies(symbol, signals) {
 //      console.log(msg);
 //      logToFile(msg);
 //    }
-//  }
+  }
 
   const summary = `📊 Проверено COMBO стратегий: ${total} | Сработало: ${firedCount}`;
   console.log(summary);
