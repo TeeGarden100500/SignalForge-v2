@@ -33,18 +33,18 @@ function checkComboStrategies(symbol, signals) {
         direction: combo.direction
       });
      } 
-//     else {
-//      const msg = `❌ COMBO "${combo.name}" НЕ сработала для ${symbol}: не хватает тегов: ${missing.join(', ')}`;
-//      console.log(msg);
-//      logToFile(msg);
-//    }
-      }
+/*     else {
+      const msg = `❌ COMBO "${combo.name}" НЕ сработала для ${symbol}: не хватает тегов: ${missing.join(', ')}`;
+      console.log(msg);
+      logToFile(msg);
+     }
+*/   }
 
-//  const summary = `📊 Проверено COMBO стратегий: ${total} | Сработало: ${firedCount}`;
+/*  const summary = `📊 Проверено COMBO стратегий: ${total} | Сработало: ${firedCount}`;
   console.log(summary);
   logToFile(summary);
   logToFile(''); // пустая строка-разделитель
-
+*/
   return fired;
       }
 
