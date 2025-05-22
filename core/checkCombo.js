@@ -40,7 +40,7 @@ function checkComboStrategies(symbol, signals) {
 //    }
       }
 
-  const summary = `📊 Проверено COMBO стратегий: ${total} | Сработало: ${firedCount}`;
+//  const summary = `📊 Проверено COMBO стратегий: ${total} | Сработало: ${firedCount}`;
   console.log(summary);
   logToFile(summary);
   logToFile(''); // пустая строка-разделитель
