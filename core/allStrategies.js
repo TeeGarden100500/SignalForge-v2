@@ -13,9 +13,5 @@ module.exports = {
   checkDojiPattern: require('./strategyDoji').checkDojiPattern,
   checkRSIHiddenBull: require('./strategyRSIHiddenBull').checkRSIHiddenBull,
   checkMACDDivergence: require('./strategyMACDDivergence').checkMACDDivergence,
-  checkDojiStrategy: require('./strategyDoji').checkDojiStrategy,
-  checkBreakoutStrategy: require('./strategyBreakout').checkBreakoutStrategy,
-  checkDojiPattern: require('./strategyDoji').checkDojiPattern,
-  checkRSIHiddenBull: require('./strategyRSIHiddenBull').checkRSIHiddenBull,
   checkGreenCandle: require('./strategyCandlePatterns').checkGreenCandle,
 };
