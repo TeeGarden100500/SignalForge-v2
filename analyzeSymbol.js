@@ -1,6 +1,6 @@
 // src/analyzeSymbol.js
 
-const { applyStrategies } = require('./applyStrategies');
+const { applyStrategies } = require('./core/applyStrategies');
 const { sendWebhook } = require('./webhookHandler');
 const { getCandlesFor } = require('./candleStore'); // или твой источник
 
