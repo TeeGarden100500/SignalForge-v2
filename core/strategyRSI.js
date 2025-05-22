@@ -1,6 +1,6 @@
 const { calculateRSI } = require('./indicators');
 
-function checkRSIStrategy(symbol, candles) {
+function checkRSIStrategy(symbol, candles, timeframe) {
   const rsi = calculateRSI(candles);
 
   if (rsi === null) return null;
