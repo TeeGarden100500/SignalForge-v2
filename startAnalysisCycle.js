@@ -1,5 +1,5 @@
 const { analyzeSymbol } = require('./analyzeSymbol');
-const config = require('../config');
+const config = require('./config');
 
 function analyzeAllSymbols(symbols, interval) {
   const delayMs = config.SYMBOL_ANALYSIS_DELAY_MS || 500; // шаг между монетами
