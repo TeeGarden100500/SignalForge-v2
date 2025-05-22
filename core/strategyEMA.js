@@ -16,10 +16,9 @@ function checkEMACrossStrategy(symbol, candles, timeframe) {
 
   if (prevCross < 0 && currentCross > 0) {
     return {
-      symbol,
+      symbol, timeframe,
       strategy: 'EMA_CROSS',
       tag: 'EMA_CROSS',
-      timeframe,
       message: `🔼 [${symbol}] EMA пересекла вверх: EMA9 > EMA21`
     };
   }
@@ -53,10 +52,9 @@ function checkEMACrossStrategy(symbol, candles, timeframe) {
 
   const trend = angle > 0 ? 'вверх ⏫' : 'вниз ⏬';
   return {
-    symbol,
+    symbol, timeframe,
     strategy: 'EMA_ANGLE',
     tag: 'EMA_ANGLE',
-    timeframe,
     message: `📈 [${symbol}] EMA(21) уверенно наклонён ${trend} (угол: ${angle})`
   };
 }
