@@ -1,6 +1,6 @@
 const { calculateATR } = require('./indicators');
 
-function checkATRSpikeStrategy(symbol, candles, interval) {
+function checkATRSpikeStrategy(symbol, candles, timeframe) {
   if (candles.length < 16) return null;
 
   const atr = calculateATR(candles, 14);
@@ -19,10 +19,9 @@ function checkATRSpikeStrategy(symbol, candles, interval) {
 
   if (spikeRatio >= 1.5) {
     return {
-      symbol,
+      symbol, timeframe,
       strategy: 'ATR_SPIKE',
       tag: 'ATR_SPIKE',
-      timeframe,
       message: `💥 [${symbol}] Волатильность выше нормы: TR = ${currTR.toFixed(2)}, ATR = ${atr.toFixed(2)} (${spikeRatio.toFixed(2)}x)`
     };
   }
