@@ -13,7 +13,7 @@ function logToFile(message) {
   fs.appendFileSync(logFilePath, message + '\n');
     }
 
-function checkComboStrategies(symbol, signals) {
+function checkComboStrategies(symbol, signals, timeframe) {
   const fired = [];
   let total = 0;
   let firedCount = 0;
@@ -23,11 +23,11 @@ function checkComboStrategies(symbol, signals) {
     const missing = combo.conditions.filter(cond => !signals.includes(cond));
     if (missing.length === 0) {
       firedCount++;
-      const msg = `✅ COMBO "${combo.name}" сработала для ${symbol}: ${combo.message}`;
+      console.log(`✅ COMBO "${combo.name}" сработала для ${symbol} [${res.timeframe}]: ${res.message}`);
       console.log(msg);
       logToFile(msg);
       fired.push({
-        symbol,
+        symbol, timeframe,
         name: combo.name,
         message: combo.message,
         direction: combo.direction
