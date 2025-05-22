@@ -1,6 +1,7 @@
 const { getTopVolatilePairs } = require('./volatilitySelector');
 const { VOLATILITY_UPDATE_INTERVAL_HOURS } = require('./config');
 const { startCandleCollector } = require('./wsHandler');
+const { analyzeAllSymbols } = require('./startAnalysisCycle');
 
 async function runVolatilityScanLoop() {
   const intervalMs = VOLATILITY_UPDATE_INTERVAL_HOURS * 60 * 60 * 1000;
