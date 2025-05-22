@@ -23,7 +23,7 @@ function checkComboStrategies(symbol, signals, timeframe) {
     const missing = combo.conditions.filter(cond => !signals.includes(cond));
     if (missing.length === 0) {
       firedCount++;
-      console.log(`✅ COMBO "${combo.name}" сработала для ${symbol} [${res.timeframe}]: ${res.message}`);
+      const msg = `✅ COMBO "${combo.name}" сработала для ${symbol} [${timeframe}]: ${combo.message}`;
       console.log(msg);
       logToFile(msg);
       fired.push({
@@ -32,7 +32,7 @@ function checkComboStrategies(symbol, signals, timeframe) {
         message: combo.message,
         direction: combo.direction
       });
-     } 
+     }
 /*     else {
       const msg = `❌ COMBO "${combo.name}" НЕ сработала для ${symbol}: не хватает тегов: ${missing.join(', ')}`;
       console.log(msg);
