@@ -13,5 +13,6 @@ async function runVolatilityScanLoop() {
 (async () => {
   const topPairs = await getTopVolatilePairs();
   startCandleCollector(topPairs);
+  analyzeAllSymbols(topPairs, '5m');
 })();
 runVolatilityScanLoop();
