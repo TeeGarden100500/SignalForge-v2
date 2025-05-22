@@ -9,6 +9,7 @@ function checkGreenCandle(symbol, candles) {
       symbol,
       strategy: 'GREEN_CANDLE',
       tag: 'GREEN_CANDLE',
+      timeframe,
       message: `🟢 [${symbol}] Зеленая свеча: ${last.open} → ${last.close}`
     };
   }
