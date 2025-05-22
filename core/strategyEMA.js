@@ -19,6 +19,7 @@ function checkEMACrossStrategy(symbol, candles) {
       symbol,
       strategy: 'EMA_CROSS',
       tag: 'EMA_CROSS',
+      timeframe,
       message: `🔼 [${symbol}] EMA пересекла вверх: EMA9 > EMA21`
     };
   }
@@ -55,6 +56,7 @@ function checkEMACrossStrategy(symbol, candles) {
     symbol,
     strategy: 'EMA_ANGLE',
     tag: 'EMA_ANGLE',
+    timeframe,
     message: `📈 [${symbol}] EMA(21) уверенно наклонён ${trend} (угол: ${angle})`
   };
 }
