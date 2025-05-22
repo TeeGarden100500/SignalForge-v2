@@ -2,7 +2,6 @@ const { calculateEMA } = require('./indicators');
 const { calculateEMAAngle } = require('./indicators');
 const { DEBUG_LOG_LEVEL } = require('../config');
 
-
 let lastDirection = {}; // для хранения предыдущего пересечения
 
 function checkEMACrossStrategy(symbol, candles) {
@@ -40,10 +39,14 @@ function checkEMACrossStrategy(symbol, candles) {
   const { angle, emaStart, emaEnd } = result;
   const threshold = 0.001;
 
+  if (DEBUG_LOG_LEVEL === 'verbose') {
   console.log(`[DEBUG] EMA для ${symbol} | Start: ${emaStart}, End: ${emaEnd}, Angle: ${angle}`);
+}
 
   if (Math.abs(angle) < threshold) {
-    console.log(`[DEBUG] Angle слишком мал для ${symbol}: ${angle}`);
+    if (DEBUG_LOG_LEVEL === 'verbose') {
+  console.log(`[DEBUG] Angle слишком мал для ${symbol}: ${angle}`);
+}
     return null;
   }
 
