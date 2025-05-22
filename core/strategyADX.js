@@ -11,6 +11,7 @@ function checkADXStrengthStrategy(symbol, candles, interval) {
     symbol,
     strategy: 'ADX',
     tag: 'ADX_TREND',
+    timeframe,
     message: `📈 [${symbol}] Сильный тренд: ADX = ${adx.toFixed(2)}`
   };
 }
