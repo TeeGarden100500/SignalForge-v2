@@ -1,6 +1,6 @@
 const { detectHighLowProximity } = require('./indicators');
 
-function checkHighLowProximity(symbol, candles, interval, mode = 'strict') {
+function checkHighLowProximity(symbol, candles, timeframe, mode = 'strict') {
   const threshold = mode === 'loose' ? 10 : 1.5;
   const result = detectHighLowProximity(candles, 20, threshold);
   if (!result) return null;
@@ -9,20 +9,18 @@ function checkHighLowProximity(symbol, candles, interval, mode = 'strict') {
 
 if (nearHigh) {
   return {
-    symbol,
+    symbol, timeframe,
     strategy: mode === 'loose' ? 'PROX_HIGH_L' : 'PROX_HIGH',
     tag: mode === 'loose' ? 'PROX_HIGH_L' : 'PROX_HIGH',
-    timeframe,
     message: `🟠 [${symbol}] Цена рядом с HIGH (${close} ≈ ${high}) [${mode}]`
   };
 }
 
 if (nearLow) {
   return {
-    symbol,
+    symbol, timeframe,
     strategy: mode === 'loose' ? 'PROX_LOW_L' : 'PROX_LOW',
     tag: mode === 'loose' ? 'PROX_LOW_L' : 'PROX_LOW',
-    timeframe,
     message: `🔵 [${symbol}] Цена рядом с LOW (${close} ≈ ${low}) [${mode}]`
   };
 }
