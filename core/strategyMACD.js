@@ -2,7 +2,7 @@ const { calculateMACD } = require('./indicators');
 
 let lastMACD = {};
 
-function checkMACDStrategy(symbol, candles, timeframe) {
+function checkMACDStrategy(symbol, candles, interval, timeframe) {
   const key = `${symbol}_${interval}`;
   const macd = calculateMACD(candles);
   if (!macd) return null;
