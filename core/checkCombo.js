@@ -30,11 +30,13 @@ function checkComboStrategies(symbol, signals, timeframe) {
       console.log(`✅ COMBO "${combo.name}" сработала для ${symbol} [${timeframe}]: ${msg}`);
       logToFile(msg);
       fired.push({
-        symbol, timeframe,
+        symbol,
+        timeframe,
         name: combo.name,
-        message: combo.message,
+        message: msg,  // ✅ уже готовое сообщение
         direction: combo.direction
       });
+
      }
 /*     else {
       const msg = `❌ COMBO "${combo.name}" НЕ сработала для ${symbol}: не хватает тегов: ${missing.join(', ')}`;
