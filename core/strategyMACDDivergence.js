@@ -1,4 +1,5 @@
 const { calculateMACD } = require('./indicators');
+const { DEBUG_LOG_LEVEL } = require('../config');
 
 function checkMACDDivergence(symbol, candles) {
   if (!Array.isArray(candles) || candles.length < 5) return null;
@@ -8,7 +9,9 @@ function checkMACDDivergence(symbol, candles) {
 
   const macdSeries = calculateMACD(candles);
   if (!Array.isArray(macdSeries) || macdSeries.length < 2) {
+    if (DEBUG_LOG_LEVEL === 'verbose') {
     console.log(`[DEBUG] MACD Divergence: недостаточно данных для ${symbol}`);
+    }
     return null;
     }
 
