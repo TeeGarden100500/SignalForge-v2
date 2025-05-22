@@ -15,6 +15,7 @@ function checkMACDStrategy(symbol, candles, interval) {
       symbol,
       strategy: 'MACD_CROSS_UP',
       tag: 'MACD_CROSS_UP',
+      timeframe,
       message: `🟢 [${symbol}] MACD пересёк вверх (сигнал на рост)`,
     };
   }
@@ -24,6 +25,7 @@ function checkMACDStrategy(symbol, candles, interval) {
       symbol,
       strategy: 'MACD_CROSS_DOWN',
       tag: 'MACD_CROSS_DOWN',
+      timeframe,
       message: `🔴 [${symbol}] MACD пересёк вниз (сигнал на падение)`,
     };
   }
@@ -35,6 +37,7 @@ if (candles.length >= 3) {
       symbol,
       strategy: 'MACD_DIVERGENCE',
       tag: 'MACD_DIVERGENCE',
+      timeframe,
       message: `🟢 [${symbol}] Дивергенция по MACD`,
     };
   }
