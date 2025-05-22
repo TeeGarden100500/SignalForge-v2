@@ -22,6 +22,7 @@ function checkATRSpikeStrategy(symbol, candles, interval) {
       symbol,
       strategy: 'ATR_SPIKE',
       tag: 'ATR_SPIKE',
+      timeframe,
       message: `💥 [${symbol}] Волатильность выше нормы: TR = ${currTR.toFixed(2)}, ATR = ${atr.toFixed(2)} (${spikeRatio.toFixed(2)}x)`
     };
   }
