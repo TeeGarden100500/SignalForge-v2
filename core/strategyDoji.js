@@ -11,6 +11,7 @@ function checkDojiPattern(candles) {
     return {
       strategy: 'DOJI',
       tag: 'DOJI',
+      timeframe,
       message: `📌 [DOJI] Найден разворотный паттерн Doji`
     };
   }
