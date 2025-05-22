@@ -1,6 +1,6 @@
 
 
-function checkGreenCandle(symbol, candles) {
+function checkGreenCandle(symbol, candles, timeframe) {
   if (!candles.length) return null;
 
   const last = candles.at(-1);
