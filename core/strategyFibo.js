@@ -1,6 +1,6 @@
 const { calculateFiboLevels } = require('./indicators');
 
-function checkFiboProximityStrategy(symbol, candles, interval) {
+function checkFiboProximityStrategy(symbol, candles, timeframe) {
   const fibo = calculateFiboLevels(candles, 30);
   if (!fibo) return null;
 
@@ -11,10 +11,9 @@ function checkFiboProximityStrategy(symbol, candles, interval) {
   for (const [label, price] of Object.entries(levels)) {
     if (Math.abs(close - price) <= threshold) {
       return {
-        symbol,
+        symbol, timeframe,
         strategy: 'FIBO_TOUCH',
         tag: 'FIBO_TOUCH',
-        timeframe,
         message: `📐 [${symbol}] Цена рядом с FIBO ${label} (${close} ≈ ${price})`
       };
     }
