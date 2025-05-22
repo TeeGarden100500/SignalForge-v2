@@ -1,6 +1,6 @@
 const { detectBreakout } = require('./indicators');
 
-function checkBreakoutStrategy(symbol, candles) {
+function checkBreakoutStrategy(symbol, candles, timeframe) {
   if (!Array.isArray(candles) || candles.length < 3) return null;
 
   const prevHigh = candles.at(-2).high;
