@@ -8,7 +8,7 @@ function checkMACDDivergence(symbol, candles) {
 
   const macdSeries = calculateMACD(candles);
   if (!Array.isArray(macdSeries) || macdSeries.length < 2) {
-    console.log(`[DEBUG] MACD Divergence: недостаточно данных для ${symbol}`);
+//    console.log(`[DEBUG] MACD Divergence: недостаточно данных для ${symbol}`);
     return null;
     }
 
