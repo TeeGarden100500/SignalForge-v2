@@ -4,7 +4,7 @@ const { DEBUG_LOG_LEVEL } = require('../config');
 
 let lastDirection = {}; // для хранения предыдущего пересечения
 
-function checkEMACrossStrategy(symbol, candles) {
+function checkEMACrossStrategy(symbol, candles, timeframe) {
   if (!Array.isArray(candles) || candles.length < 22) return null;
 
   const closes = candles.map(c => c.close);
