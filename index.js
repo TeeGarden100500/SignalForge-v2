@@ -10,12 +10,18 @@ async function runVolatilityScanLoop() {
     await getTopVolatilePairs();
   }, intervalMs);
 }
+
 (async () => {
   const topPairs = await getTopVolatilePairs();
   startCandleCollector(topPairs);
- const timeframes = ['5m', '15m', '1h'];
-for (const tf of timeframes) {
-  analyzeAllSymbols(topPairs, tf);
-}
+
+  const timeframes = ['5m', '15m', '1h'];
+
+  timeframes.forEach((tf, i) => {
+    setTimeout(() => {
+      analyzeAllSymbols(topPairs, tf);
+    }, i * 30000); // 30 секунд между фреймами
+  });
 })();
+
 runVolatilityScanLoop();
