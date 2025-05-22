@@ -22,6 +22,7 @@ function checkRSIHiddenBull(symbol, candles) {
       symbol,
       strategy: 'RSI_HIDDEN_BULL',
       tag: 'RSI_HIDDEN_BULL',
+      timeframe,
       message: `🟢 [${symbol}] Скрытая бычья дивергенция: цена снижается, RSI растёт — возможен рост`
     };
   }
