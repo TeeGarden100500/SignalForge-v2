@@ -1,8 +1,8 @@
 const { detectVolumeSpike } = require('./indicators');
 
-function checkVolumeSpikeStrategy(symbol, candles, interval) {
+function checkVolumeSpikeStrategy(symbol, candles, timeframe) {
 
-  const result = detectVolumeSpike(candles, timeframe);
+  const result = detectVolumeSpike(candles);
   if (!result || !result.spike) return null;
 
   const volume = candles.at(-1).volume;
