@@ -12,6 +12,7 @@ if (nearHigh) {
     symbol,
     strategy: mode === 'loose' ? 'PROX_HIGH_L' : 'PROX_HIGH',
     tag: mode === 'loose' ? 'PROX_HIGH_L' : 'PROX_HIGH',
+    timeframe,
     message: `🟠 [${symbol}] Цена рядом с HIGH (${close} ≈ ${high}) [${mode}]`
   };
 }
@@ -21,6 +22,7 @@ if (nearLow) {
     symbol,
     strategy: mode === 'loose' ? 'PROX_LOW_L' : 'PROX_LOW',
     tag: mode === 'loose' ? 'PROX_LOW_L' : 'PROX_LOW',
+    timeframe,
     message: `🔵 [${symbol}] Цена рядом с LOW (${close} ≈ ${low}) [${mode}]`
   };
 }
