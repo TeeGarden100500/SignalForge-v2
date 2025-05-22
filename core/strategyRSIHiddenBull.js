@@ -1,6 +1,6 @@
 const { calculateRSI } = require('./indicators');
 
-function checkRSIHiddenBull(symbol, candles) {
+function checkRSIHiddenBull(symbol, candles, timeframe) {
   if (candles.length < 5) return null;
 
   const rsiPeriod = 14;
