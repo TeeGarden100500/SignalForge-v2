@@ -6,10 +6,9 @@ function checkGreenCandle(symbol, candles, timeframe) {
   const last = candles.at(-1);
   if (last.close > last.open) {
     return {
-      symbol,
+      symbol, timeframe,
       strategy: 'GREEN_CANDLE',
       tag: 'GREEN_CANDLE',
-      timeframe,
       message: `🟢 [${symbol}] Зеленая свеча: ${last.open} → ${last.close}`
     };
   }
