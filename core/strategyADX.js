@@ -20,6 +20,7 @@ function checkADXStrengthStrategy(symbol, candles, interval) {
       symbol,
       strategy: 'ADX',
       tag: 'ADX_FLAT',
+      timeframe,
       message: `💤 [${symbol}] Флэт/слабый тренд. ADX = ${adx}`
     };
   }
