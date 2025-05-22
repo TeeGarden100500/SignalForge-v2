@@ -26,7 +26,7 @@ function checkEMACrossStrategy(symbol, candles, timeframe) {
   return null;
   }
 
-  function checkEMAAngleStrategy(symbol, candles, interval) {
+  function checkEMAAngleStrategy(symbol, candles, timeframe) {
   const result = calculateEMAAngle(candles, 21, 21);
 
   if (!result) {
