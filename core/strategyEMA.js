@@ -1,5 +1,7 @@
 const { calculateEMA } = require('./indicators');
 const { calculateEMAAngle } = require('./indicators');
+const { DEBUG_LOG_LEVEL } = require('../config');
+
 
 let lastDirection = {}; // для хранения предыдущего пересечения
 
@@ -23,13 +25,15 @@ function checkEMACrossStrategy(symbol, candles) {
   }
 
   return null;
-}
+  }
 
-function checkEMAAngleStrategy(symbol, candles, interval) {
+  function checkEMAAngleStrategy(symbol, candles, interval) {
   const result = calculateEMAAngle(candles, 21, 21);
 
   if (!result) {
-    console.log(`[DEBUG] EMA angle result is NULL for ${symbol}`);
+    if (DEBUG_LOG_LEVEL === 'verbose') {
+  console.log(`[DEBUG] EMA angle result is NULL for ${symbol}`);
+  }
     return null;
   }
 
