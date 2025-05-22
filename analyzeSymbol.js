@@ -1,8 +1,8 @@
 // src/analyzeSymbol.js
 
 const { applyStrategies } = require('./applyStrategies');
-const { sendWebhook } = require('../webhookHandler');
-const { getCandlesFor } = require('../cache/candleStore'); // или твой источник
+const { sendWebhook } = require('./webhookHandler');
+const { getCandlesFor } = require('./candleStore'); // или твой источник
 
 function analyzeSymbol(symbol, interval) {
   const candles = getCandlesFor(symbol, interval); // получаем свечи
