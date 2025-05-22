@@ -1,4 +1,4 @@
-function checkDojiPattern(candles) {
+function checkDojiPattern(candles, timeframe) {
   if (!Array.isArray(candles) || candles.length < 3) return null;
 
   const lastCandle = candles.at(-1);
