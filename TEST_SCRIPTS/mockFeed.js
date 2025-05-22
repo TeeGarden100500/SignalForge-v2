@@ -20,7 +20,7 @@ const mockData = {
   ...mock6,
   ...mock7,
   ...mock8,
- ...mock9,
+  ...mock9,
   ...mock10,
 };
 
