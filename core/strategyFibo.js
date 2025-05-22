@@ -14,6 +14,7 @@ function checkFiboProximityStrategy(symbol, candles, interval) {
         symbol,
         strategy: 'FIBO_TOUCH',
         tag: 'FIBO_TOUCH',
+        timeframe,
         message: `📐 [${symbol}] Цена рядом с FIBO ${label} (${close} ≈ ${price})`
       };
     }
