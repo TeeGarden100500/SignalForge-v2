@@ -9,22 +9,20 @@ function checkBreakoutStrategy(symbol, candles, timeframe) {
 
   if (current.high > prevHigh) {
     return {
-      symbol,
+      symbol, timeframe,
       strategy: 'BREAKOUT',
       tag: 'BREAKOUT_UP',
       tags: ['BREAKOUT', 'BREAKOUT_UP'],
-      timeframe,
       message: `🚀 [${symbol}] Пробой вверх! Цена ${current.high} выше HIGH ${prevHigh}`
     };
   }
 
   if (current.low < prevLow) {
     return {
-      symbol,
+      symbol, timeframe,
       strategy: 'BREAKOUT',
       tag: 'BREAKOUT_DOWN',
       tags: ['BREAKOUT', 'BREAKOUT_DOWN'],
-      timeframe,
       message: `🔻 [${symbol}] Пробой вниз! Цена ${current.low} ниже LOW ${prevLow}`
     };
   }
