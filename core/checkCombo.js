@@ -23,21 +23,24 @@ function checkComboStrategies(symbol, signals, timeframe) {
     const missing = combo.conditions.filter(cond => !signals.includes(cond));
     if (missing.length === 0) {
       firedCount++;
-      const msg = typeof combo.message === 'function'
-      ? combo.message(symbol, timeframe)
-      : combo.message;
 
-      console.log(`✅ COMBO "${combo.name}" сработала для ${symbol} [${timeframe}]: ${msg}`);
-      logToFile(msg);
+      // 🔧 Генерируем сообщение (с учётом возможной функции)
+      const msg = typeof combo.message === 'function'
+        ? combo.message(symbol, timeframe)
+        : combo.message;
+
+      const logLine = `✅ COMBO "${combo.name}" сработала для ${symbol} [${timeframe}]: ${msg}`;
+      console.log(logLine);
+      logToFile(logLine);
+
       fired.push({
         symbol,
         timeframe,
         name: combo.name,
-        message: msg,  // ✅ уже готовое сообщение
+        message: msg, // ✅ Здесь должно быть уже готовое сообщение
         direction: combo.direction
       });
-
-     }
+    }
 /*     else {
       const msg = `❌ COMBO "${combo.name}" НЕ сработала для ${symbol}: не хватает тегов: ${missing.join(', ')}`;
       console.log(msg);
