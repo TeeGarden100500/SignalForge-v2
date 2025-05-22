@@ -20,20 +20,18 @@ function checkMACDDivergence(symbol, candles, timeframe) {
 
   if (priceNow < pricePrev && macdNow > macdPrev) {
     return {
-      symbol,
+      symbol, timeframe,
       strategy: 'MACD_DIVERGENCE',
       tag: 'MACD_DIVERGENCE',
-      timeframe,
       message: `🟢 [${symbol}] MACD Дивергенция: цена падает, MACD растет — возможный отскок`
     };
     }
 
   if (priceNow > pricePrev && macdNow < macdPrev) {
     return {
-      symbol,
+      symbol, timeframe,
       strategy: 'MACD_DIVERGENCE',
       tag: 'MACD_DIVERGENCE',
-      timeframe,
       message: `🔴 [${symbol}] MACD Дивергенция: цена растет, MACD падает — возможный разворот вниз`
     };
     }
