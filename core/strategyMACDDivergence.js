@@ -1,7 +1,7 @@
 const { calculateMACD } = require('./indicators');
 const { DEBUG_LOG_LEVEL } = require('../config');
 
-function checkMACDDivergence(symbol, candles) {
+function checkMACDDivergence(symbol, candles, timeframe) {
   if (!Array.isArray(candles) || candles.length < 5) return null;
 
   const priceNow = candles.at(-1).close;
