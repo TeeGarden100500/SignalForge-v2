@@ -27,16 +27,17 @@ function applyStrategies(symbol, candles, interval) {
 
   const add = (res, fallbackTag) => {
     if (res) {
+      if (!res.timeframe) res.timeframe = interval; // 🟢 подставляем таймфрейм, если не указан
       signalTags.push(res.strategy || fallbackTag);
       messages.push(res.message);
       results.push(res);
     }
   };
 
-  add(checkRSIStrategy(symbol, candles), 'RSI_OVERBOUGHT');
-  add(checkRSIStrategy(symbol, candles), 'RSI_OVERSOLD');
-  add(checkRSIStrategy(symbol, candles), 'RSI_DROP');
-  add(checkRSIHiddenBull(symbol, candles), 'RSI_HIDDEN_BULL'); 
+  add(checkRSIStrategy(symbol, candles, interval), 'RSI_OVERBOUGHT');
+  add(checkRSIStrategy(symbol, candles, interval), 'RSI_OVERSOLD');
+  add(checkRSIStrategy(symbol, candles, interval), 'RSI_DROP');
+  add(checkRSIHiddenBull(symbol, candles, interval), 'RSI_HIDDEN_BULL'); 
   
   add(checkMACDStrategy(symbol, candles, interval), 'MACD_CROSS_UP');
   add(checkMACDStrategy(symbol, candles, interval), 'MACD_CROSS_DOWN');
@@ -58,10 +59,10 @@ function applyStrategies(symbol, candles, interval) {
 
   add(checkDojiPattern(candles), 'DOJI');
 
-  add(checkGreenCandle(symbol, candles), 'GREEN_CANDLE');
+  add(checkGreenCandle(symbol, candles, interval), 'GREEN_CANDLE');
 
-  add(checkBreakoutStrategy(symbol, candles), 'BREAKOUT_UP');
-  add(checkBreakoutStrategy(symbol, candles), 'BREAKOUT_DOWN');
+  add(checkBreakoutStrategy(symbol, candles, interval), 'BREAKOUT_UP');
+  add(checkBreakoutStrategy(symbol, candles, interval), 'BREAKOUT_DOWN');
 
   add(checkATRSpikeStrategy(symbol, candles, interval), 'ATR_SPIKE');
   
