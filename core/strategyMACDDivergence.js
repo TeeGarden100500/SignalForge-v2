@@ -23,6 +23,7 @@ function checkMACDDivergence(symbol, candles) {
       symbol,
       strategy: 'MACD_DIVERGENCE',
       tag: 'MACD_DIVERGENCE',
+      timeframe,
       message: `🟢 [${symbol}] MACD Дивергенция: цена падает, MACD растет — возможный отскок`
     };
     }
@@ -32,6 +33,7 @@ function checkMACDDivergence(symbol, candles) {
       symbol,
       strategy: 'MACD_DIVERGENCE',
       tag: 'MACD_DIVERGENCE',
+      timeframe,
       message: `🔴 [${symbol}] MACD Дивергенция: цена растет, MACD падает — возможный разворот вниз`
     };
     }
