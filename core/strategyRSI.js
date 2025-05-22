@@ -10,6 +10,7 @@ function checkRSIStrategy(symbol, candles) {
       symbol,
       strategy: 'RSI_OVERSOLD',
       tag: 'RSI_OVERSOLD',
+      timeframe,
       message: `🟢 [${symbol}] RSI = ${rsi} → Возможен отскок (перепроданность)`,
     };
   }
@@ -19,6 +20,7 @@ function checkRSIStrategy(symbol, candles) {
       symbol,
       strategy: 'RSI_OVERBOUGHT',
       tag: 'RSI_OVERBOUGHT',
+      timeframe,
       message: `🔴 [${symbol}] RSI = ${rsi} → Возможен откат (перекупленность)`,
     };
   }
@@ -32,6 +34,7 @@ if (rsiPrev !== null && rsiNow < rsiPrev - 5) {
     symbol,
     strategy: 'RSI_DROP',
     tag: 'RSI_DROP',
+    timeframe,
     message: `📉 [${symbol}] Резкое падение RSI: с ${rsiPrev.toFixed(2)} до ${rsiNow.toFixed(2)}`
   };
 }
