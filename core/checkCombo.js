@@ -23,8 +23,11 @@ function checkComboStrategies(symbol, signals, timeframe) {
     const missing = combo.conditions.filter(cond => !signals.includes(cond));
     if (missing.length === 0) {
       firedCount++;
-      const msg = `✅ COMBO "${combo.name}" сработала для ${symbol} [${timeframe}]: ${combo.message}`;
-      console.log(msg);
+      const msg = typeof combo.message === 'function'
+      ? combo.message(symbol, timeframe)
+      : combo.message;
+
+      console.log(`✅ COMBO "${combo.name}" сработала для ${symbol} [${timeframe}]: ${msg}`);
       logToFile(msg);
       fired.push({
         symbol, timeframe,
