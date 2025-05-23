@@ -8,7 +8,7 @@ function checkVolumeSpikeStrategy(symbol, candles, timeframe) {
   const volume = candles.at(-1).volume;
   const prevVolume = result.avgVolume;
 
-  if (volume < prevVolume * 3) {
+  if (volume < prevVolume * 0.5) {
     return {
       symbol, timeframe,
       strategy: 'VOLUME_DROP',
@@ -16,7 +16,7 @@ function checkVolumeSpikeStrategy(symbol, candles, timeframe) {
       message: `📉 [${symbol}] Объём резко снизился: ${volume.toFixed(2)} < ${prevVolume.toFixed(2)}`
     };
   }
-
+ if (volume > prevVolume * 3) {
   return {
     symbol, timeframe,
     strategy: 'VOLUME_SPIKE',
