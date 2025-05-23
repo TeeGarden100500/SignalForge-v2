@@ -24,7 +24,7 @@ function checkVolumeSpikeStrategy(symbol, candles, timeframe) {
     message: `⚡ [${symbol}] Объём выше нормы в ${result.ratio}× (${result.volume} против среднего ${result.avgVolume})`
   };
 }
-
+}
 module.exports = {
   checkVolumeSpikeStrategy
 };
