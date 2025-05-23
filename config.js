@@ -8,9 +8,9 @@ module.exports = {
                              //    Пример: 0.05 ~ 2.86°, что является умеренным наклоном
   
   DOJI_BODY_RATIO: 0.3, // 🔧 Условие для Doji: тело составляет менее 30% от полного диапазона свечи
-  MEAN_REVERS_THRESHOLD_DOWN: -2.0,
-  MEAN_REVERS_THRESHOLD_UP: 3.0,
-  BREAKOUT_LOOKBACK: 2
+  MEAN_REVERS_THRESHOLD_DOWN: -2.0, // Цена ниже MA на X%
+  MEAN_REVERS_THRESHOLD_UP: 3.0, // Цена выше MA на X%
+  BREAKOUT_LOOKBACK: 2 // Breakout: сравниваем текущую цену с High/Low, отстоящими на N свечей назад
 
   CACHE_LIMITS: {
   '5m': 120,
