@@ -1,6 +1,8 @@
 const { calculateEMA } = require('./indicators');
 const { calculateEMAAngle } = require('./indicators');
 const { DEBUG_LOG_LEVEL } = require('../config');
+const { EMA_ANGLE_THRESHOLD } = require('../config');
+
 
 let lastDirection = {}; // для хранения предыдущего пересечения
 
@@ -37,8 +39,7 @@ function checkEMACrossStrategy(symbol, candles, timeframe) {
   }
 
   const { angle, emaStart, emaEnd } = result;
-  const threshold = 0.05; //🔧 Порог угла наклона EMA (в радианах), выше которого считаем тренд направленным. 
-                            // Пример: 0.05 ~ 2.86°, что является умеренным наклоном
+  const threshold = EMA_ANGLE_THRESHOLD; 
 
   if (DEBUG_LOG_LEVEL === 'verbose') {
   console.log(`[DEBUG] EMA для ${symbol} | Start: ${emaStart}, End: ${emaEnd}, Angle: ${angle}`);
