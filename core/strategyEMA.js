@@ -8,8 +8,8 @@ function checkEMACrossStrategy(symbol, candles, timeframe) {
   if (!Array.isArray(candles) || candles.length < 22) return null;
 
   const closes = candles.map(c => c.close);
-  const emaShort = calculateEMA(closes, 9);
-  const emaLong = calculateEMA(closes, 21);
+  const emaShort = calculateEMA(closes, 12);
+  const emaLong = calculateEMA(closes, 26);
 
   const prevCross = emaShort.at(-2) - emaLong.at(-2);
   const currentCross = emaShort.at(-1) - emaLong.at(-1);
@@ -37,7 +37,7 @@ function checkEMACrossStrategy(symbol, candles, timeframe) {
   }
 
   const { angle, emaStart, emaEnd } = result;
-  const threshold = 0.001;
+  const threshold = 0.05;
 
   if (DEBUG_LOG_LEVEL === 'verbose') {
   console.log(`[DEBUG] EMA для ${symbol} | Start: ${emaStart}, End: ${emaEnd}, Angle: ${angle}`);
