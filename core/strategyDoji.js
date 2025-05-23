@@ -5,7 +5,7 @@ function checkDojiPattern(candles, timeframe) {
   const body = Math.abs(lastCandle.open - lastCandle.close);
   const range = lastCandle.high - lastCandle.low;
 
-  const isDoji = body / range < 0.1;
+  const isDoji = body / range < 0.3; // 🔧 Условие для Doji: тело составляет менее 30% от полного диапазона свечи
 
   if (isDoji) {
     return {
