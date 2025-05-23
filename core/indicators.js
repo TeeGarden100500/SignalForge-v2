@@ -68,7 +68,7 @@ function calculateEMAAngle(candles, period = 21, depth = 21) {
   const delta = emaEnd - emaStart;
   const angle = +(delta / depth).toFixed(4); // наклон
 
-  // console.log(`📊 [DEBUG] angle: ${angle}`);
+  console.log(`📊 [DEBUG] angle: ${angle}`);
 
   return {
     emaStart,
