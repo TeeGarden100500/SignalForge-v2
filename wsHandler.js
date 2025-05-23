@@ -68,7 +68,7 @@ const candles = candleCache[symbol]?.[interval];
   const { signalTags, messages } = applyStrategies(symbol, candles, interval);
   messages.forEach(msg => log(`📢 ${msg}`));
 
-  const combos = checkComboStrategies(symbol, signalTags);
+  const combos = checkComboStrategies(symbol, signalTags, interval);
   combos.forEach(combo => {
     console.log(`🔗 COMBO: ${combo.message}`);
       });
