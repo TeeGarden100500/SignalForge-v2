@@ -7,11 +7,11 @@ const logFilePath = path.join(__dirname, '../logs/combo_debug.log');
 // Убедимся, что папка logs существует
 if (!fs.existsSync(path.dirname(logFilePath))) {
   fs.mkdirSync(path.dirname(logFilePath), { recursive: true });
-    }
+}
 
 function logToFile(message) {
   fs.appendFileSync(logFilePath, message + '\n');
-    }
+}
 
 function checkComboStrategies(symbol, signals, timeframe) {
   const fired = [];
@@ -21,10 +21,11 @@ function checkComboStrategies(symbol, signals, timeframe) {
   for (const combo of comboStrategies) {
     total++;
     const missing = combo.conditions.filter(cond => !signals.includes(cond));
+
     if (missing.length === 0) {
       firedCount++;
 
-      // 🔧 Генерируем сообщение (с учётом возможной функции)
+      // 🛠 Правильный вызов message как функции
       const msg = typeof combo.message === 'function'
         ? combo.message(symbol, timeframe)
         : combo.message;
@@ -37,7 +38,7 @@ function checkComboStrategies(symbol, signals, timeframe) {
         symbol,
         timeframe,
         name: combo.name,
-        message: msg, // ✅ Здесь должно быть уже готовое сообщение
+        message: msg, // ✅ готовая строка, не функция
         direction: combo.direction
       });
     }
