@@ -6,7 +6,7 @@ function checkADXStrengthStrategy(symbol, candles, timeframe) {
 
   const { adx } = result;
 
-  if (adx > 15) {
+  if (adx > 25) {
   return {
     symbol, timeframe,
     strategy: 'ADX',
@@ -15,7 +15,7 @@ function checkADXStrengthStrategy(symbol, candles, timeframe) {
   };
 }
 
-  if (adx < 15) {
+  if (adx < 20) {
     return {
       symbol, timeframe,
       strategy: 'ADX',
