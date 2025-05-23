@@ -1,4 +1,5 @@
 const { calculateMeanReversion } = require('./indicators');
+const { MEAN_REVERS_LOWER, MEAN_REVERS_UPPER } = require('../config');
 
 function checkMeanReversionStrategy(symbol, candles, timeframe) {
   const result = calculateMeanReversion(candles);
@@ -9,7 +10,7 @@ function checkMeanReversionStrategy(symbol, candles, timeframe) {
   const deviation = ((close - ma) / ma) * 100;
   const threshold = 2.0;
 
-if (deviation <= -threshold) {
+if (deviation <= MEAN_REVERS_LOWER) { // Цена ниже MA на X%
   return {
     symbol, timeframe,
     strategy: 'MEAN_REVERS',
@@ -18,7 +19,7 @@ if (deviation <= -threshold) {
   };
 }
 
-if (deviation > 3) {
+if (deviation > MEAN_REVERS_UPPER) { // Цена выше MA на X%
   return {
     symbol, timeframe,
     strategy: 'MEAN_REVERS',
