@@ -34,7 +34,6 @@ function checkEMACrossStrategy(symbol, candles, timeframe) {
   if (!result) return null;
 
     return null;
-  }
 
   const { angle, emaStart, emaEnd } = result;
   const threshold = EMA_ANGLE_THRESHOLD; 
