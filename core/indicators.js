@@ -51,47 +51,50 @@ function calculateEMA(prices, period) {
 }
 
 const { EMA_SETTINGS } = require('../config');
-
-const EMA_PERIOD = EMA_SETTINGS.PERIOD;
-const EMA_DEPTH = EMA_SETTINGS.DEPTH;
                                                             // === EMAAngle ===
 function calculateEMAAngle(candles) {
+  const EMA_PERIOD = EMA_SETTINGS.PERIOD;
+  const EMA_DEPTH = EMA_SETTINGS.DEPTH;
 
-  // Проверка: достаточно ли свечей
-  if (candles.length < EMA_PERIOD + EMA_DEPTH) return null;
+  console.log('🧪 [DEBUG] Всего свечей:', candles.length);
 
-  // Выбираем участки для анализа
- const firstSlice = candles.slice(-(EMA_DEPTH + EMA_PERIOD), -EMA_PERIOD);
+  if (candles.length < EMA_PERIOD + EMA_DEPTH) {
+    console.log('⛔ [DEBUG] Недостаточно свечей для EMA уголка');
+    return null;
+  }
+
+  const firstSlice = candles.slice(-(EMA_DEPTH + EMA_PERIOD), -EMA_PERIOD);
   const lastSlice = candles.slice(-EMA_PERIOD);
 
-  // Вычисляем EMA для каждого участка
- const emaStartSeries = calculateEMA(firstSlice.map(c => c.close), EMA_PERIOD);
+  console.log('📈 [DEBUG] firstSlice.length:', firstSlice.length);
+  console.log('📉 [DEBUG] lastSlice.length:', lastSlice.length);
+
+  const emaStartSeries = calculateEMA(firstSlice.map(c => c.close), EMA_PERIOD);
   const emaEndSeries = calculateEMA(lastSlice.map(c => c.close), EMA_PERIOD);
 
-  // Берём последнее значение из каждого массива EMA
   const emaStart = emaStartSeries.at(-1);
   const emaEnd = emaEndSeries.at(-1);
 
-  // Защита от некорректных значений
+  console.log('🧮 [DEBUG] emaStartSeries:', emaStartSeries);
+  console.log('🧮 [DEBUG] emaEndSeries:', emaEndSeries);
+  console.log('🎯 [DEBUG] emaStart:', emaStart, 'emaEnd:', emaEnd);
+
   if (!emaStart || !emaEnd || isNaN(emaStart) || isNaN(emaEnd)) {
     console.log('[DEBUG] Invalid EMA values:', { emaStart, emaEnd });
     return null;
   }
 
-  // Расчёт угла (наклона): изменение цены по глубине
   const delta = emaEnd - emaStart;
-  const angle = +(delta / EMA_DEPTH).toFixed(4); // округляем до 4 знаков
+  const angle = +(delta / EMA_DEPTH).toFixed(4);
 
-  // Логгируем
-  console.log(`📈 [DEBUG] EMA angle: ${angle}`);
+  console.log(`📐 [DEBUG] EMA angle: ${angle}`);
 
   return {
     emaStart,
     emaEnd,
-    angle
+    angle,
   };
 }
-
 
 const { MACD_SETTINGS } = require('../config');
                                                                                // === MACD ===
