@@ -1,4 +1,7 @@
-function calculateRSI(candles, period = 14) {
+const { RSI_PERIOD } = require('../config');
+
+
+function calculateRSI(candles, RSI_PERIOD) {
   if (candles.length < period + 1) return null;
 
   let gains = 0;
