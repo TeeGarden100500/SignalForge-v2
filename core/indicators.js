@@ -1,7 +1,7 @@
 const { RSI_PERIOD } = require('../config');
 
 
-function calculateRSI(candles, RSI_PERIOD) {
+function calculateRSI(candles, period = RSI_PERIOD) {
   if (candles.length < period + 1) return null;
 
   let gains = 0;
@@ -24,7 +24,7 @@ function calculateRSI(candles, RSI_PERIOD) {
   const rs = avgGain / avgLoss;
   const rsi = 100 - 100 / (1 + rs);
 
-  return +rsi.toFixed(2);
+   return rsi;
 }
 
 function calculateEMA(prices, period) {
