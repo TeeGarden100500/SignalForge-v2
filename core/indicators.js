@@ -47,7 +47,12 @@ function calculateEMA(prices, period) {
   return ema;
 }
 
-function calculateEMAAngle(candles, period = 21, depth = 21) {
+  const { EMA_PERIOD, EMA_DEPTH } = require('../config');
+
+function calculateEMAAngle(candles) {
+  const period = EMA_PERIOD;
+  const depth = EMA_DEPTH;
+
   // Проверка: достаточно ли свечей
   if (candles.length < period + depth) return null;
 
