@@ -156,8 +156,8 @@ function detectVolumeSpike(candles, factor = VOLUME_SPIKE_FACTOR) {
 }
 
 const { BREAKOUT_LOOKBACK } = require('../config');
-                                                                    // === Breakout ===
-function detectBreakout(candles, lookback = 20) {
+                                                                                    // === Breakout ===
+function detectBreakout(candles, lookback = BREAKOUT_LOOKBACK) {
   if (candles.length < lookback + 1) return null;
 
   const recent = candles.slice(-1 - lookback, -1);
@@ -177,7 +177,7 @@ function detectBreakout(candles, lookback = 20) {
     close: last.close
   };
 }
-
+                                                                                      // === HighLowProximity ===
 function detectHighLowProximity(candles, lookback = 20, threshold = 10) {
   if (candles.length < lookback + 1) return null;
 
