@@ -92,22 +92,29 @@ function calculateEMAAngle(candles) {
   };
 }
 
-function calculateMACD(candles, fastPeriod = 12, slowPeriod = 26, signalPeriod = 9) {
-  if (candles.length < slowPeriod + signalPeriod) return null;
+
+const { MACD_SETTINGS } = require('../config');
+
+function calculateMACD(candles) {
+  const { FAST_PERIOD, SLOW_PERIOD, SIGNAL_PERIOD } = MACD_SETTINGS;
+
+  if (candles.length < SLOW_PERIOD + SIGNAL_PERIOD) return null;
 
   const macdLineArr = [];
+
   for (let i = 0; i < candles.length; i++) {
     const slice = candles.slice(0, i + 1);
-    const fastEMA = calculateEMA(slice, fastPeriod);
-    const slowEMA = calculateEMA(slice, slowPeriod);
-    if (fastEMA !== null && slowEMA !== null) {
+    const fastEMA = calculateEMA(slice, FAST_PERIOD);
+    const slowEMA = calculateEMA(slice, SLOW_PERIOD);
+
+    if (fastEMA != null && slowEMA != null) {
       macdLineArr.push(fastEMA - slowEMA);
     }
   }
 
-  if (macdLineArr.length < signalPeriod) return null;
+   if (macdLineArr.length < SIGNAL_PERIOD) return null;
 
-    const recentMACD = macdLineArr.at(-1);
+  const recentMACD = macdLineArr.at(-1);
   const signalSeries = calculateEMA(macdLineArr.map(v => ({ close: v })), signalPeriod);
   const signal = signalSeries?.at(-1); // Проверка на наличие
 
