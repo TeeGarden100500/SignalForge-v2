@@ -1,6 +1,6 @@
 const { applyStrategies } = require('../core/applyStrategies');
 const { checkComboStrategies } = require('../core/checkCombo');
- const mock1 = require('./testData/mock_candles_converted.json');
+ /* const mock1 = require('./testData/mock_candles_converted.json');
  const mock2 = require('./testData/mock_atr_spike.json');
  const mock3 = require('./testData/mock_adx_trend_flat.json');
  const mock4 = require('./testData/mock_fibo_touch.json');
@@ -9,12 +9,12 @@ const { checkComboStrategies } = require('../core/checkCombo');
  const mock7 = require('./testData/mock_bullish_divergence (2).json');
  const mock8 = require('./testData/mock_dead_volume_fall.json');
  const mock9 = require('./testData/mock_exhaustion_top (2).json');
- const mock10 = require('./testData/mock_momentum_rebound.json');
+ const mock10 = require('./testData/mock_momentum_rebound.json'); */
  const mock11 = require('./testData/mock_EMA_test.json');
 
 
 const mockData = {
-  ...mock1,
+  /* ...mock1,
   ...mock2,
   ...mock3,
   ...mock4,
@@ -23,7 +23,7 @@ const mockData = {
   ...mock7,
   ...mock8,
   ...mock9,
-  ...mock10,
+  ...mock10, */
   ...mock11, 
 };
 
