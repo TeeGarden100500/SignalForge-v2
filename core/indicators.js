@@ -129,16 +129,18 @@ function calculateMACD(candles) {
   };
   }
 
-function calculateAverageVolume(candles, period = 20) {
+// === Volume Settings ===
+const { AVERAGE_VOLUME_PERIOD, VOLUME_SPIKE_FACTOR, } = require('../config');
+
+function calculateAverageVolume(candles, period = AVERAGE_VOLUME_PERIOD) {
   if (candles.length < period + 1) return null;
-//  console.log(`[DEBUG] Тип candles:`, typeof candles);
-//  console.log(`[DEBUG] Прототип candles:`, Object.prototype.toString.call(candles));
+
   const recent = candles.slice(-1 - period, -1);
   const avg = recent.reduce((sum, c) => sum + c.volume, 0) / period;
   return +avg.toFixed(2);
 }
 
-function detectVolumeSpike(candles, factor = 1.5) {
+function detectVolumeSpike(candles, factor = VOLUME_SPIKE_FACTOR) {
   const avgVolume = calculateAverageVolume(candles);
   const lastVolume = candles.at(-1)?.volume;
 
@@ -149,9 +151,10 @@ function detectVolumeSpike(candles, factor = 1.5) {
     spike,
     ratio: +(lastVolume / avgVolume).toFixed(2),
     volume: lastVolume,
-    avgVolume
+    avgVolume,
   };
 }
+
 
 function detectBreakout(candles, lookback = 20) {
   if (candles.length < lookback + 1) return null;
