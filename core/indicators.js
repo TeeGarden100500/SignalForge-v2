@@ -155,8 +155,8 @@ function detectVolumeSpike(candles, factor = VOLUME_SPIKE_FACTOR) {
   };
 }
 
-const { BREAKOUT_LOOKBACK } = require('../config');
                                                                                     // === Breakout ===
+const { BREAKOUT_LOOKBACK } = require('../config');
 function detectBreakout(candles, lookback = BREAKOUT_LOOKBACK) {
   if (candles.length < lookback + 1) return null;
 
@@ -178,7 +178,11 @@ function detectBreakout(candles, lookback = BREAKOUT_LOOKBACK) {
   };
 }
                                                                                       // === HighLowProximity ===
-function detectHighLowProximity(candles, lookback = 20, threshold = 10) {
+const { BREAKOUT_PROXIMITY } = require('../config');
+function detectHighLowProximity(candles) {
+  const lookback = BREAKOUT_PROXIMITY.LOOKBACK;
+  const threshold = BREAKOUT_PROXIMITY.THRESHOLD;
+
   if (candles.length < lookback + 1) return null;
 
   const recent = candles.slice(-1 - lookback, -1);
@@ -199,12 +203,15 @@ function detectHighLowProximity(candles, lookback = 20, threshold = 10) {
     close
   };
 }
-
-function calculateMeanReversion(candles, maPeriod = 20) {
+                                                                                      // === MeanReversion ===
+function calculateMeanReversion(candles) {
+  const maPeriod = MEAN_REVERSION.MA_PERIOD;
+  
   if (candles.length < maPeriod + 1) return null;
 
   const slice = candles.slice(-maPeriod);
   const close = candles.at(-1).close;
+  
   const avg = slice.reduce((sum, c) => sum + c.close, 0) / maPeriod;
 
   const deviation = ((close - avg) / avg) * 100;
@@ -215,7 +222,7 @@ function calculateMeanReversion(candles, maPeriod = 20) {
     ma: +avg.toFixed(2)
   };
 }
-
+                                                                                        // === ATR ===
 function calculateATR(candles, period = 14) {
   if (candles.length < period + 1) return null;
 
