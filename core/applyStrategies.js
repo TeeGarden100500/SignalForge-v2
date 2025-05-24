@@ -1,6 +1,7 @@
 const {
   checkRSIStrategy,
   checkRSIHiddenBull,
+  checkRSIVolumeFade,
   checkMACDStrategy,
   checkVolumeSpikeStrategy,
   checkEMACrossStrategy,
@@ -37,8 +38,10 @@ function applyStrategies(symbol, candles, interval) {
   add(checkRSIStrategy(symbol, candles, interval), 'RSI_OVERBOUGHT');
   add(checkRSIStrategy(symbol, candles, interval), 'RSI_OVERSOLD');
   add(checkRSIStrategy(symbol, candles, interval), 'RSI_DROP');
-  add(checkRSIHiddenBull(symbol, candles, interval), 'RSI_HIDDEN_BULL'); 
   
+  add(checkRSIHiddenBull(symbol, candles, interval), 'RSI_HIDDEN_BULL');
+  add(checkRSIVolumeFade(symbol, candles, interval), 'RSI_VOLUME_FADE');
+
   add(checkMACDStrategy(symbol, candles, interval), 'MACD_CROSS_UP');
   add(checkMACDStrategy(symbol, candles, interval), 'MACD_CROSS_DOWN');
   add(checkMACDDivergence(symbol, candles), 'MACD_DIVERGENCE');
@@ -68,6 +71,7 @@ function applyStrategies(symbol, candles, interval) {
   
   add(checkADXStrengthStrategy(symbol, candles, interval), 'ADX_TREND');
   add(checkADXStrengthStrategy(symbol, candles, interval), 'ADX_FLAT');
+  
 
   
   return { signalTags, messages, results };
