@@ -303,7 +303,10 @@ function calculateADX(candles, period = ADX_PERIOD) {
   };
 }
                                                                                         // === FiboLevels ===
-function calculateFiboLevels(candles, depth = 30) {
+
+const { FIBO_SETTINGS } = require('../config');
+function calculateFiboLevels(candles, depth = FIBO_SETTINGS.DEPTH) {
+
   if (candles.length < depth) return null;
 
   const slice = candles.slice(-depth);
@@ -312,13 +315,11 @@ function calculateFiboLevels(candles, depth = 30) {
 
   const diff = high - low;
 
-  const levels = {
-    "0.236": +(high - diff * 0.236).toFixed(4),
-    "0.382": +(high - diff * 0.382).toFixed(4),
-    "0.5": +(high - diff * 0.5).toFixed(4),
-    "0.618": +(high - diff * 0.618).toFixed(4),
-    "0.786": +(high - diff * 0.786).toFixed(4)
-  };
+  const levels = {};
+  FIBO_SETTINGS.LEVELS.forEach(level => {
+  levels[level.toString()] = +(high - diff * level).toFixed(4);
+});
+
 
   return {
     high,
