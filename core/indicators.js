@@ -54,11 +54,14 @@ function calculateEMAAngle(candles, period = 21, depth = 21) {
   const firstSlice = candles.slice(-(depth + period), -period);
   const lastSlice = candles.slice(-period);
 
-  const emaStart = calculateEMA(firstSlice, period);
-  const emaEnd = calculateEMA(lastSlice, period);
+  const emaStartSeries = calculateEMA(firstSlice, period);
+  const emaEndSeries = calculateEMA(lastSlice, period);
 
-  // 👇 Вставь сюда логирование:
- // console.log(`📊 [DEBUG] total candles: ${candles.length}`);
+  const emaStart = emaStartSeries.at(-1);
+  const emaEnd = emaEndSeries.at(-1);
+
+// 👇 Вставь сюда логирование:
+// console.log(`📊 [DEBUG] total candles: ${candles.length}`);
 //  console.log(`📊 [DEBUG] firstSlice:`, firstSlice.map(c => c.close));
 //  console.log(`📊 [DEBUG] lastSlice:`, lastSlice.map(c => c.close));
 //  console.log(`📊 [DEBUG] emaStart: ${emaStart}, emaEnd: ${emaEnd}`);
