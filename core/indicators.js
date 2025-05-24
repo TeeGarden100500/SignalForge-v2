@@ -48,37 +48,41 @@ function calculateEMA(prices, period) {
 }
 
 function calculateEMAAngle(candles, period = 21, depth = 21) {
+  // Проверка: достаточно ли свечей
   if (candles.length < period + depth) return null;
 
-  const currentCandles = candles.slice(-depth);
-  const firstSlice = candles.slice(-(depth + period), -period);
-  const lastSlice = candles.slice(-period);
+  // Выбираем участки для анализа
+  const firstSlice = candles.slice(-(depth + period), -period); // начало
+  const lastSlice = candles.slice(-period);                     // конец
 
-  const emaStartSeries = calculateEMA(firstSlice, period);
-  const emaEndSeries = calculateEMA(lastSlice, period);
+  // Вычисляем EMA для каждого участка
+  const emaStartSeries = calculateEMA(firstSlice.map(c => c.close), period);
+  const emaEndSeries = calculateEMA(lastSlice.map(c => c.close), period);
 
+  // Берём последнее значение из каждого массива EMA
   const emaStart = emaStartSeries.at(-1);
   const emaEnd = emaEndSeries.at(-1);
 
-// 👇 Вставь сюда логирование:
-// console.log(`📊 [DEBUG] total candles: ${candles.length}`);
-//  console.log(`📊 [DEBUG] firstSlice:`, firstSlice.map(c => c.close));
-//  console.log(`📊 [DEBUG] lastSlice:`, lastSlice.map(c => c.close));
-//  console.log(`📊 [DEBUG] emaStart: ${emaStart}, emaEnd: ${emaEnd}`);
+  // Защита от некорректных значений
+  if (!emaStart || !emaEnd || isNaN(emaStart) || isNaN(emaEnd)) {
+    console.log('[DEBUG] Invalid EMA values:', { emaStart, emaEnd });
+    return null;
+  }
 
-  if (!emaStart || !emaEnd); // return null;
-
+  // Расчёт угла (наклона): изменение цены по глубине
   const delta = emaEnd - emaStart;
-  const angle = +(delta / depth).toFixed(4); // наклон
+  const angle = +(delta / depth).toFixed(4); // округляем до 4 знаков
 
-  console.log(`📊 [DEBUG] angle: ${angle}`);
+  // Логгируем
+  console.log(`📈 [DEBUG] EMA angle: ${angle}`);
 
   return {
     emaStart,
     emaEnd,
-    angle,
+    angle
   };
 }
+
 
 function calculateMACD(candles, fastPeriod = 12, slowPeriod = 26, signalPeriod = 9) {
   if (candles.length < slowPeriod + signalPeriod) return null;
