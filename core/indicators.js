@@ -64,7 +64,7 @@ function calculateEMAAngle(candles) {
   }
 
   const firstSlice = candles.slice(-(EMA_PERIOD + EMA_DEPTH + 1), -EMA_DEPTH);
-  const lastSlice  = candles.slice(-EMA_PERIOD);
+  const lastSlice  = candles.slice(-EMA_PERIOD + 1);
 
   console.log('📈 [DEBUG] firstSlice.length:', firstSlice.length);
   console.log('📉 [DEBUG] lastSlice.length:', lastSlice.length);
