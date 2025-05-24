@@ -11,6 +11,10 @@ module.exports = {
   MEAN_REVERS_THRESHOLD_DOWN: -2.0, // Цена ниже MA на X%
   MEAN_REVERS_THRESHOLD_UP: 3.0, // Цена выше MA на X%
   BREAKOUT_LOOKBACK: 2, // Breakout: сравниваем текущую цену с High/Low, отстоящими на N свечей назад
+  EMA_SETTINGS: {
+    PERIOD: 21,     // Количество свечей для расчёта EMA
+    DEPTH: 7        // Глубина сравнения для угла наклона EMA (разница между началом и концом участка)
+  },
 
   CACHE_LIMITS: {
   '5m': 120,
