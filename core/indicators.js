@@ -48,9 +48,9 @@ function calculateEMA(prices, period) {
     }
   }
   return ema;
-}
+  }
 
-const { EMA_SETTINGS } = require('../config');
+  const { EMA_SETTINGS } = require('../config');
                                                             // === EMAAngle ===
 function calculateEMAAngle(candles) {
   const EMA_PERIOD = EMA_SETTINGS.PERIOD;
@@ -63,8 +63,8 @@ function calculateEMAAngle(candles) {
     return null;
   }
 
-  const firstSlice = candles.slice(-(EMA_DEPTH + EMA_PERIOD + 1), -EMA_PERIOD);
-  const lastSlice = candles.slice(-(EMA_PERIOD + 1));
+  const firstSlice = candles.slice(-(EMA_PERIOD + EMA_DEPTH), -EMA_DEPTH);
+  const lastSlice  = candles.slice(-EMA_PERIOD);
 
   console.log('📈 [DEBUG] firstSlice.length:', firstSlice.length);
   console.log('📉 [DEBUG] lastSlice.length:', lastSlice.length);
@@ -94,9 +94,9 @@ function calculateEMAAngle(candles) {
     emaEnd,
     angle,
   };
-}
+  }
 
-const { MACD_SETTINGS } = require('../config');
+  const { MACD_SETTINGS } = require('../config');
                                                                                // === MACD ===
 function calculateMACD(candles) {
   const { FAST_PERIOD, SLOW_PERIOD, SIGNAL_PERIOD } = MACD_SETTINGS;
@@ -140,7 +140,7 @@ function calculateAverageVolume(candles, period = AVERAGE_VOLUME_PERIOD) {
   const recent = candles.slice(-1 - period, -1);
   const avg = recent.reduce((sum, c) => sum + c.volume, 0) / period;
   return +avg.toFixed(2);
-}
+  }
 
 function detectVolumeSpike(candles, factor = VOLUME_SPIKE_FACTOR) {
   const avgVolume = calculateAverageVolume(candles);
@@ -155,8 +155,7 @@ function detectVolumeSpike(candles, factor = VOLUME_SPIKE_FACTOR) {
     volume: lastVolume,
     avgVolume,
   };
-}
-
+  }
                                                                                     // === Breakout ===
   const { BREAKOUT_LOOKBACK } = require('../config');
 function detectBreakout(candles, lookback = BREAKOUT_LOOKBACK) {
@@ -178,7 +177,7 @@ function detectBreakout(candles, lookback = BREAKOUT_LOOKBACK) {
     low: lowestLow,
     close: last.close
   };
-}
+  }
                                                                                       // === HighLowProximity ===
   const { BREAKOUT_PROXIMITY } = require('../config');
 function detectHighLowProximity(candles) {
@@ -204,7 +203,7 @@ function detectHighLowProximity(candles) {
     low,
     close
   };
-}
+  }
                                                                                       // === MeanReversion ===
   const { MEAN_REVERSION } = require('../config');
 function calculateMeanReversion(candles) {
@@ -224,7 +223,7 @@ function calculateMeanReversion(candles) {
     close,
     ma: +avg.toFixed(2)
   };
-}
+  }
                                                                                         // === ATR ===
 
   const { ATR } = require('../config');
@@ -248,12 +247,12 @@ function calculateATR(candles) {
 
   const atr = trValues.reduce((sum, val) => sum + val, 0) / period;
   return +atr.toFixed(4);
-}
+  }
 
                                                                                       // === ADX ===
 
 
-const { ADX_PERIOD } = require('../config');
+  const { ADX_PERIOD } = require('../config');
 
 function calculateADX(candles, period = ADX_PERIOD) {
   if (candles.length < period + 1) return null;
@@ -266,18 +265,18 @@ function calculateADX(candles, period = ADX_PERIOD) {
   const plusDM = [];
   const minusDM = [];
 
-  for (let i = 1; i <= period; i++) {
-    const curr = candles[i];
-    const high = curr.high;
-    const low = curr.low;
+for (let i = 1; i <= period; i++) {
+  const curr = candles[i];
+  const high = curr.high;
+  const low = curr.low;
 
-    const upMove = high - prevHigh;
-    const downMove = prevLow - low;
+  const upMove = high - prevHigh;
+  const downMove = prevLow - low;
 
-    const tr = Math.max(
-      high - low,
-      Math.abs(high - prevClose),
-      Math.abs(low - prevClose)
+  const tr = Math.max(
+    high - low,
+    Math.abs(high - prevClose),
+    Math.abs(low - prevClose)
     );
 
     trList.push(tr);
