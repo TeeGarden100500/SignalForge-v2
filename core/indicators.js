@@ -130,8 +130,7 @@ function calculateMACD(candles) {
   }
 
                                                                                 // === Volume Settings ===
-const { AVERAGE_VOLUME_PERIOD, VOLUME_SPIKE_FACTOR, } = require('../config');
-
+  const { AVERAGE_VOLUME_PERIOD, VOLUME_SPIKE_FACTOR, } = require('../config');
 function calculateAverageVolume(candles, period = AVERAGE_VOLUME_PERIOD) {
   if (candles.length < period + 1) return null;
 
@@ -156,7 +155,7 @@ function detectVolumeSpike(candles, factor = VOLUME_SPIKE_FACTOR) {
 }
 
                                                                                     // === Breakout ===
-const { BREAKOUT_LOOKBACK } = require('../config');
+  const { BREAKOUT_LOOKBACK } = require('../config');
 function detectBreakout(candles, lookback = BREAKOUT_LOOKBACK) {
   if (candles.length < lookback + 1) return null;
 
@@ -178,7 +177,7 @@ function detectBreakout(candles, lookback = BREAKOUT_LOOKBACK) {
   };
 }
                                                                                       // === HighLowProximity ===
-const { BREAKOUT_PROXIMITY } = require('../config');
+  const { BREAKOUT_PROXIMITY } = require('../config');
 function detectHighLowProximity(candles) {
   const lookback = BREAKOUT_PROXIMITY.LOOKBACK;
   const threshold = BREAKOUT_PROXIMITY.THRESHOLD;
@@ -204,6 +203,7 @@ function detectHighLowProximity(candles) {
   };
 }
                                                                                       // === MeanReversion ===
+  const { MEAN_REVERSION } = require('../config');
 function calculateMeanReversion(candles) {
   const maPeriod = MEAN_REVERSION.MA_PERIOD;
   
@@ -223,7 +223,10 @@ function calculateMeanReversion(candles) {
   };
 }
                                                                                         // === ATR ===
+
+  const { ATR } = require('../config');
 function calculateATR(candles, period = 14) {
+  const period = ATR.PERIOD;
   if (candles.length < period + 1) return null;
 
   const trValues = [];
@@ -244,7 +247,12 @@ function calculateATR(candles, period = 14) {
   return +atr.toFixed(4);
 }
 
-function calculateADX(candles, period = 14) {
+                                                                                      // === ADX ===
+
+
+const { ADX_PERIOD } = require('../config');
+
+function calculateADX(candles, period = ADX_PERIOD) {
   if (candles.length < period + 1) return null;
 
   let prevHigh = candles[0].high;
@@ -294,7 +302,7 @@ function calculateADX(candles, period = 14) {
     minusDI: +minusDI.toFixed(2)
   };
 }
-
+                                                                                        // === FiboLevels ===
 function calculateFiboLevels(candles, depth = 30) {
   if (candles.length < depth) return null;
 
