@@ -10,6 +10,8 @@ const mock1 = require('./testData/mock_candles_converted.json');
  const mock8 = require('./testData/mock_dead_volume_fall.json');
  const mock9 = require('./testData/mock_exhaustion_top (2).json');
  const mock10 = require('./testData/mock_momentum_rebound.json');
+ const mock11 = require('./testData/mock_EMA_test.json');
+
 
 const mockData = {
   ...mock1,
@@ -22,6 +24,7 @@ const mockData = {
   ...mock8,
   ...mock9,
   ...mock10,
+  ...mock11, 
 };
 
 Object.entries(mockData).forEach(([key, candles]) => {
