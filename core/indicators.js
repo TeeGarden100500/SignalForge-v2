@@ -115,7 +115,7 @@ function calculateMACD(candles) {
    if (macdLineArr.length < SIGNAL_PERIOD) return null;
 
   const recentMACD = macdLineArr.at(-1);
-  const signalSeries = calculateEMA(macdLineArr.map(v => ({ close: v })), signalPeriod);
+  const signalSeries = calculateEMA(macdLineArr.map(v => ({ close: v })), SIGNAL_PERIOD);
   const signal = signalSeries?.at(-1); // Проверка на наличие
 
   if (signal == null) return null;
