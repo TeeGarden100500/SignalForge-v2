@@ -225,7 +225,7 @@ function calculateMeanReversion(candles) {
                                                                                         // === ATR ===
 
   const { ATR } = require('../config');
-function calculateATR(candles, period = 14) {
+function calculateATR(candles) {
   const period = ATR.PERIOD;
   if (candles.length < period + 1) return null;
 
