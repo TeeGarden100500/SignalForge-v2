@@ -12,6 +12,7 @@ module.exports = {
   checkFiboProximityStrategy: require('./strategyFibo').checkFiboProximityStrategy,
   checkDojiPattern: require('./strategyDoji').checkDojiPattern,
   checkRSIHiddenBull: require('./strategyRSIHiddenBull').checkRSIHiddenBull,
+  checkRSIVolumeFade: require('./strategyRSI_Volume_Fade'),
   checkMACDDivergence: require('./strategyMACDDivergence').checkMACDDivergence,
   checkGreenCandle: require('./strategyCandlePatterns').checkGreenCandle,
 };
