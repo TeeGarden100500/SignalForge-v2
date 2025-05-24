@@ -40,7 +40,7 @@ function applyStrategies(symbol, candles, interval) {
   add(checkRSIStrategy(symbol, candles, interval), 'RSI_DROP');
   
   add(checkRSIHiddenBull(symbol, candles, interval), 'RSI_HIDDEN_BULL');
-  add(checkRSIVolumeFade(symbol, candles, interval), 'RSI_VOLUME_FADE');
+  checkRSIVolumeFade(symbol, candles, interval).forEach(res => add(res, 'RSI_VOLUME_FADE'));
 
   add(checkMACDStrategy(symbol, candles, interval), 'MACD_CROSS_UP');
   add(checkMACDStrategy(symbol, candles, interval), 'MACD_CROSS_DOWN');
