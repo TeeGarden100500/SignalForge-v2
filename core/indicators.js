@@ -47,22 +47,23 @@ function calculateEMA(prices, period) {
   return ema;
 }
 
-  const { EMA_PERIOD, EMA_DEPTH } = require('../config');
+const { EMA_SETTINGS } = require('../config');
+
+const EMA_PERIOD = EMA_SETTINGS.PERIOD;
+const EMA_DEPTH = EMA_SETTINGS.DEPTH;
 
 function calculateEMAAngle(candles) {
-  const period = EMA_PERIOD;
-  const depth = EMA_DEPTH;
 
   // Проверка: достаточно ли свечей
-  if (candles.length < period + depth) return null;
+  if (candles.length < EMA_PERIOD + EMA_DEPTH) return null;
 
   // Выбираем участки для анализа
-  const firstSlice = candles.slice(-(depth + period), -period); // начало
-  const lastSlice = candles.slice(-period);                     // конец
+ const firstSlice = candles.slice(-(EMA_DEPTH + EMA_PERIOD), -EMA_PERIOD);
+  const lastSlice = candles.slice(-EMA_PERIOD);
 
   // Вычисляем EMA для каждого участка
-  const emaStartSeries = calculateEMA(firstSlice.map(c => c.close), period);
-  const emaEndSeries = calculateEMA(lastSlice.map(c => c.close), period);
+ const emaStartSeries = calculateEMA(firstSlice.map(c => c.close), EMA_PERIOD);
+  const emaEndSeries = calculateEMA(lastSlice.map(c => c.close), EMA_PERIOD);
 
   // Берём последнее значение из каждого массива EMA
   const emaStart = emaStartSeries.at(-1);
@@ -76,7 +77,7 @@ function calculateEMAAngle(candles) {
 
   // Расчёт угла (наклона): изменение цены по глубине
   const delta = emaEnd - emaStart;
-  const angle = +(delta / depth).toFixed(4); // округляем до 4 знаков
+  const angle = +(delta / EMA_DEPTH).toFixed(4); // округляем до 4 знаков
 
   // Логгируем
   console.log(`📈 [DEBUG] EMA angle: ${angle}`);
@@ -87,7 +88,6 @@ function calculateEMAAngle(candles) {
     angle
   };
 }
-
 
 function calculateMACD(candles, fastPeriod = 12, slowPeriod = 26, signalPeriod = 9) {
   if (candles.length < slowPeriod + signalPeriod) return null;
