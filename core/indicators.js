@@ -1,6 +1,6 @@
 const { RSI_PERIOD } = require('../config');
 
-
+                                                                            // === RSI ===
 function calculateRSI(candles, period = RSI_PERIOD) {
   if (candles.length < period + 1) return null;
 
@@ -26,7 +26,7 @@ function calculateRSI(candles, period = RSI_PERIOD) {
 
    return rsi;
 }
-
+                                                                            // === EMA ===
 function calculateEMA(prices, period) {
   const k = 2 / (period + 1);
   let ema = [];
@@ -54,7 +54,7 @@ const { EMA_SETTINGS } = require('../config');
 
 const EMA_PERIOD = EMA_SETTINGS.PERIOD;
 const EMA_DEPTH = EMA_SETTINGS.DEPTH;
-
+                                                            // === EMAAngle ===
 function calculateEMAAngle(candles) {
 
   // Проверка: достаточно ли свечей
@@ -94,7 +94,7 @@ function calculateEMAAngle(candles) {
 
 
 const { MACD_SETTINGS } = require('../config');
-
+                                                                               // === MACD ===
 function calculateMACD(candles) {
   const { FAST_PERIOD, SLOW_PERIOD, SIGNAL_PERIOD } = MACD_SETTINGS;
 
@@ -129,7 +129,7 @@ function calculateMACD(candles) {
   };
   }
 
-// === Volume Settings ===
+                                                                                // === Volume Settings ===
 const { AVERAGE_VOLUME_PERIOD, VOLUME_SPIKE_FACTOR, } = require('../config');
 
 function calculateAverageVolume(candles, period = AVERAGE_VOLUME_PERIOD) {
@@ -155,7 +155,8 @@ function detectVolumeSpike(candles, factor = VOLUME_SPIKE_FACTOR) {
   };
 }
 
-
+const { BREAKOUT_LOOKBACK } = require('../config');
+                                                                    // === Breakout ===
 function detectBreakout(candles, lookback = 20) {
   if (candles.length < lookback + 1) return null;
 
