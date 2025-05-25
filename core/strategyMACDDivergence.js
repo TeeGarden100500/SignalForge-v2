@@ -33,3 +33,4 @@ function checkMACDDivergence(symbol, candles, timeframe) {
 
   return null;
 }
+module.exports = { checkMACDDivergence };
