@@ -2,42 +2,33 @@ const { calculateMACDSeries } = require('./calculateMACDSeries.js');
 
 function checkMACDDivergence(symbol, candles, timeframe) {
   const macdSeries = calculateMACDSeries(candles);
-  if (!Array.isArray(macdSeries) || macdSeries.length < 3) {
-    console.log(`[DEBUG] MACD Divergence: недостаточно данных для ${symbol}`);
-    return null;
-  }
+  if (!macdSeries || macdSeries.length < 5) return null;
 
-  const lastThree = macdSeries.slice(-3);
-  const [macd1, macd2, macd3] = lastThree.map(v => v?.macd);
-  const [c1, c2, c3] = candles.slice(-3);
+  const priceNow = candles.at(-1).close;
+  const pricePrev = candles.at(-4).close;
 
-  if ([macd1, macd2, macd3].some(v => typeof v !== 'number')) {
-    console.log(`[DEBUG] MACD Divergence: null значения в последних точках для ${symbol}`);
-    return null;
-  }
+  const macdNow = macdSeries.at(-1);
+  const macdPrev = macdSeries.at(-4);
 
-  const priceNow = c3.close;
-  const pricePrev = c1.close;
+  if (macdNow == null || macdPrev == null) return null;
 
-  // Обратная дивергенция: цена падает, MACD растёт
-  if (priceNow < pricePrev && macd3 > macd1) {
+  if (priceNow < pricePrev && macdNow > macdPrev) {
     return {
       symbol,
       timeframe,
       strategy: 'MACD_DIVERGENCE',
       tag: 'MACD_DIVERGENCE',
-      message: `🟢 [${symbol}] MACD Дивергенция: цена падает, MACD растёт — возможный отскок`
+      message: `🟢 [${symbol}] MACD Дивергенция: цена падает, MACD растет — возможный отскок`,
     };
   }
 
-  // Прямая дивергенция: цена растёт, MACD падает
-  if (priceNow > pricePrev && macd3 < macd1) {
+  if (priceNow > pricePrev && macdNow < macdPrev) {
     return {
       symbol,
       timeframe,
       strategy: 'MACD_DIVERGENCE',
       tag: 'MACD_DIVERGENCE',
-      message: `🔴 [${symbol}] MACD Дивергенция: цена растёт, MACD падает — возможный разворот вниз`
+      message: `🔴 [${symbol}] MACD Дивергенция: цена растет, MACD падает — возможный разворот вниз`,
     };
   }
 
