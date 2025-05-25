@@ -1,43 +1,41 @@
-const { calculateMACD } = require('./indicators');
-const { DEBUG_LOG_LEVEL } = require('../config');
+const { calculateMACDSeries } = require('../core/calculateMACDSeries');
 
-function checkMACDDivergence(symbol, candles, timeframe) {
-  if (!Array.isArray(candles) || candles.length < 5) return null;
+function strategyMACDDivergence(candles, interval, symbol) {
+  const macdSeries = calculateMACDSeries(candles);
 
-  const priceNow = candles.at(-1).close;
-  const pricePrev = candles.at(-4).close;
+  if (!Array.isArray(macdSeries) || macdSeries.length < 2) return null;
 
-  const macdSeries = calculateMACD(candles);
-  if (!Array.isArray(macdSeries) || macdSeries.length < 2) {
-    if (DEBUG_LOG_LEVEL === 'verbose') {
-    console.log(`[DEBUG] MACD Divergence: недостаточно данных для ${symbol}`);
-    }
-    return null;
-    }
+  const latest = macdSeries.at(-1);
+  const previous = macdSeries.at(-2);
 
-  const macdPrev = macdSeries.at(-2).macd;
-  const macdNow = macdSeries.at(-1).macd;
+  if (!latest || !previous) return null;
 
-  if (priceNow < pricePrev && macdNow > macdPrev) {
+  const isBullishDivergence = previous.macd < previous.signal && latest.macd > latest.signal;
+  const isBearishDivergence = previous.macd > previous.signal && latest.macd < latest.signal;
+
+  if (isBullishDivergence) {
     return {
-      symbol, timeframe,
       strategy: 'MACD_DIVERGENCE',
-      tag: 'MACD_DIVERGENCE',
-      message: `🟢 [${symbol}] MACD Дивергенция: цена падает, MACD растет — возможный отскок`
+      signal: 'buy',
+      strength: 'medium',
+      interval,
+      symbol,
+      message: `MACD bullish divergence on ${symbol} (${interval})`,
     };
-    }
+  }
 
-  if (priceNow > pricePrev && macdNow < macdPrev) {
+  if (isBearishDivergence) {
     return {
-      symbol, timeframe,
       strategy: 'MACD_DIVERGENCE',
-      tag: 'MACD_DIVERGENCE',
-      message: `🔴 [${symbol}] MACD Дивергенция: цена растет, MACD падает — возможный разворот вниз`
+      signal: 'sell',
+      strength: 'medium',
+      interval,
+      symbol,
+      message: `MACD bearish divergence on ${symbol} (${interval})`,
     };
-    }
+  }
 
- return null;
-    }
+  return null;
+}
 
-module.exports = { checkMACDDivergence };
-  
+module.exports = { strategyMACDDivergence };
