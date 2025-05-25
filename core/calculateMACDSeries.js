@@ -1,4 +1,5 @@
 // indicators.js (внизу файла или в нужной секции)
+const { MACD_SETTINGS } = require('../config');
 function calculateMACDSeries(candles) {
   const { FAST_PERIOD, SLOW_PERIOD, SIGNAL_PERIOD } = MACD_SETTINGS;
 
