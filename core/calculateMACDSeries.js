@@ -26,4 +26,4 @@ function calculateMACDSeries(candles) {
   return macdLineArr;
 }
 
-module.exports = calculateMACDSeries;
+module.exports = { calculateMACDSeries };
