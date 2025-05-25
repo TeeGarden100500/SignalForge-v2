@@ -106,6 +106,11 @@ function calculateMACD(candles) {
   const macdLineArr = [];
 
   for (let i = 0; i < candles.length; i++) {
+    console.log(`[DEBUG] macdLineArr.length: ${macdLineArr.length}`);
+    if (macdLineArr.length < SIGNAL_PERIOD + 2) {
+    console.log('[DEBUG] MACD Divergence: недостаточно значений в macdLineArr');
+    return null;
+    }
     const slice = candles.slice(0, i + 1);
     const fastEMA = calculateEMA(slice, FAST_PERIOD);
     const slowEMA = calculateEMA(slice, SLOW_PERIOD);
