@@ -1,53 +1,59 @@
+const { MACD_MIN_SIGNAL } = require('../config');
 const { calculateMACDSeries } = require('./calculateMACDSeries');
 
 function checkMACDDivergence(symbol, candles, timeframe) {
+  if (!candles || candles.length < 50) return null;
+
   const macdSeries = calculateMACDSeries(candles);
-  if (!Array.isArray(macdSeries)) {
-    console.log('[DEBUG] MACD Divergence: macdSeries is not an array');
+  const validSeries = macdSeries.filter(entry => entry && entry.macd !== null && entry.signal !== null);
+  const lastIndex = validSeries.length - 1;
+
+  if (validSeries.length < 2) {
+    console.debug('[DEBUG] MACD Divergence: Недостаточно данных для расчета');
     return null;
   }
 
-  const validMACD = macdSeries.filter(x => x && x.macd != null && x.signal != null);
-  console.log('[DEBUG] Valid MACD length:', validMACD.length);
+  const prevMACD = validSeries[lastIndex - 1];
+  const currMACD = validSeries[lastIndex];
 
-  if (validMACD.length < 5) {
-    console.log('[DEBUG] MACD Divergence: Недостаточно данных для', symbol);
-    return null;
-  }
-
-  const prevMACD = validMACD.at(-5);
-  const currMACD = validMACD.at(-1);
-  const prevPrice = candles.at(-5)?.close;
+  const prevPrice = candles.at(-2)?.close;
   const currPrice = candles.at(-1)?.close;
 
-  console.log('[DEBUG] MACD Divergence:', symbol, {
-    prevMACD, currMACD, prevPrice, currPrice
-  });
-
-  if (!prevMACD || !currMACD || prevPrice == null || currPrice == null) {
-    console.log('[DEBUG] MACD Divergence: Не удалось получить значения для анализа');
+  // Защита от пустых данных
+  if (!prevMACD || !currMACD || !prevPrice || !currPrice) {
     return null;
   }
 
-  const macdRising = currMACD.macd > prevMACD.macd;
-  const macdDiff = Math.abs(currMACD.macd - prevMACD.macd);
-  const priceFalling = currPrice < prevPrice;
-  const priceDiff = Math.abs(currPrice - prevPrice);
-
-  const macdSensitivity = 0.0001; // можно вынести в config
-  const priceSensitivity = currPrice * 0.002; // 0.2% изменения цены
-
-  if (priceFalling && macdRising && macdDiff > macdSensitivity && priceDiff > priceSensitivity) {
-    return {
-      symbol,
-      strategy: 'MACD_DIVERGENCE',
-      tag: 'MACD_DIVERGENCE',
-      timeframe,
-      message: `🔄 [${symbol}] MACD дивергенция на ${timeframe}: цена падает, MACD растёт — возможен разворот вверх`
-    };
+  // Слишком слабый сигнал — гистограмма почти 0
+  const histogramStrength = Math.abs(currMACD.histogram);
+  if (histogramStrength < MACD_MIN_SIGNAL) {
+    console.debug(`[DEBUG] MACD Divergence: Сигнал слишком слабый (hist=${currMACD.histogram}) для ${symbol}`);
+    return null;
   }
 
-  return null;
+  // Условия дивергенций
+  let type = null;
+  if (currPrice > prevPrice && currMACD.macd < prevMACD.macd) {
+    type = 'hidden_bear'; // Скрытая медвежья дивергенция
+  } else if (currPrice < prevPrice && currMACD.macd > prevMACD.macd) {
+    type = 'classic_bull'; // Классическая бычья дивергенция
+  }
+
+  if (!type) return null;
+
+  const message = `📉 [${symbol}] MACD Divergence [${type.toUpperCase()}] на ${timeframe}:
+  Цена: ${prevPrice} → ${currPrice}
+  MACD: ${prevMACD.macd.toFixed(4)} → ${currMACD.macd.toFixed(4)}
+  Гистограмма: ${currMACD.histogram.toFixed(4)}`;
+
+  return {
+    symbol,
+    strategy: 'MACD_DIVERGENCE',
+    tag: 'MACD_DIVERGENCE',
+    timeframe,
+    type,
+    message,
+  };
 }
 
 module.exports = { checkMACDDivergence };
