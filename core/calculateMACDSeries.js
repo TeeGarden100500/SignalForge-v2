@@ -1,36 +1,26 @@
-// core/indicators.js (или новый файл, если хочешь изолировать)
-
-const { FAST_PERIOD, SLOW_PERIOD, SIGNAL_PERIOD } = require('../config').MACD_SETTINGS;
-const { calculateEMA } = require('./indicators');
-
+// indicators.js (внизу файла или в нужной секции)
 function calculateMACDSeries(candles) {
+  const { FAST_PERIOD, SLOW_PERIOD, SIGNAL_PERIOD } = MACD_SETTINGS;
+
   const macdLineArr = [];
 
   for (let i = 0; i < candles.length; i++) {
     const slice = candles.slice(0, i + 1);
-
-    if (slice.length < Math.max(FAST_PERIOD, SLOW_PERIOD) + 1) {
+    if (slice.length < SLOW_PERIOD) {
       macdLineArr.push(null);
       continue;
     }
+    const fastEMA = calculateEMA(slice, FAST_PERIOD)?.at(-1);
+    const slowEMA = calculateEMA(slice, SLOW_PERIOD)?.at(-1);
 
-    const fastEMA = calculateEMA(slice, FAST_PERIOD);
-    const slowEMA = calculateEMA(slice, SLOW_PERIOD);
-
-    const fast = fastEMA?.at(-1);
-    const slow = slowEMA?.at(-1);
-
-    if (fast == null || slow == null) {
-      macdLineArr.push(null);
+    if (fastEMA != null && slowEMA != null) {
+      macdLineArr.push(fastEMA - slowEMA);
     } else {
-      macdLineArr.push(fast - slow);
+      macdLineArr.push(null);
     }
   }
 
-  // Построим сигнальную EMA только по валидным значениям
-  const macdSeries = macdLineArr.map((v) => (v == null ? null : { macd: v }));
-
-  return macdSeries;
+  return macdLineArr;
 }
 
-module.exports = { calculateMACDSeries };
+module.exports.calculateMACDSeries = calculateMACDSeries;
