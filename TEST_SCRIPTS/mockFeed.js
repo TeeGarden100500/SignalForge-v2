@@ -8,13 +8,13 @@ const { checkComboStrategies } = require('../core/checkCombo');
  const mock6 = require('./testData/mock_ema_debug.json');
  const mock7 = require('./testData/mock_bullish_divergence (2).json');
  const mock8 = require('./testData/mock_dead_volume_fall.json');
- const mock9 = require('./testData/mock_exhaustion_top (2).json');
- const mock10 = require('./testData/mock_momentum_rebound.json'); */
+ const mock9 = require('./testData/mock_exhaustion_top (2).json'); */
+ const mock10 = require('./testData/mock_EMA_test_60_candles.json');
  const mock11 = require('./testData/mock_EMA_test.json');
 
 
 const mockData = {
-  /* ...mock1,
+ /*  ...mock1,
   ...mock2,
   ...mock3,
   ...mock4,
@@ -22,8 +22,8 @@ const mockData = {
   ...mock6,
   ...mock7,
   ...mock8,
-  ...mock9,
-  ...mock10, */
+  ...mock9, */
+  ...mock10,
   ...mock11, 
 };
 
