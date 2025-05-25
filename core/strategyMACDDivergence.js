@@ -1,37 +1,47 @@
 const { calculateMACDSeries } = require('./calculateMACDSeries');
 
-function checkMACDDivergence(symbol, candles, timeframe) {
-  if (!Array.isArray(candles) || candles.length < 30) return null;
-  
+function checkMACDDivergence(symbol, candles) {
   const macdSeries = calculateMACDSeries(candles);
-  console.log('[DEBUG] MACD Series:', macdSeries);
-
-  if (!macdSeries || macdSeries.length < 6) return null;
-    console.log(`[DEBUG] MACD Divergence: Недостаточно данных для ${symbol}`);
+  if (!Array.isArray(macdSeries)) {
+    console.log('[DEBUG] MACD Divergence: macdSeries is not an array');
     return null;
+  }
 
+  const validMACD = macdSeries.filter(x => x && x.macd != null && x.signal != null);
+  console.log('[DEBUG] Valid MACD length:', validMACD.length);
 
-    const curr = macdSeries.at(-1);
-    const prev = macdSeries.at(-5);
-    const currPrice = candles.at(-1)?.close;
-    const prevPrice = candles.at(-5)?.close;
+  if (validMACD.length < 5) {
+    console.log('[DEBUG] MACD Divergence: Недостаточно данных для', symbol);
+    return null;
+  }
 
- // Проверка: все данные валидны
-  if (!curr || !prev || currPrice == null || prevPrice == null) return null;
+  const prevMACD = validMACD.at(-5);
+  const currMACD = validMACD.at(-1);
+  const prevPrice = candles.at(-5)?.close;
+  const currPrice = candles.at(-1)?.close;
 
-// Условие бычьей скрытой дивергенции: цена падает, MACD растёт
-    const isHiddenBullish = prevPrice > currPrice && prev.macd < curr.macd;
+  console.log('[DEBUG] MACD Divergence:', symbol, {
+    prevMACD, currMACD, prevPrice, currPrice
+  });
 
-  if (isHiddenBullish) {
+  if (!prevMACD || !currMACD || prevPrice == null || currPrice == null) {
+    console.log('[DEBUG] MACD Divergence: Не удалось получить значения для анализа');
+    return null;
+  }
+
+  const macdRising = currMACD.macd > prevMACD.macd;
+  const priceFalling = currPrice < prevPrice;
+
+  if (priceFalling && macdRising) {
     return {
       symbol,
       strategy: 'MACD_DIVERGENCE',
       tag: 'MACD_DIVERGENCE',
-      timeframe,
-      message: `🟢 [${symbol}] MACD дивергенция: цена падает, MACD растёт — возможен разворот вверх`
+      message: `🔄 [${symbol}] MACD Divergence: цена падает, MACD растёт — возможен разворот`
     };
   }
 
   return null;
 }
+
 module.exports = { checkMACDDivergence };
