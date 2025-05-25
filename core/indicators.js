@@ -33,6 +33,7 @@ function calculateEMA(prices, period) {
   let sum = 0;
 
   for (let i = 0; i < prices.length; i++) {
+    console.log(`[DEBUG][${i}] slice.length: ${slice.length}, fastEMA: ${fastEMA}, slowEMA: ${slowEMA}`);
     const price = prices[i];
 
     if (i < period) {
