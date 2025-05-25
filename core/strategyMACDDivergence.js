@@ -2,6 +2,7 @@ const { calculateMACDSeries } = require('./calculateMACDSeries');
 
 function checkMACDDivergence(symbol, candles, timeframe) {
   const macdSeries = calculateMACDSeries(candles);
+  console.log('[DEBUG] MACD Series:', macdSeries);
 
   if (!macdSeries || macdSeries.length < 2) {
     console.log(`[DEBUG] MACD Divergence: Недостаточно данных для ${symbol}`);
