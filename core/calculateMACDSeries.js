@@ -1,29 +1,46 @@
-const { calculateEMA } = require('./indicators');
-const { FAST_PERIOD, SLOW_PERIOD } = require('../config').MACD_SETTINGS;
+const { MACD_SETTINGS } = require('../config');
+const { calculateEMA } = require('./indicators'); // убедись, что она доступна
 
 function calculateMACDSeries(candles) {
-  const macdLineArr = [];
+  const { FAST_PERIOD, SLOW_PERIOD, SIGNAL_PERIOD } = MACD_SETTINGS;
 
-  for (let i = 0; i < candles.length; i++) {
-    const slice = candles.slice(0, i + 1);
+  if (candles.length < SLOW_PERIOD + SIGNAL_PERIOD) return null;
 
-    if (slice.length < SLOW_PERIOD) {
-      macdLineArr.push(null);
-      continue;
-    }
+  // массив цен
+  const prices = candles.map(c => c.close);
 
-    const fastEMA = calculateEMA(slice.map(c => c.close), FAST_PERIOD).at(-1);
-    const slowEMA = calculateEMA(slice.map(c => c.close), SLOW_PERIOD).at(-1);
+  // EMA серии
+  const fastEMAarr = calculateEMA(prices, FAST_PERIOD);
+  const slowEMAarr = calculateEMA(prices, SLOW_PERIOD);
 
-    if (fastEMA == null || slowEMA == null) {
-      macdLineArr.push(null);
-      continue;
-    }
+  // строим macdLine по разнице
+  const macdLine = prices.map((_, i) => {
+    const fast = fastEMAarr[i];
+    const slow = slowEMAarr[i];
+    if (fast == null || slow == null) return null;
+    return fast - slow;
+  });
 
-    macdLineArr.push(fastEMA - slowEMA);
-  }
+  // строим сигнальную EMA от macdLine
+  const macdFiltered = macdLine.map(val => ({ close: val })).filter(d => d.close != null);
+  const signalArr = calculateEMA(macdFiltered.map(d => d.close), SIGNAL_PERIOD);
 
-  return macdLineArr;
+  // выравниваем длину сигнала до длины macdLine
+  const alignedSignalArr = Array(macdLine.length - signalArr.length).fill(null).concat(signalArr);
+
+  // собираем результат
+  const macdSeries = macdLine.map((macd, i) => {
+    const signal = alignedSignalArr[i];
+    if (macd == null || signal == null) return null;
+
+    return {
+      macd: +macd.toFixed(4),
+      signal: +signal.toFixed(4),
+      histogram: +(macd - signal).toFixed(4)
+    };
+  });
+
+  return macdSeries;
 }
 
 module.exports = { calculateMACDSeries };
