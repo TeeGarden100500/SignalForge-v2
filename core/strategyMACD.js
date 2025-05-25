@@ -27,18 +27,6 @@ function checkMACDStrategy(symbol, candles, interval, timeframe) {
       message: `🔴 [${symbol}] MACD пересёк вниз (сигнал на падение)`,
     };
   }
-// Простейшая заглушка MACD-дивергенции
-if (candles.length >= 3) {
-  const [c1, c2, c3] = candles.slice(-3);
-  if (c3.macd > c2.macd && c3.close < c2.close) {
-    return {
-      symbol, timeframe,
-      strategy: 'MACD_DIVERGENCE',
-      tag: 'MACD_DIVERGENCE',
-      message: `🟢 [${symbol}] Дивергенция по MACD`,
-    };
-  }
-}
 
   return null;
 }
