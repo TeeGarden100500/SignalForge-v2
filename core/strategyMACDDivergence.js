@@ -31,7 +31,7 @@ function checkMACDDivergence(symbol, candles, timeframe) {
       message: `🟢 [${symbol}] MACD дивергенция: цена падает, MACD растёт — возможен разворот вверх`
     };
   }
-}
+
   return null;
 }
 module.exports = { checkMACDDivergence };
