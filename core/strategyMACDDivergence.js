@@ -1,4 +1,4 @@
-const { calculateMACDSeries } = require('./indicators');
+const { calculateMACDSeries } = require('./calculateMACDSeries.js');
 
 function checkMACDDivergence(symbol, candles, timeframe) {
   const macdSeries = calculateMACDSeries(candles);
