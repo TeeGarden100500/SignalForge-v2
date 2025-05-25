@@ -9,7 +9,7 @@ function checkMACDDivergence(symbol, candles, timeframe) {
   if (!macdSeries || macdSeries.length < 6) return null;
     console.log(`[DEBUG] MACD Divergence: Недостаточно данных для ${symbol}`);
     return null;
-  }
+
 
     const curr = macdSeries.at(-1);
     const prev = macdSeries.at(-5);
@@ -31,7 +31,7 @@ function checkMACDDivergence(symbol, candles, timeframe) {
       message: `🟢 [${symbol}] MACD дивергенция: цена падает, MACD растёт — возможен разворот вверх`
     };
   }
-
+}
   return null;
 }
 module.exports = { checkMACDDivergence };
