@@ -345,6 +345,7 @@ module.exports = {
   calculateMACD,
   detectVolumeSpike,
   detectBreakout,
+  calculateMACDSeries,
   detectHighLowProximity,
   calculateMeanReversion,
   calculateATR,
