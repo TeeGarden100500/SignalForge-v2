@@ -1,37 +1,43 @@
-const { calculateMACDSeries } = require('../core/calculateMACDSeries');
+const { calculateMACDSeries } = require('./indicators');
 
-function checkMACDDivergence(candles, interval, symbol) {
+function checkMACDDivergence(symbol, candles, timeframe) {
   const macdSeries = calculateMACDSeries(candles);
+  if (!Array.isArray(macdSeries) || macdSeries.length < 3) {
+    console.log(`[DEBUG] MACD Divergence: недостаточно данных для ${symbol}`);
+    return null;
+  }
 
-  if (!Array.isArray(macdSeries) || macdSeries.length < 2) return null;
+  const lastThree = macdSeries.slice(-3);
+  const [macd1, macd2, macd3] = lastThree.map(v => v?.macd);
+  const [c1, c2, c3] = candles.slice(-3);
 
-  const latest = macdSeries.at(-1);
-  const previous = macdSeries.at(-2);
+  if ([macd1, macd2, macd3].some(v => typeof v !== 'number')) {
+    console.log(`[DEBUG] MACD Divergence: null значения в последних точках для ${symbol}`);
+    return null;
+  }
 
-  if (!latest || !previous) return null;
+  const priceNow = c3.close;
+  const pricePrev = c1.close;
 
-  const isBullishDivergence = previous.macd < previous.signal && latest.macd > latest.signal;
-  const isBearishDivergence = previous.macd > previous.signal && latest.macd < latest.signal;
-
-  if (isBullishDivergence) {
+  // Обратная дивергенция: цена падает, MACD растёт
+  if (priceNow < pricePrev && macd3 > macd1) {
     return {
-      strategy: 'MACD_DIVERGENCE',
-      signal: 'buy',
-      strength: 'medium',
-      interval,
       symbol,
-      message: `MACD bullish divergence on ${symbol} (${interval})`,
+      timeframe,
+      strategy: 'MACD_DIVERGENCE',
+      tag: 'MACD_DIVERGENCE',
+      message: `🟢 [${symbol}] MACD Дивергенция: цена падает, MACD растёт — возможный отскок`
     };
   }
 
-  if (isBearishDivergence) {
+  // Прямая дивергенция: цена растёт, MACD падает
+  if (priceNow > pricePrev && macd3 < macd1) {
     return {
-      strategy: 'MACD_DIVERGENCE',
-      signal: 'sell',
-      strength: 'medium',
-      interval,
       symbol,
-      message: `MACD bearish divergence on ${symbol} (${interval})`,
+      timeframe,
+      strategy: 'MACD_DIVERGENCE',
+      tag: 'MACD_DIVERGENCE',
+      message: `🔴 [${symbol}] MACD Дивергенция: цена растёт, MACD падает — возможный разворот вниз`
     };
   }
 
