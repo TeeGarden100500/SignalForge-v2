@@ -1,34 +1,34 @@
 const { calculateMACDSeries } = require('./calculateMACDSeries');
 
 function checkMACDDivergence(symbol, candles, timeframe) {
+  if (!Array.isArray(candles) || candles.length < 30) return null;
+  
   const macdSeries = calculateMACDSeries(candles);
   console.log('[DEBUG] MACD Series:', macdSeries);
 
-  if (!macdSeries || macdSeries.length < 2) {
+  if (!macdSeries || macdSeries.length < 6) return null;
     console.log(`[DEBUG] MACD Divergence: Недостаточно данных для ${symbol}`);
     return null;
   }
 
-  const current = macdSeries.at(-1);
-  const prev = macdSeries.at(-2);
+    const curr = macdSeries.at(-1);
+    const prev = macdSeries.at(-5);
+    const currPrice = candles.at(-1)?.close;
+    const prevPrice = candles.at(-5)?.close;
 
-  console.log(`[DEBUG] MACD Divergence: ${symbol}`, {
-    prevMACD: prev.macd,
-    currMACD: current.macd,
-    prevPrice: candles.at(-2)?.close,
-    currPrice: candles.at(-1)?.close,
-  });
+ // Проверка: все данные валидны
+  if (!curr || !prev || currPrice == null || prevPrice == null) return null;
 
-  if (
-    current.macd > prev.macd &&                  // MACD идёт вверх
-    candles.at(-1).close < candles.at(-2).close  // А цена идёт вниз
-  ) {
+// Условие бычьей скрытой дивергенции: цена падает, MACD растёт
+    const isHiddenBullish = prevPrice > currPrice && prev.macd < curr.macd;
+
+  if (isHiddenBullish) {
     return {
       symbol,
-      timeframe,
       strategy: 'MACD_DIVERGENCE',
       tag: 'MACD_DIVERGENCE',
-      message: `📉 [${symbol}] Медвежья дивергенция MACD: цена падает, MACD растёт — возможен разворот вниз`,
+      timeframe,
+      message: `🟢 [${symbol}] MACD дивергенция: цена падает, MACD растёт — возможен разворот вверх`
     };
   }
 
