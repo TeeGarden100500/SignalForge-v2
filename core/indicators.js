@@ -33,7 +33,6 @@ function calculateEMA(prices, period) {
   let sum = 0;
 
   for (let i = 0; i < prices.length; i++) {
-    console.log(`[DEBUG][${i}] slice.length: ${slice.length}, fastEMA: ${fastEMA}, slowEMA: ${slowEMA}`);
     const price = prices[i];
 
     if (i < period) {
@@ -115,6 +114,7 @@ function calculateMACD(candles) {
     const slice = candles.slice(0, i + 1);
     const fastEMA = calculateEMA(slice, FAST_PERIOD);
     const slowEMA = calculateEMA(slice, SLOW_PERIOD);
+    console.log(`[DEBUG][${i}] slice.length: ${slice.length}, fastEMA: ${fastEMA}, slowEMA: ${slowEMA}`);
 
     if (fastEMA != null && slowEMA != null) {
       macdLineArr.push(fastEMA - slowEMA);
