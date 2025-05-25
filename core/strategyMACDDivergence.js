@@ -1,6 +1,6 @@
 const { calculateMACDSeries } = require('../core/calculateMACDSeries');
 
-function strategyMACDDivergence(candles, interval, symbol) {
+function checkMACDDivergence(candles, interval, symbol) {
   const macdSeries = calculateMACDSeries(candles);
 
   if (!Array.isArray(macdSeries) || macdSeries.length < 2) return null;
@@ -38,4 +38,4 @@ function strategyMACDDivergence(candles, interval, symbol) {
   return null;
 }
 
-module.exports = { strategyMACDDivergence };
+module.exports = { checkMACDDivergence };
