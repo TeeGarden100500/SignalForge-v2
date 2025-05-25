@@ -1,6 +1,6 @@
 const { calculateMACDSeries } = require('./calculateMACDSeries');
 
-function checkMACDDivergence(symbol, candles) {
+function checkMACDDivergence(symbol, candles, timeframe) {
   const macdSeries = calculateMACDSeries(candles);
   if (!Array.isArray(macdSeries)) {
     console.log('[DEBUG] MACD Divergence: macdSeries is not an array');
@@ -30,14 +30,20 @@ function checkMACDDivergence(symbol, candles) {
   }
 
   const macdRising = currMACD.macd > prevMACD.macd;
+  const macdDiff = Math.abs(currMACD.macd - prevMACD.macd);
   const priceFalling = currPrice < prevPrice;
+  const priceDiff = Math.abs(currPrice - prevPrice);
 
-  if (priceFalling && macdRising) {
+  const macdSensitivity = 0.0001; // можно вынести в config
+  const priceSensitivity = currPrice * 0.002; // 0.2% изменения цены
+
+  if (priceFalling && macdRising && macdDiff > macdSensitivity && priceDiff > priceSensitivity) {
     return {
       symbol,
       strategy: 'MACD_DIVERGENCE',
       tag: 'MACD_DIVERGENCE',
-      message: `🔄 [${symbol}] MACD Divergence: цена падает, MACD растёт — возможен разворот`
+      timeframe,
+      message: `🔄 [${symbol}] MACD дивергенция на ${timeframe}: цена падает, MACD растёт — возможен разворот вверх`
     };
   }
 
