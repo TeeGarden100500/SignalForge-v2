@@ -1,4 +1,4 @@
-const { MACD_MIN_SIGNAL } = require('../config');
+const { MACD_MIN_SIGNAL, DEBUG_LOG_LEVEL } = require('../config');
 const { calculateMACDSeries } = require('./calculateMACDSeries');
 
 function checkMACDDivergence(symbol, candles, timeframe) {
@@ -9,7 +9,9 @@ function checkMACDDivergence(symbol, candles, timeframe) {
   const lastIndex = validSeries.length - 1;
 
   if (validSeries.length < 2) {
-    console.debug('[DEBUG] MACD Divergence: Недостаточно данных для расчета');
+    if (DEBUG_LOG_LEVEL !== 'none') {
+    console.log('[DEBUG] MACD Divergence: Недостаточно данных для расчета');
+  }
     return null;
   }
 
@@ -27,7 +29,9 @@ function checkMACDDivergence(symbol, candles, timeframe) {
   // Слишком слабый сигнал — гистограмма почти 0
   const histogramStrength = Math.abs(currMACD.histogram);
   if (histogramStrength < MACD_MIN_SIGNAL) {
-    console.debug(`[DEBUG] MACD Divergence: Сигнал слишком слабый (hist=${currMACD.histogram}) для ${symbol}`);
+    if (DEBUG_LOG_LEVEL === 'verbose') {
+    console.log(`[DEBUG] MACD Divergence: Сигнал слишком слабый (hist=${currMACD.histogram}) для ${symbol}`);
+  }
     return null;
   }
 
