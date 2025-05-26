@@ -15,13 +15,15 @@ const {
   checkMACDDivergence,
   checkDojiPattern,
   checkGreenCandle,
-  
 } = require('./allStrategies'); // можно объединить импорты
+const { DEBUG_LOG_LEVEL } = require('../config');
 
 function applyStrategies(symbol, candles, interval) {
+  if (DEBUG_LOG_LEVEL === 'verbose') {
   console.log('[DEBUG] candles type:', typeof candles);
   console.log('[DEBUG] Array.isArray:', Array.isArray(candles));
   console.log('[DEBUG] Raw candles:', candles);
+}
   const signalTags = [];
   const messages = [];
   const results = [];
