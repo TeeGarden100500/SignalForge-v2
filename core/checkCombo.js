@@ -49,7 +49,7 @@ function checkComboStrategies(symbol, signals, timeframe) {
         console.log(msg);
         logToFile(msg);
         }
-
+ }
       if (DEBUG_LOG_LEVEL !== 'none') {
         const summary = `📊 Проверено COMBO стратегий: ${strategies.length} | Сработало: ${firedCount}`;
         console.log(summary);
