@@ -61,7 +61,7 @@ function calculateEMAAngle(candles) {
 }
 
   if (candles.length < EMA_PERIOD + EMA_DEPTH) {
-    if (DEBUG_LOG_LEVEL !== 'none') {
+    if (DEBUG_LOG_LEVEL !== 'verbose') {
     console.log('⛔ [DEBUG] Недостаточно свечей для EMA уголка');
   }
     return null;
