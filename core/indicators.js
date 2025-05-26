@@ -1,4 +1,4 @@
-const { RSI_PERIOD } = require('../config');
+const { RSI_PERIOD, DEBUG_LOG_LEVEL } = require('../config');
 
                                                                             // === RSI ===
 function calculateRSI(candles, period = RSI_PERIOD) {
