@@ -56,18 +56,19 @@ function calculateEMAAngle(candles) {
   const EMA_PERIOD = EMA_SETTINGS.PERIOD;
   const EMA_DEPTH = EMA_SETTINGS.DEPTH;
 
+  if (DEBUG_LOG_LEVEL === 'verbose') {
   console.log('🧪 [DEBUG] Всего свечей:', candles.length);
+}
 
   if (candles.length < EMA_PERIOD + EMA_DEPTH) {
+    if (DEBUG_LOG_LEVEL !== 'none') {
     console.log('⛔ [DEBUG] Недостаточно свечей для EMA уголка');
+  }
     return null;
   }
 
   const firstSlice = candles.slice(-(EMA_PERIOD + EMA_DEPTH + 1), -EMA_DEPTH);
   const lastSlice  = candles.slice(-EMA_PERIOD - 1);
-
-  console.log('📈 [DEBUG] firstSlice.length:', firstSlice.length);
-  console.log('📉 [DEBUG] lastSlice.length:', lastSlice.length);
 
   const emaStartSeries = calculateEMA(firstSlice.map(c => c.close), EMA_PERIOD);
   const emaEndSeries = calculateEMA(lastSlice.map(c => c.close), EMA_PERIOD);
@@ -75,20 +76,30 @@ function calculateEMAAngle(candles) {
   const emaStart = emaStartSeries.at(-1);
   const emaEnd = emaEndSeries.at(-1);
 
+  if (DEBUG_LOG_LEVEL === 'verbose') {
+  console.log('📈 [DEBUG] firstSlice.length:', firstSlice.length);
+  console.log('📉 [DEBUG] lastSlice.length:', lastSlice.length);
   console.log('🧮 [DEBUG] emaStartSeries:', emaStartSeries);
   console.log('🧮 [DEBUG] emaEndSeries:', emaEndSeries);
+  }
+  
+  if (DEBUG_LOG_LEVEL !== 'none') {
   console.log('🎯 [DEBUG] emaStart:', emaStart, 'emaEnd:', emaEnd);
+  }
 
   if (!emaStart || !emaEnd || isNaN(emaStart) || isNaN(emaEnd)) {
+    if (DEBUG_LOG_LEVEL !== 'none') {
     console.log('[DEBUG] Invalid EMA values:', { emaStart, emaEnd });
+  }
     return null;
   }
 
   const delta = emaEnd - emaStart;
   const angle = +(delta / EMA_DEPTH).toFixed(4);
 
+  if (DEBUG_LOG_LEVEL !== 'none') {
   console.log(`📐 [DEBUG] EMA angle: ${angle}`);
-
+  }
   return {
     emaStart,
     emaEnd,
@@ -106,16 +117,23 @@ function calculateMACD(candles) {
   const macdLineArr = [];
 
   for (let i = 0; i < candles.length; i++) {
-    console.log(`[DEBUG] macdLineArr.length: ${macdLineArr.length}`);
+    if (DEBUG_LOG_LEVEL === 'verbose') {
+  console.log(`[DEBUG] macdLineArr.length: ${macdLineArr.length}`);
+}
+
     if (macdLineArr.length < SIGNAL_PERIOD + 2) {
+    if (DEBUG_LOG_LEVEL !== 'none') {
     console.log('[DEBUG] MACD Divergence: недостаточно значений в macdLineArr');
+  }
     return null;
     }
     const slice = candles.slice(0, i + 1);
     const fastEMA = calculateEMA(slice, FAST_PERIOD);
     const slowEMA = calculateEMA(slice, SLOW_PERIOD);
-    console.log(`[DEBUG][${i}] slice.length: ${slice.length}, fastEMA: ${fastEMA}, slowEMA: ${slowEMA}`);
-
+    
+    if (DEBUG_LOG_LEVEL === 'verbose') {
+  console.log(`[DEBUG][${i}] slice.length: ${slice.length}, fastEMA: ${fastEMA}, slowEMA: ${slowEMA}`);
+}
     if (fastEMA != null && slowEMA != null) {
       macdLineArr.push(fastEMA - slowEMA);
     }
