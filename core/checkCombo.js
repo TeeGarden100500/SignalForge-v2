@@ -30,9 +30,11 @@ function checkComboStrategies(symbol, signals, timeframe) {
         ? combo.message(symbol, timeframe)
         : combo.message;
 
-      const logLine = `✅ COMBO "${combo.name}" сработала для ${symbol} [${timeframe}]: ${msg}`;
-      console.log(logLine);
-      logToFile(logLine);
+      if (DEBUG_LOG_LEVEL !== 'none') {
+    const logLine = `✅ COMBO "${combo.name}" сработала для ${symbol} [${timeframe}]: ${msg}`;
+    console.log(logLine);
+    logToFile(logLine);
+        }
 
       fired.push({
         symbol,
@@ -41,19 +43,20 @@ function checkComboStrategies(symbol, signals, timeframe) {
         message: msg, // ✅ готовая строка, не функция
         direction: combo.direction
       });
-    }
-/*     else {
-      const msg = `❌ COMBO "${combo.name}" НЕ сработала для ${symbol}: не хватает тегов: ${missing.join(', ')}`;
-      console.log(msg);
-      logToFile(msg);
-     }
-*/   }
+        }
+      if (DEBUG_LOG_LEVEL === 'verbose') {
+        const msg = `❌ COMBO "${combo.name}" НЕ сработала для ${symbol}: не хватает тегов: ${missing.join(', ')}`;
+        console.log(msg);
+        logToFile(msg);
+        }
 
-/*  const summary = `📊 Проверено COMBO стратегий: ${total} | Сработало: ${firedCount}`;
-  console.log(summary);
-  logToFile(summary);
-  logToFile(''); // пустая строка-разделитель
-*/
+      if (DEBUG_LOG_LEVEL !== 'none') {
+        const summary = `📊 Проверено COMBO стратегий: ${strategies.length} | Сработало: ${firedCount}`;
+        console.log(summary);
+        logToFile(summary);
+        logToFile(''); // Пустая строка-разделитель
+        }
+
   return fired;
       }
 
