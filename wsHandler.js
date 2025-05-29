@@ -127,14 +127,31 @@ setInterval(() => {
 }, 5 * 60 * 1000); // каждые 30 минут проверка на не активные свечи
 
 // Загрузка кэша при старте
-const loaded = loadCacheFromFile();
-Object.assign(candleCache, loaded);
-console.log(`🗂️ Кэш загружен: ${Object.keys(loaded).length} символов`);
+if (GITHUB_CACHE_ENABLED) {
+  loadFromGist().then(gistCache => {
+    Object.assign(candleCache, gistCache);
+    console.log(`🗂️ [GIST] Загружено из Gist: ${Object.keys(gistCache).length} символов`);
+  }).catch(err => {
+    console.warn('⚠️ [GIST] Не удалось загрузить из Gist. Фолбэк на локальный файл.');
+    const localCache = loadCacheFromFile();
+    Object.assign(candleCache, localCache);
+    console.log(`🗂️ Локальный кэш загружен: ${Object.keys(localCache).length} символов`);
+  });
+} else {
+  const loaded = loadCacheFromFile();
+  Object.assign(candleCache, loaded);
+  console.log(`🗂️ Кэш загружен: ${Object.keys(loaded).length} символов`);
+}
 
 // Сохранение кэша каждую минуту
 setInterval(() => {
-  saveCacheToFile(candleCache);
+  if (GITHUB_CACHE_ENABLED) {
+    saveToGist(candleCache);
+  } else {
+    saveCacheToFile(candleCache);
+  }
 }, 300_000);
+
 // Этот код должен быть размещён в главном файле цикла, где кэш обновляется
 
 module.exports = {
