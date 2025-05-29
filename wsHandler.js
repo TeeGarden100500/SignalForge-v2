@@ -5,7 +5,8 @@ const { CACHE_LIMITS } = require('./config');
 const { checkMACDStrategy } = require('./core/strategyMACD');
 const { applyStrategies } = require('./core/applyStrategies');
 const { checkComboStrategies } = require('./core/checkCombo');
-
+const { saveCacheToFile } = require('./cache/cacheSaver');
+const { loadCacheFromFile } = require('./cache/cacheLoader');
 
 const TIMEFRAMES = ['5m', '15m', '1h'];
 
@@ -121,6 +122,16 @@ setInterval(() => {
     }
   });
 }, 5 * 60 * 1000); // каждые 30 минут проверка на не активные свечи
+
+// Загрузка кэша при старте
+let candlesCache = loadCacheFromFile();
+
+// Сохранение кэша каждую минуту
+setInterval(() => {
+  saveCacheToFile(candlesCache);
+}, 60_000);
+
+// Этот код должен быть размещён в главном файле цикла, где кэш обновляется
 
 module.exports = {
   startCandleCollector,
