@@ -7,6 +7,11 @@ module.exports = {
 
   DOJI_BODY_RATIO: 0.3, // 🔧 Условие для Doji: тело составляет менее 30% от полного диапазона свечи
 
+  GITHUB_CACHE_ENABLED: true,
+  GITHUB_TOKEN: 'ghp_xxxxxxxxxxxxxxxxxxxxx', // токен GitHub
+  GIST_ID: 'abc1234567890abcdef...',          // ID твоего Gist
+  GIST_FILENAME: 'candles_cache.json'
+ 
                                           // === RSI Settings ===
   //**************************************************************************************************************************
   RSI_PERIOD: 14,
