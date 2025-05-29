@@ -124,12 +124,13 @@ setInterval(() => {
 }, 5 * 60 * 1000); // каждые 30 минут проверка на не активные свечи
 
 // Загрузка кэша при старте
-Object.assign(candleCache, loadCacheFromFile());
+const loaded = loadCacheFromFile();
+Object.assign(candleCache, loaded);
+console.log(`🗂️ Кэш загружен: ${Object.keys(loaded).length} символов`);
 
 // Сохранение кэша каждую минуту
 setInterval(() => {
   saveCacheToFile(candleCache);
-  console.log(`🗂️ Кэш загружен: ${Object.keys(candleCache).length} символов`);
 }, 60_000);
 // Этот код должен быть размещён в главном файле цикла, где кэш обновляется
 
