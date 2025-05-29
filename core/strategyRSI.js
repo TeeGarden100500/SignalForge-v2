@@ -5,7 +5,7 @@ function checkRSIStrategy(symbol, candles, timeframe) {
 
   if (rsi === null) return null;
 
-  if (rsi < 40) {
+  if (rsi < 35) {
     return {
       symbol,
       strategy: 'RSI_OVERSOLD',
@@ -15,7 +15,7 @@ function checkRSIStrategy(symbol, candles, timeframe) {
     };
   }
 
-  if (rsi > 60) {
+  if (rsi > 70) {
     return {
       symbol,
       strategy: 'RSI_OVERBOUGHT',
