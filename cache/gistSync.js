@@ -40,8 +40,26 @@ async function saveToGist(cache) {
         }
       }
     };
-    await axios.patch(GIST_URL, payload, { headers });
-    console.log(`[GIST] ✅ Кэш свечей сохранён в Gist (${GIST_FILENAME})`);
+   await axios.patch(GIST_URL, payload, { headers });
+
+let totalCandles = 0;
+let totalSymbols = 0;
+let totalTimeframes = 0;
+
+for (const [symbol, tfObj] of Object.entries(cache)) {
+  totalSymbols++;
+  for (const [tf, candles] of Object.entries(tfObj)) {
+    totalTimeframes++;
+    totalCandles += candles.length;
+  }
+}
+
+const sizeKb = Buffer.byteLength(JSON.stringify(cache)) / 1024;
+
+console.log(`[GIST] ✅ Кэш сохранён в Gist (${GIST_FILENAME})`);
+console.log(`📊 Символов: ${totalSymbols} | Таймфреймов: ${totalTimeframes} | Свечей: ${totalCandles}`);
+console.log(`💾 Объём JSON: ${sizeKb.toFixed(1)} KB`);
+
   } catch (err) {
     console.error(`[GIST] ❌ Ошибка при сохранении в Gist:`, err.message);
   }
