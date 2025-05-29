@@ -8,7 +8,7 @@ module.exports = {
   DOJI_BODY_RATIO: 0.3, // 🔧 Условие для Doji: тело составляет менее 30% от полного диапазона свечи
 
   GITHUB_CACHE_ENABLED: true,
-  GITHUB_TOKEN: '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', // токен GitHub
+  GITHUB_TOKEN: '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', // токен GitHub
   GIST_ID: '8d44a82bf2917e2560b5e1ed6eb9a831', // ID твоего Gist
   GIST_FILENAME: 'candles_cache.json',
  
