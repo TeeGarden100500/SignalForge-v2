@@ -82,8 +82,8 @@ const candles = candleCache[symbol]?.[interval];
       console.error(`❗ WS Error [${socketKey}]`, err.message);
     });
 
-    ws.on('close', () => {
-      console.warn(`⚠️ WS Закрыт [${socketKey}]`);
+    ws.on('close', (code, reason) => {
+    console.warn(`⚠️ WS Закрыт [${socketKey}] Код: ${code} Причина: ${reason?.toString() || 'нет причины'}`);
     });
   });
 }
@@ -145,7 +145,10 @@ if (GITHUB_CACHE_ENABLED) {
 
 // Сохранение кэша каждую минуту
 setInterval(() => {
-  if (GITHUB_CACHE_ENABLED) {
+  console.log(`🌐 Активных WebSocket потоков: ${Object.keys(sockets).length}`);
+  const mem = process.memoryUsage().heapUsed / 1024 / 1024;
+  console.log(`🧠 RAM usage: ${mem.toFixed(2)} MB`);
+    if (GITHUB_CACHE_ENABLED) {
     saveToGist(candleCache);
   } else {
     saveCacheToFile(candleCache);
