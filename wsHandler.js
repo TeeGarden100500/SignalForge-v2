@@ -7,6 +7,9 @@ const { applyStrategies } = require('./core/applyStrategies');
 const { checkComboStrategies } = require('./core/checkCombo');
 const { saveCacheToFile } = require('./cache/cacheSaver');
 const { loadCacheFromFile } = require('./cache/cacheLoader');
+const { loadFromGist, saveToGist } = require('./cache/gistSync');
+const { GITHUB_CACHE_ENABLED } = require('./config');
+
 
 const TIMEFRAMES = ['5m', '15m', '1h'];
 
