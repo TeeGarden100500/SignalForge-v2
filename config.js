@@ -15,8 +15,8 @@ module.exports = {
                                           // === strategyRSI_Volume_Fade ===**************************************************
   //**************************************************************************************************************************
   RSI_VOLUME_FADE: {
-  RSI_HIGH_THRESHOLD: 60,
-  RSI_LOW_THRESHOLD: 40,
+  RSI_HIGH_THRESHOLD: 70,
+  RSI_LOW_THRESHOLD: 30,
   VOLUME_DROP_PERCENT: 10,     // можно менять на 5 или 15 по тестам
   TIMEFRAMES: ['5m', '15m']
   },
