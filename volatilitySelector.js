@@ -24,7 +24,7 @@ async function loadTradingSymbols() {
   }
 }
 
-async function getTopVolatilePairs() {
+async function getTopVolatilePairs(candleCache) {
   try {
     if (TRADING_SYMBOLS.size === 0) await loadTradingSymbols();
 
@@ -54,7 +54,13 @@ async function getTopVolatilePairs() {
       .sort((a, b) => b.volatility - a.volatility)
       .slice(0, TOP_N_PAIRS);
     
-pruneObsoleteSymbols(candleCache, topVolatileSymbols);
+const topVolatileSymbols = filtered.map(p => p.symbol);
+
+// ВАЖНО: candleCache должен быть передан в эту функцию извне!
+if (typeof candleCache !== 'undefined') {
+  pruneObsoleteSymbols(candleCache, topVolatileSymbols);
+}
+
     
     if (DEBUG_LOG_LEVEL !== 'none') {
       console.log(`📊 Топ ${TOP_N_PAIRS} волатильных пар:`);
