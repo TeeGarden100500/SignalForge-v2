@@ -18,12 +18,20 @@ const GIST_URL = `https://api.github.com/gists/${GIST_ID}`;
 
 async function loadFromGist() {
   if (!GITHUB_CACHE_ENABLED) return {};
+
   try {
     const response = await axios.get(GIST_URL, { headers });
     const content = response.data.files[GIST_FILENAME].content;
-    const parsed = JSON.parse(content);
-    console.log(`[GIST] ✅ Кэш загружен из Gist (${GIST_FILENAME})`);
-    return parsed;
+
+    try {
+      const cache = JSON.parse(content);
+      console.log(`[GIST] ✅ Кэш загружен из Gist (${GIST_FILENAME})`);
+      return cache;
+    } catch (e) {
+      console.error(`[GIST] ❌ Ошибка разбора JSON из Gist: ${e.message}`);
+      return {};
+    }
+
   } catch (err) {
     console.error(`[GIST] ❌ Ошибка при загрузке из Gist:`, err.message);
     return {};
@@ -41,7 +49,13 @@ async function saveToGist(cache) {
       }
     };
    await axios.patch(GIST_URL, payload, { headers });
+const jsonStr = JSON.stringify(cache);
+const sizeKb = Buffer.byteLength(jsonStr) / 1024;
 
+if (sizeKb > 1500) {
+  console.warn(`[GIST] ⚠️ Размер JSON (${sizeKb.toFixed(1)} KB) превышает лимит 1500 KB. Сохранение отменено.`);
+  return;
+}
 let totalCandles = 0;
 let totalSymbols = 0;
 let totalTimeframes = 0;
