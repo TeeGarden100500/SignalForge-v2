@@ -13,7 +13,7 @@ async function runVolatilityScanLoop() {
 }
 
 (async () => {
-  const topPairs = await getTopVolatilePairs();
+  const topPairs = await getTopVolatilePairs(candleCache);
   startCandleCollector(topPairs);
 
   const timeframes = ['5m', '15m', '1h'];
