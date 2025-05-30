@@ -159,7 +159,8 @@ setInterval(() => {
 
 module.exports = {
   startCandleCollector,
-  getCandleCache
+  getCandleCache,
+  candleCache
 };
 
 setInterval(() => {
