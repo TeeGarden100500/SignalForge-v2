@@ -1,5 +1,6 @@
 const axios = require('axios');
 const { TOP_N_PAIRS, PAIR_SUFFIX, DEBUG_LOG_LEVEL } = require('./config');
+const { pruneObsoleteSymbols } = require('./utils/pruneCache');
 
 let TRADING_SYMBOLS = new Set();
 
@@ -52,7 +53,9 @@ async function getTopVolatilePairs() {
       .filter(Boolean)
       .sort((a, b) => b.volatility - a.volatility)
       .slice(0, TOP_N_PAIRS);
-
+    
+pruneObsoleteSymbols(candleCache, topVolatileSymbols);
+    
     if (DEBUG_LOG_LEVEL !== 'none') {
       console.log(`📊 Топ ${TOP_N_PAIRS} волатильных пар:`);
       filtered.forEach(p => console.log(`${p.symbol}: ${p.volatility}%`));
