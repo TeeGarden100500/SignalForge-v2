@@ -75,5 +75,5 @@ if (typeof candleCache !== 'undefined') {
 }
 
 module.exports = {
-  getTopVolatilePairs,
+  getTopVolatilePairs(candleCache),
 };
