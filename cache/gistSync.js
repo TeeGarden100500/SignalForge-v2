@@ -68,8 +68,6 @@ for (const [symbol, tfObj] of Object.entries(cache)) {
   }
 }
 
-const sizeKb = Buffer.byteLength(JSON.stringify(cache)) / 1024;
-
 console.log(`[GIST] ✅ Кэш сохранён в Gist (${GIST_FILENAME})`);
 console.log(`📊 Символов: ${totalSymbols} | Таймфреймов: ${totalTimeframes} | Свечей: ${totalCandles}`);
 console.log(`💾 Объём JSON: ${sizeKb.toFixed(1)} KB`);
