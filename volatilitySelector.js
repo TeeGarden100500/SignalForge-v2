@@ -33,10 +33,12 @@ async function getTopVolatilePairs(candleCache) {
 
     // ⛔️ Удаляем мёртвые пары с низким объёмом
     const MIN_VOLUME = 100_000;
-    const tradablePairs = response.data.filter(t =>
-      TRADING_SYMBOLS.has(t.symbol) &&
-      parseFloat(t.quoteVolume) >= MIN_VOLUME
-    );
+
+const tradablePairs = response.data.filter(pair =>
+  TRADING_SYMBOLS.has(pair.symbol) &&
+  parseFloat(pair.quoteVolume) >= MIN_VOLUME
+);
+
 
     const sorted = tradablePairs
       .map(t => ({
