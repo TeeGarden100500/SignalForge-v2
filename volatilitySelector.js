@@ -31,24 +31,37 @@ async function getTopVolatilePairs(candleCache) {
     const url = 'https://api.binance.com/api/v3/ticker/24hr';
     const response = await axios.get(url);
 
-    const filtered = response.data
-      .filter(pair =>
-        TRADING_SYMBOLS.has(pair.symbol) &&
-        !pair.symbol.includes('UP') &&
-        !pair.symbol.includes('DOWN')
-      )
-      .map(pair => {
-        const high = parseFloat(pair.highPrice);
-        const low = parseFloat(pair.lowPrice);
+    // ⛔️ Удаляем мёртвые пары с низким объёмом
+    const MIN_VOLUME = 100_000;
+    const tradablePairs = response.data.filter(t =>
+      TRADING_SYMBOLS.has(t.symbol) &&
+      parseFloat(t.quoteVolume) >= MIN_VOLUME
+    );
 
-        if (!low || !high || isNaN(low) || isNaN(high) || low === 0) return null;
+    const sorted = tradablePairs
+      .map(t => ({
+        symbol: t.symbol,
+        volatility: Math.abs(parseFloat(t.priceChangePercent))
+      }))
+      .sort((a, b) => b.volatility - a.volatility);
 
-        const volatility = ((high - low) / low) * 100;
+    const filtered = sorted.slice(0, TOP_N_PAIRS);
+    const topVolatileSymbols = filtered.map(p => p.symbol);
 
-        return {
-          symbol: pair.symbol,
-          volatility: +volatility.toFixed(2),
-        };
+    if (DEBUG_LOG_LEVEL !== 'none') {
+      console.log(`📈 Выбрано ${topVolatileSymbols.length} топ-пар из ${tradablePairs.length} ликвидных USDT`);
+    }
+
+    pruneObsoleteSymbols(candleCache, topVolatileSymbols);
+    return filtered;
+
+  } catch (err) {
+    console.error('❌ Ошибка при расчёте волатильности:', err.message);
+
+  return {
+    symbol: pair.symbol,
+    volatility: +volatility.toFixed(2),
+      };
       })
       .filter(Boolean)
       .sort((a, b) => b.volatility - a.volatility)
