@@ -55,20 +55,12 @@ const tradablePairs = response.data.filter(pair =>
     }
 
     pruneObsoleteSymbols(candleCache, topVolatileSymbols);
-    return filtered;
-
+     return filtered;
   } catch (err) {
     console.error('❌ Ошибка при расчёте волатильности:', err.message);
-
-  return {
-    symbol: pair.symbol,
-    volatility: +volatility.toFixed(2)
-  };
+    return [];
   }
-      });
-      .filter(Boolean)
-      .sort((a, b) => b.volatility - a.volatility)
-      .slice(0, TOP_N_PAIRS);
+}
     
 const topVolatileSymbols = filtered.map(p => p.symbol);
 
