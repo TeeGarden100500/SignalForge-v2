@@ -62,8 +62,8 @@ async function getTopVolatilePairs(candleCache) {
     symbol: pair.symbol,
     volatility: +volatility.toFixed(2),
   }
-  };
-      })
+  }
+      });
       .filter(Boolean)
       .sort((a, b) => b.volatility - a.volatility)
       .slice(0, TOP_N_PAIRS);
