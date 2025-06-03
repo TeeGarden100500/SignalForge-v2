@@ -67,8 +67,6 @@ const topVolatileSymbols = filtered.map(p => p.symbol);
 // ВАЖНО: candleCache должен быть передан в эту функцию извне!
 if (typeof candleCache !== 'undefined') {
   pruneObsoleteSymbols(candleCache, topVolatileSymbols);
-}
-
     
     if (DEBUG_LOG_LEVEL !== 'none') {
       console.log(`📊 Топ ${TOP_N_PAIRS} волатильных пар:`);
