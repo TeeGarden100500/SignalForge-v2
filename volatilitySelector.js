@@ -62,8 +62,8 @@ const tradablePairs = response.data.filter(pair =>
 
   return {
     symbol: pair.symbol,
-    volatility: +volatility.toFixed(2),
-  }
+    volatility: +volatility.toFixed(2)
+  };
   }
       });
       .filter(Boolean)
