@@ -9,6 +9,8 @@ const { saveCacheToFile } = require('./cache/cacheSaver');
 const { loadCacheFromFile } = require('./cache/cacheLoader');
 const { loadFromGist, saveToGist } = require('./cache/gistSync');
 const { GITHUB_CACHE_ENABLED } = require('./config');
+const { isSymbolTradable, loadTradingSymbols } = require('./volatilitySelector');
+const { removeSymbolsFromCache } = require('./cache/cacheManager');
 
 
 const TIMEFRAMES = ['5m', '15m', '1h'];
@@ -23,6 +25,18 @@ function log(...args) {
   if (DEBUG_LOG_LEVEL === 'verbose') {
     console.log(...args);
   }
+}
+
+function removeSymbolData(symbol) {
+  removeSymbolsFromCache(candleCache, symbol);
+  TIMEFRAMES.forEach(interval => {
+    const key = `${symbol}_${interval}`;
+    if (sockets[key]) {
+      sockets[key].close();
+      delete sockets[key];
+    }
+    if (lastUpdatedAt[key]) delete lastUpdatedAt[key];
+  });
 }
 
 function subscribeToKlines(symbol) {
@@ -88,11 +102,28 @@ const candles = candleCache[symbol]?.[interval];
   });
 }
 
-function startCandleCollector(pairs) {
-  const limitedPairs = pairs.slice(0, TOP_N_PAIRS); // максимум 50 для WebSocket лимита
+async function startCandleCollector(pairs) {
+  await loadTradingSymbols();
+  const limitedPairs = pairs.slice(0, TOP_N_PAIRS);
+  const valid = [];
+  const removed = [];
 
   limitedPairs.forEach(p => {
-    subscribeToKlines(p.symbol || p); // если просто строка, или объект { symbol }
+    const sym = p.symbol || p;
+    if (isSymbolTradable(sym)) {
+      valid.push(sym);
+    } else {
+      removed.push(sym);
+      removeSymbolData(sym);
+    }
+  });
+
+  if (DEBUG_LOG_LEVEL === 'verbose' && removed.length) {
+    console.log(`[WS] Исключены из подписки: ${removed.join(', ')}`);
+  }
+
+  valid.forEach(sym => {
+    subscribeToKlines(sym);
   });
 }
 
@@ -105,22 +136,8 @@ setInterval(() => {
 
   Object.entries(lastUpdatedAt).forEach(([key, lastUpdate]) => {
     if (now - lastUpdate > LAST_UPDATE_TIMEOUT_MS) {
-      const [symbol, interval] = key.split('_');
-
-      // удалить из кэша
-      if (candleCache[symbol] && candleCache[symbol][interval]) {
-        delete candleCache[symbol][interval];
-      }
-
-      // удалить ws
-      if (sockets[key]) {
-        sockets[key].close();
-        delete sockets[key];
-      }
-
-      // удалить временную метку
-      delete lastUpdatedAt[key];
-
+      const [symbol] = key.split('_');
+      removeSymbolData(symbol);
       console.log(`🗑️ Удалён неактивный поток: ${key}`);
     }
   });
@@ -160,7 +177,8 @@ setInterval(() => {
 module.exports = {
   startCandleCollector,
   getCandleCache,
-  candleCache
+  candleCache,
+  removeSymbolData
 };
 
 setInterval(() => {
