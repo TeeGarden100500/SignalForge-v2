@@ -1,6 +1,6 @@
 const { applyStrategies } = require('./core/applyStrategies');
 const { sendWebhook } = require('./webhookHandler');
-const { getCandleCache } = require('./wsHandler'); // 🔄 подключение из wsHandler
+const { getCandleCache } = require('./wsHandler'); // подключение из wsHandler
 
 function getCandlesFor(symbol, interval) {
   const cache = getCandleCache();
@@ -9,10 +9,11 @@ function getCandlesFor(symbol, interval) {
 
 function analyzeSymbol(symbol, interval) {
   const candles = getCandlesFor(symbol, interval);      // получаем свечи
-  const results = applyStrategies(symbol, candles, interval); // применяем стратегии
+  const strategyData = applyStrategies(symbol, candles, interval); // применяем стратегии
+  const { results } = strategyData;
 
   if (results.length > 0) {
-    sendWebhook(symbol, results, interval);             // отправляем сигнал
+    sendWebhook(symbol, strategyData, interval);             // отправляем сигнал
   }
 }
 
