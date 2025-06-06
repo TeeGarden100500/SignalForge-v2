@@ -24,6 +24,10 @@ async function loadTradingSymbols() {
   }
 }
 
+function isSymbolTradable(symbol) {
+  return TRADING_SYMBOLS.has(symbol);
+}
+
 async function getTopVolatilePairs(candleCache) {
   try {
     if (TRADING_SYMBOLS.size === 0) await loadTradingSymbols();
@@ -31,6 +35,11 @@ async function getTopVolatilePairs(candleCache) {
     const url = 'https://api.binance.com/api/v3/ticker/24hr';
     const response = await axios.get(url);
 
+    const removed = response.data.filter(p => !TRADING_SYMBOLS.has(p.symbol));
+    if (DEBUG_LOG_LEVEL === 'verbose' && removed.length) {
+      const names = removed.map(r => r.symbol).join(', ');
+      console.log(`[FILTER] Исключены недоступные пары: ${names}`);
+    }
     const filtered = response.data
       .filter(pair =>
         TRADING_SYMBOLS.has(pair.symbol) &&
@@ -76,4 +85,6 @@ if (typeof candleCache !== 'undefined') {
 
 module.exports = {
   getTopVolatilePairs,
+  loadTradingSymbols,
+  isSymbolTradable,
 };
