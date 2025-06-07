@@ -54,6 +54,20 @@ const comboStrategies = [
     direction: "short",
     message: () =>
       "❗️ COMBO: Short Reversal Trap — Ложный импульс вверх и вынос ликвидности. Возможен откат. SHORT."
+  },
+  {
+    name: "Long Reversal Bounce",
+    conditions: [
+      "LIQUIDITY_REBOUND",
+      "WICK_REJECTION",
+      "FLASH_CRASH_RECOVERY",
+      "VOLUME_SPIKE",
+      "RSI_OVERSOLD"
+    ],
+    minMatch: 3,
+    direction: "long",
+    message: () =>
+      "📈 COMBO: Long Reversal Bounce — Сильный отскок от зоны ликвидности. Возможен разворот. LONG."
   }
 ];
 
