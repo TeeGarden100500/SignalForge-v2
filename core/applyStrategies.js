@@ -15,6 +15,7 @@ const {
   checkMACDDivergence,
   checkDojiPattern,
   checkGreenCandle,
+  checkFlashCrashRecovery,
 } = require('./allStrategies'); // можно объединить импорты
 const { DEBUG_LOG_LEVEL } = require('../config');
 
@@ -63,6 +64,8 @@ function applyStrategies(symbol, candles, interval) {
   add(checkEMAAngleStrategy(symbol, candles, interval), 'EMA_ANGLE');
 
   add(checkDojiPattern(candles), 'DOJI');
+
+  add(checkFlashCrashRecovery(candles, interval), 'FLASH_CRASH_RECOVERY');
 
   add(checkGreenCandle(symbol, candles, interval), 'GREEN_CANDLE');
 

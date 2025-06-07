@@ -15,4 +15,5 @@ module.exports = {
   checkRSIVolumeFade: require('./strategyRSI_Volume_Fade'),
   checkMACDDivergence: require('./strategyMACDDivergence').checkMACDDivergence,
   checkGreenCandle: require('./strategyCandlePatterns').checkGreenCandle,
+  checkFlashCrashRecovery: require('../strategies/strategyFlashCrashRecovery').checkFlashCrashRecovery,
 };
