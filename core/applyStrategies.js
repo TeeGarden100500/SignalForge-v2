@@ -16,6 +16,7 @@ const {
   checkDojiPattern,
   checkGreenCandle,
   checkFlashCrashRecovery,
+  checkStopLossHunt,
 } = require('./allStrategies'); // можно объединить импорты
 const { DEBUG_LOG_LEVEL } = require('../config');
 
@@ -66,6 +67,7 @@ function applyStrategies(symbol, candles, interval) {
   add(checkDojiPattern(candles), 'DOJI');
 
   add(checkFlashCrashRecovery(candles, interval), 'FLASH_CRASH_RECOVERY');
+  add(checkStopLossHunt(candles, interval), 'STOP_LOSS_HUNT');
 
   add(checkGreenCandle(symbol, candles, interval), 'GREEN_CANDLE');
 
