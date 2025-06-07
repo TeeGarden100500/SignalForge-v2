@@ -9,7 +9,7 @@ const { saveCacheToFile } = require('./cache/cacheSaver');
 const { loadCacheFromFile } = require('./cache/cacheLoader');
 const { loadFromGist, saveToGist } = require('./cache/gistSync');
 const { GITHUB_CACHE_ENABLED } = require('./config');
-const { isSymbolTradable, loadTradingSymbols } = require('./volatilitySelector');
+const { isFuturesTradable } = require('./futuresSymbols');
 const { removeSymbolsFromCache } = require('./cache/cacheManager');
 
 
@@ -103,14 +103,13 @@ const candles = candleCache[symbol]?.[interval];
 }
 
 async function startCandleCollector(pairs) {
-  await loadTradingSymbols();
   const limitedPairs = pairs.slice(0, TOP_N_PAIRS);
   const valid = [];
   const removed = [];
 
   limitedPairs.forEach(p => {
     const sym = p.symbol || p;
-    if (isSymbolTradable(sym)) {
+    if (isFuturesTradable(sym)) {
       valid.push(sym);
     } else {
       removed.push(sym);

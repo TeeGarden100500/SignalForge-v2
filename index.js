@@ -1,5 +1,6 @@
 console.log(`🚀 [BOOT] Старт SignalForge @ ${new Date().toISOString()}`);
 const { getTopVolatilePairs } = require('./volatilitySelector');
+const { loadFuturesSymbols } = require('./futuresSymbols');
 const { VOLATILITY_UPDATE_INTERVAL_HOURS } = require('./config');
 const { startCandleCollector, candleCache } = require('./wsHandler');
 const { analyzeAllSymbols } = require('./startAnalysisCycle');
@@ -13,6 +14,7 @@ async function runVolatilityScanLoop() {
 }
 
 (async () => {
+  await loadFuturesSymbols();
   const topPairs = await getTopVolatilePairs(candleCache);
   await startCandleCollector(topPairs);
 
