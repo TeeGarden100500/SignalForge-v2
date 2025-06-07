@@ -16,4 +16,5 @@ module.exports = {
   checkMACDDivergence: require('./strategyMACDDivergence').checkMACDDivergence,
   checkGreenCandle: require('./strategyCandlePatterns').checkGreenCandle,
   checkFlashCrashRecovery: require('../strategies/strategyFlashCrashRecovery').checkFlashCrashRecovery,
+  checkStopLossHunt: require('../strategies/strategyStopLossHunt').checkStopLossHunt,
 };
