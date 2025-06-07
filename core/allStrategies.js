@@ -19,4 +19,5 @@ module.exports = {
   checkStopLossHunt: require('../strategies/strategyStopLossHunt').checkStopLossHunt,
   checkVolumeTrap: require('../strategies/strategyVolumeTrap').checkVolumeTrap,
   checkWickRejection: require('../strategies/strategyWickRejection').checkWickRejection,
+  checkLiquidityRebound: require('../strategies/strategyLiquidityRebound').checkLiquidityRebound,
 };

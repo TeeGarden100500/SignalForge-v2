@@ -19,8 +19,10 @@ const {
   checkStopLossHunt,
   checkVolumeTrap,
   checkWickRejection,
+  checkLiquidityRebound,
 } = require('./allStrategies'); // можно объединить импорты
 const { DEBUG_LOG_LEVEL } = require('../config');
+const liquidityLevels = require('../liquidityLevels.json');
 
 function applyStrategies(symbol, candles, interval) {
   if (DEBUG_LOG_LEVEL === 'verbose') {
@@ -72,6 +74,8 @@ function applyStrategies(symbol, candles, interval) {
   add(checkStopLossHunt(candles, interval), 'STOP_LOSS_HUNT');
   add(checkVolumeTrap(candles, interval), 'VOLUME_TRAP');
   add(checkWickRejection(candles, interval), 'WICK_REJECTION');
+  const levels = liquidityLevels[symbol]?.[interval] || [];
+  add(checkLiquidityRebound(candles, interval, levels), 'LIQUIDITY_REBOUND');
 
   add(checkGreenCandle(symbol, candles, interval), 'GREEN_CANDLE');
 
