@@ -28,7 +28,7 @@ async function loadFromGist() {
       console.log(`[GIST] ✅ Кэш загружен из Gist (${GIST_FILENAME})`);
       return cache;
     } catch (e) {
-      console.error(`[GIST] ❌ Ошибка разбора JSON из Gist: ${e.message}`);
+      console.error('[GIST] ❌ Ошибка чтения JSON. Очистка...');
       return {};
     }
 
