@@ -17,4 +17,5 @@ module.exports = {
   checkGreenCandle: require('./strategyCandlePatterns').checkGreenCandle,
   checkFlashCrashRecovery: require('../strategies/strategyFlashCrashRecovery').checkFlashCrashRecovery,
   checkStopLossHunt: require('../strategies/strategyStopLossHunt').checkStopLossHunt,
+  checkVolumeTrap: require('../strategies/strategyVolumeTrap').checkVolumeTrap,
 };

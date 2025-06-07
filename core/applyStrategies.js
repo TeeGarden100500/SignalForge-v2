@@ -17,6 +17,7 @@ const {
   checkGreenCandle,
   checkFlashCrashRecovery,
   checkStopLossHunt,
+  checkVolumeTrap,
 } = require('./allStrategies'); // можно объединить импорты
 const { DEBUG_LOG_LEVEL } = require('../config');
 
@@ -68,6 +69,7 @@ function applyStrategies(symbol, candles, interval) {
 
   add(checkFlashCrashRecovery(candles, interval), 'FLASH_CRASH_RECOVERY');
   add(checkStopLossHunt(candles, interval), 'STOP_LOSS_HUNT');
+  add(checkVolumeTrap(candles, interval), 'VOLUME_TRAP');
 
   add(checkGreenCandle(symbol, candles, interval), 'GREEN_CANDLE');
 
