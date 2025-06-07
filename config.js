@@ -90,6 +90,13 @@ MACD_SETTINGS: {
 },
   // ******************************************************************************************************************
 
+  FLASH_CRASH: {
+  DROP_PERCENT: 15,
+  MAX_CANDLE_WINDOW: 6,
+  MIN_WICK_RATIO: 2,
+  VOLUME_SPIKE_MULTIPLIER: 2
+  },
+
   CACHE_LIMITS: {
   '5m': 70,
   '15m': 70,
