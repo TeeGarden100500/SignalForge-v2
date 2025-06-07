@@ -40,6 +40,20 @@ const comboStrategies = [
     direction: "short",
     message: (symbol, timeframe) =>
     `🔻 [Dead Volume Fall] для ${symbol} на ${timeframe} — Объём падает на спаде — снижение может усилиться.`
+  },
+  {
+    name: "Short Reversal Trap",
+    conditions: [
+      "FLASH_CRASH_RECOVERY",
+      "STOP_LOSS_HUNT",
+      "VOLUME_TRAP",
+      "RSI_OVERBOUGHT",
+      "WICK_REJECTION"
+    ],
+    minMatch: 3,
+    direction: "short",
+    message: () =>
+      "❗️ COMBO: Short Reversal Trap — Ложный импульс вверх и вынос ликвидности. Возможен откат. SHORT."
   }
 ];
 
