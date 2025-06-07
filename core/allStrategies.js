@@ -18,4 +18,5 @@ module.exports = {
   checkFlashCrashRecovery: require('../strategies/strategyFlashCrashRecovery').checkFlashCrashRecovery,
   checkStopLossHunt: require('../strategies/strategyStopLossHunt').checkStopLossHunt,
   checkVolumeTrap: require('../strategies/strategyVolumeTrap').checkVolumeTrap,
+  checkWickRejection: require('../strategies/strategyWickRejection').checkWickRejection,
 };
