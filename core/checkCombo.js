@@ -16,50 +16,49 @@ function logToFile(message) {
 
 function checkComboStrategies(symbol, signals, timeframe) {
   const fired = [];
-  let total = 0;
   let firedCount = 0;
 
   for (const combo of comboStrategies) {
-    total++;
-    const missing = combo.conditions.filter(cond => !signals.includes(cond));
+    const matches = combo.conditions.filter(cond => signals.includes(cond));
+    const minMatch = combo.minMatch || combo.conditions.length;
 
-    if (missing.length === 0) {
+    if (matches.length >= minMatch) {
       firedCount++;
 
-      // 🛠 Правильный вызов message как функции
       const msg = typeof combo.message === 'function'
         ? combo.message(symbol, timeframe)
         : combo.message;
 
       if (DEBUG_LOG_LEVEL !== 'none') {
-    const logLine = `✅ COMBO "${combo.name}" сработала для ${symbol} [${timeframe}]: ${msg}`;
-    console.log(logLine);
-    logToFile(logLine);
-        }
+        const logLine = `✅ COMBO "${combo.name}" сработала для ${symbol} [${timeframe}]: ${msg}`;
+        console.log(logLine);
+        logToFile(logLine);
+      }
 
       fired.push({
         symbol,
         timeframe,
         name: combo.name,
-        message: msg, // ✅ готовая строка, не функция
+        message: msg,
         direction: combo.direction
       });
-        }
-      if (DEBUG_LOG_LEVEL === 'verbose') {
-        const msg = `❌ COMBO "${combo.name}" НЕ сработала для ${symbol}: не хватает тегов: ${missing.join(', ')}`;
-        console.log(msg);
-        logToFile(msg);
-        }
- }
-      if (DEBUG_LOG_LEVEL !== 'none') {
-        const summary = `📊 Проверено COMBO стратегий: ${strategies.length} | Сработало: ${firedCount}`;
-        console.log(summary);
-        logToFile(summary);
-        logToFile(''); // Пустая строка-разделитель
-        }
+    } else if (DEBUG_LOG_LEVEL === 'verbose') {
+      const missing = combo.conditions.filter(cond => !signals.includes(cond));
+      const msg = `❌ COMBO "${combo.name}" НЕ сработала для ${symbol}: не хватает тегов: ${missing.join(', ')} (${matches.length}/${minMatch})`;
+      console.log(msg);
+      logToFile(msg);
+    }
+  }
+
+  if (DEBUG_LOG_LEVEL !== 'none') {
+    const summary = `📊 Проверено COMBO стратегий: ${comboStrategies.length} | Сработало: ${firedCount}`;
+    console.log(summary);
+    logToFile(summary);
+    logToFile('');
+  }
 
   return fired;
-      }
+}
 
 module.exports = {
   checkComboStrategies
