@@ -1,3 +1,4 @@
+const { confirmShortReversalTrap } = require("./combo/shortReversalTrap");
 const comboStrategies = [
   {
     name: "Momentum Rebound",
@@ -51,6 +52,7 @@ const comboStrategies = [
       "WICK_REJECTION"
     ],
     minMatch: 3,
+    validator: confirmShortReversalTrap,
     direction: "short",
     message: (symbol, tf) =>
       `COMBO [Short Reversal Trap] для ${symbol} на ${tf} — Ложный импульс вверх и вынос ликвидности. Возможен откат. ❌ SHORT.`
