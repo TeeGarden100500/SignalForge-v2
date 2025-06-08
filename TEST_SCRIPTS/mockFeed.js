@@ -34,9 +34,9 @@ Object.entries(mockData).forEach(([key, candles]) => {
   const { signalTags, messages } = applyStrategies(symbol, candles, interval);
   messages.forEach(msg => console.log(`📢 ${msg}`));
 
-  const combos = checkComboStrategies(symbol, signalTags);
+  const combos = checkComboStrategies(symbol, signalTags, interval);
   console.log('📌 COMBO TAGS:', signalTags);
   combos.forEach(c => {
-    console.log(`🔗 COMBO: ${c.message}`);
+    console.log(c.message);
   });
 });

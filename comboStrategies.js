@@ -3,43 +3,43 @@ const comboStrategies = [
     name: "Momentum Rebound",
     conditions: ["RSI_OVERBOUGHT", "EMA_ANGLE", "VOLUME_SPIKE"],
     direction: "long",
-     message: (symbol, timeframe) =>
-    `🟢 [Momentum Rebound] для ${symbol} на ${timeframe} — Возможен быстрый отскок. Вход по рынку.`
+    message: (symbol, tf) =>
+      `COMBO [Momentum Rebound] для ${symbol} на ${tf} — Возможен быстрый отскок. Вход по рынку. ✅ LONG.`
   },
   {
     name: "Volume Breakout",
     conditions: ["BREAKOUT", "VOLUME_SPIKE", "ADX_TREND"],
     direction: "long",
-    message: (symbol, timeframe) =>
-    `📈 [Volume Breakout] для ${symbol} на ${timeframe} — Пробой с объёмом. Рассматривай вход на импульсе.`
+    message: (symbol, tf) =>
+      `COMBO [Volume Breakout] для ${symbol} на ${tf} — Пробой с объёмом. Рассматривай вход на импульсе. ✅ LONG.`
   },
   {
     name: "Exhaustion Top",
     conditions: ["RSI_OVERBOUGHT", "VOLUME_SPIKE", "DOJI"],
     direction: "short",
-    message: (symbol, timeframe) =>
-    `🔻 [Exhaustion Top] для ${symbol} на ${timeframe} — Перекупленность и выгорание — возможен разворот.`
+    message: (symbol, tf) =>
+      `COMBO [Exhaustion Top] для ${symbol} на ${tf} — Перекупленность и выгорание — возможен разворот. ❌ SHORT.`
   },
   {
     name: "Bullish Divergence",
     conditions: ["RSI_HIDDEN_BULL", "MACD_DIVERGENCE"],
     direction: "long",
-    message: (symbol, timeframe) =>
-    `🟢 [Bullish Divergence] для ${symbol} на ${timeframe} — Дивергенция — возможен отскок вверх.`
+    message: (symbol, tf) =>
+      `COMBO [Bullish Divergence] для ${symbol} на ${tf} — Дивергенция — возможен отскок вверх. ✅ LONG.`
   },
   {
     name: "Mean Reversion Setup",
     conditions: ["MEAN_REVERS_UP", "VOLUME_DROP"],
     direction: "short",
-    message: (symbol, timeframe) =>
-    `🟡 [Mean Reversion] для ${symbol} на ${timeframe} — Цена выше нормы. Ожидается возврат к MA.`
+    message: (symbol, tf) =>
+      `COMBO [Mean Reversion] для ${symbol} на ${tf} — Цена выше нормы. Ожидается возврат к MA. ❌ SHORT.`
   },
   {
     name: "Dead Volume Fall",
     conditions: ["RSI_DROP", "VOLUME_DROP", "EMA_ANGLE"],
     direction: "short",
-    message: (symbol, timeframe) =>
-    `🔻 [Dead Volume Fall] для ${symbol} на ${timeframe} — Объём падает на спаде — снижение может усилиться.`
+    message: (symbol, tf) =>
+      `COMBO [Dead Volume Fall] для ${symbol} на ${tf} — Объём падает на спаде — снижение может усилиться. ❌ SHORT.`
   },
   {
     name: "Short Reversal Trap",
@@ -52,8 +52,8 @@ const comboStrategies = [
     ],
     minMatch: 3,
     direction: "short",
-    message: () =>
-      "❗️ COMBO: Short Reversal Trap — Ложный импульс вверх и вынос ликвидности. Возможен откат. SHORT."
+    message: (symbol, tf) =>
+      `COMBO [Short Reversal Trap] для ${symbol} на ${tf} — Ложный импульс вверх и вынос ликвидности. Возможен откат. ❌ SHORT.`
   },
   {
     name: "Long Reversal Bounce",
@@ -66,8 +66,8 @@ const comboStrategies = [
     ],
     minMatch: 3,
     direction: "long",
-    message: () =>
-      "📈 COMBO: Long Reversal Bounce — Сильный отскок от зоны ликвидности. Возможен разворот. LONG."
+    message: (symbol, tf) =>
+      `COMBO [Long Reversal Bounce] для ${symbol} на ${tf} — Сильный отскок от зоны ликвидности. Возможен разворот. ✅ LONG.`
   }
 ];
 

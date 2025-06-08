@@ -24,7 +24,7 @@ function comboTestRun(tags = simulatedTags) {
     const allMatch = combo.conditions.every(tag => tags.includes(tag));
     if (allMatch) {
       console.log(`✅ COMBO сработала: [${combo.name}]`);
-      console.log(`→ ${combo.message}\n`);
+      console.log(`${combo.message('TEST', '1h')}\n`);
       fired++;
     } else {
       console.log(`— ❌ [${combo.name}] — условия не совпали`);
