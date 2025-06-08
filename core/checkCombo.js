@@ -14,7 +14,7 @@ function logToFile(message) {
   fs.appendFileSync(logFilePath, message + '\n');
 }
 
-function checkComboStrategies(symbol, signals, timeframe) {
+function checkComboStrategies(symbol, signals, timeframe, candles = [], indicators = {}) {
   const fired = [];
   let firedCount = 0;
 
@@ -23,6 +23,10 @@ function checkComboStrategies(symbol, signals, timeframe) {
     const minMatch = combo.minMatch || combo.conditions.length;
 
     if (matches.length >= minMatch) {
+      if (typeof combo.validator === 'function') {
+        const valid = combo.validator({ symbol, timeframe, candles, indicators, signals });
+        if (!valid) continue;
+      }
       firedCount++;
 
       const msg = typeof combo.message === 'function'
