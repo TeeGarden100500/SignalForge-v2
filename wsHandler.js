@@ -88,8 +88,8 @@ const candles = candleCache[symbol]?.[interval];
 
   const combos = checkComboStrategies(symbol, signalTags, interval);
   combos.forEach(combo => {
-    console.log(`🔗 COMBO: ${combo.message}`);
-      });
+    console.log(combo.message);
+  });
       });
 
     ws.on('error', err => {
