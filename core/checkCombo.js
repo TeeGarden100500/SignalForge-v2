@@ -1,7 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const { comboStrategies } = require('../comboStrategies');
-const { DEBUG_LOG_LEVEL } = require('../config');
+const { DEBUG_LOG_LEVEL, DEFAULT_DEPOSIT_USD } = require('../config');
+const { estimateSafeLeverage } = require('../utils/riskAnalyzer');
 
 const logFilePath = path.join(__dirname, '../logs/combo_debug.log');
 
@@ -13,6 +14,19 @@ if (!fs.existsSync(path.dirname(logFilePath))) {
 function logToFile(message) {
   const timestamp = new Date().toISOString();
   fs.appendFileSync(logFilePath, `${timestamp} - ${message}\n`);
+}
+
+function calcAvg1mVolumeUSD(candles, timeframe, lookbackMinutes = 10) {
+  if (!Array.isArray(candles) || candles.length === 0) return 0;
+  const tf = timeframe.includes('h')
+    ? parseInt(timeframe) * 60
+    : parseInt(timeframe);
+  const minutes = isNaN(tf) || tf <= 0 ? 1 : tf;
+  const candleCount = Math.min(candles.length, Math.ceil(lookbackMinutes / minutes));
+  const recent = candles.slice(-candleCount);
+  const totalVolumeUSD = recent.reduce((sum, c) => sum + c.volume * c.close, 0);
+  const totalMinutes = candleCount * minutes;
+  return totalMinutes ? totalVolumeUSD / totalMinutes : 0;
 }
 
 function checkComboStrategies(symbol, signals, timeframe, candles = [], indicators = {}) {
@@ -36,14 +50,26 @@ function checkComboStrategies(symbol, signals, timeframe, candles = [], indicato
       }
       firedCount++;
 
-      const msg = typeof combo.message === 'function'
+      const baseMsg = typeof combo.message === 'function'
         ? combo.message(symbol, timeframe)
         : combo.message;
 
+      const price = candles.at(-1)?.close || 0;
+      const avg1mVolumeUSD = calcAvg1mVolumeUSD(candles, timeframe);
+      const { maxLeverage, maxPositionSizeUSD } = estimateSafeLeverage(
+        symbol,
+        DEFAULT_DEPOSIT_USD,
+        avg1mVolumeUSD,
+        price
+      );
+      const safeLine = `\u{1F4BC} Safe Leverage: до ${maxLeverage}x (порог \u2248 $${maxPositionSizeUSD.toFixed(0)} при депозите $${DEFAULT_DEPOSIT_USD}, объём монеты: $${avg1mVolumeUSD.toFixed(2)}/мин)`;
+      const msg = `${baseMsg}\n${safeLine}`;
+
       if (DEBUG_LOG_LEVEL !== 'none') {
-        const logLine = `✅ COMBO "${combo.name}" сработала для ${symbol} [${timeframe}]: ${msg}`;
+        const logLine = `✅ COMBO "${combo.name}" сработала для ${symbol} [${timeframe}]: ${baseMsg}`;
         console.log(logLine);
         logToFile(logLine);
+        logToFile(safeLine);
       }
 
       fired.push({
