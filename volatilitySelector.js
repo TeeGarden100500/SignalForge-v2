@@ -2,6 +2,7 @@ const axios = require('axios');
 const { TOP_N_PAIRS, DEBUG_LOG_LEVEL, VOLUME_FILTER } = require('./config');
 const { pruneObsoleteSymbols } = require('./utils/pruneCache');
 const { loadFuturesSymbols, isFuturesTradable, hasFuturesData } = require('./futuresSymbols');
+const { verboseLog, basicLog } = require('./utils/logger');
 
 function calcRecentVolumeUSD(candles = [], count = 5) {
   if (!Array.isArray(candles) || candles.length === 0) return 0;
@@ -53,14 +54,14 @@ async function getTopVolatilePairs(candleCache) {
       removed.forEach(r => {
         if (DEBUG_LOG_LEVEL !== 'none') {
           const vol = r.volumeUSD.toLocaleString(undefined, { maximumFractionDigits: 0 });
-          console.log(`[INFO] 🔇 Пропуск ${r.symbol} — объём $${vol} за 5 минут ниже порога $${VOLUME_FILTER.MIN_VOLUME_5M_USD}`);
+          basicLog(`[INFO] 🔇 Пропуск ${r.symbol} — объём $${vol} за 5 минут ниже порога $${VOLUME_FILTER.MIN_VOLUME_5M_USD}`);
         }
       });
     }
 
     if (DEBUG_LOG_LEVEL === 'verbose' && excluded.length) {
       const names = excluded.map(r => r.symbol).join(', ');
-      console.log(`[FILTER] Исключены недоступные на фьючерсах пары: ${names}`);
+      verboseLog(`[FILTER] Исключены недоступные на фьючерсах пары: ${names}`);
     }
 
     const topVolatileSymbols = topSymbols.map(p => p.symbol);
@@ -70,8 +71,8 @@ async function getTopVolatilePairs(candleCache) {
     }
 
     if (DEBUG_LOG_LEVEL !== 'none') {
-      console.log(`📊 Топ ${TOP_N_PAIRS} волатильных пар:`);
-      topSymbols.forEach(p => console.log(`${p.symbol}: ${p.volatility}%`));
+      basicLog(`📊 Топ ${TOP_N_PAIRS} волатильных пар:`);
+      topSymbols.forEach(p => basicLog(`${p.symbol}: ${p.volatility}%`));
     }
 
     return topSymbols;

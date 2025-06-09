@@ -8,6 +8,7 @@ const {
   GIST_ID,
   GIST_FILENAME
 } = require('../config');
+const { verboseLog, basicLog } = require('../utils/logger');
 
 const headers = {
   'Authorization': `token ${GITHUB_TOKEN}`,
@@ -25,7 +26,7 @@ async function loadFromGist() {
 
     try {
       const cache = JSON.parse(content);
-      console.log(`[GIST] ✅ Кэш загружен из Gist (${GIST_FILENAME})`);
+      basicLog(`[GIST] ✅ Кэш загружен из Gist (${GIST_FILENAME})`);
       return cache;
     } catch (e) {
       console.error('[GIST] ❌ Ошибка чтения JSON. Очистка...');
@@ -68,9 +69,9 @@ for (const [symbol, tfObj] of Object.entries(cache)) {
   }
 }
 
-console.log(`[GIST] ✅ Кэш сохранён в Gist (${GIST_FILENAME})`);
-console.log(`📊 Символов: ${totalSymbols} | Таймфреймов: ${totalTimeframes} | Свечей: ${totalCandles}`);
-console.log(`💾 Объём JSON: ${sizeKb.toFixed(1)} KB`);
+basicLog(`[GIST] ✅ Кэш сохранён в Gist (${GIST_FILENAME})`);
+verboseLog(`📊 Символов: ${totalSymbols} | Таймфреймов: ${totalTimeframes} | Свечей: ${totalCandles}`);
+verboseLog(`💾 Объём JSON: ${sizeKb.toFixed(1)} KB`);
 
   } catch (err) {
     console.error(`[GIST] ❌ Ошибка при сохранении в Gist:`, err.message);
