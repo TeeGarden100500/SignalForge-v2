@@ -3,6 +3,7 @@ const { calculateEMAAngle } = require('./indicators');
 const { DEBUG_LOG_LEVEL, STRATEGY_REQUIREMENTS, EMA_ANGLE_THRESHOLD } = require('../config');
 const { EMA_PERIOD, EMA_DEPTH, EMA_REQUIRED_CANDLES, EMA_SHORT_PERIOD, EMA_LONG_PERIOD } = require('../config');
 const { hasEnoughCandles } = require('../utils/candleValidator');
+const { logVerbose } = require('../utils/logger');
 
 let lastDirection = {}; // для хранения предыдущего пересечения
 
@@ -40,17 +41,19 @@ function checkEMACrossStrategy(symbol, candles, timeframe) {
   const threshold = EMA_ANGLE_THRESHOLD; 
 
   if (DEBUG_LOG_LEVEL === 'verbose') {
-  console.log(`[DEBUG] EMA для ${symbol} | Start: ${emaStart}, End: ${emaEnd}, Angle: ${angle}`);
-}
+    logVerbose(`[DEBUG] EMA для ${symbol} | Start: ${emaStart}, End: ${emaEnd}, Angle: ${angle}`);
+  }
   if (!emaStart || !emaEnd || isNaN(angle)) {
-    console.log(`📉 [DEBUG] Invalid EMA values: { emaStart: ${emaStart}, emaEnd: ${emaEnd} }`);
+    if (DEBUG_LOG_LEVEL === 'verbose') {
+      logVerbose(`📉 [DEBUG] Invalid EMA values: { emaStart: ${emaStart}, emaEnd: ${emaEnd} }`);
+    }
     return null;
   }
 
   if (Math.abs(angle) < threshold) {
     if (DEBUG_LOG_LEVEL === 'verbose') {
-  console.log(`[DEBUG] Angle слишком мал для ${symbol}: ${angle}`);
-}
+      logVerbose(`[DEBUG] Angle слишком мал для ${symbol}: ${angle}`);
+    }
     return null;
   }
 
