@@ -20,6 +20,7 @@ const {
   checkVolumeTrap,
   checkWickRejection,
   checkLiquidityRebound,
+  checkMarketCompression,
 } = require('./allStrategies'); // можно объединить импорты
 const { DEBUG_LOG_LEVEL } = require('../config');
 const liquidityLevels = require('../liquidityLevels.json');
@@ -78,6 +79,7 @@ function applyStrategies(symbol, candles, interval) {
   add(checkWickRejection(candles, interval), 'WICK_REJECTION');
   const levels = liquidityLevels[symbol]?.[interval] || [];
   add(checkLiquidityRebound(candles, interval, levels), 'LIQUIDITY_REBOUND');
+  add(checkMarketCompression(candles, interval), 'MARKET_COMPRESSION');
 
   add(checkGreenCandle(symbol, candles, interval), 'GREEN_CANDLE');
 
