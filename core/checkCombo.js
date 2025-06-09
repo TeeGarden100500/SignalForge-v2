@@ -11,7 +11,8 @@ if (!fs.existsSync(path.dirname(logFilePath))) {
 }
 
 function logToFile(message) {
-  fs.appendFileSync(logFilePath, message + '\n');
+  const timestamp = new Date().toISOString();
+  fs.appendFileSync(logFilePath, `${timestamp} - ${message}\n`);
 }
 
 function checkComboStrategies(symbol, signals, timeframe, candles = [], indicators = {}) {
@@ -21,6 +22,12 @@ function checkComboStrategies(symbol, signals, timeframe, candles = [], indicato
   for (const combo of comboStrategies) {
     const matches = combo.conditions.filter(cond => signals.includes(cond));
     const minMatch = combo.minMatch || combo.conditions.length;
+
+    if (DEBUG_LOG_LEVEL === 'verbose') {
+      const logLine = `[DEBUG] COMBO: проверка стратегии ${combo.name} — совпало ${matches.length} из ${combo.conditions.length} тегов`;
+      console.log(logLine);
+      logToFile(logLine);
+    }
 
     if (matches.length >= minMatch) {
       if (typeof combo.validator === 'function') {
