@@ -13,6 +13,11 @@ module.exports = {
   GIST_ID: '8d44a82bf2917e2560b5e1ed6eb9a831', // ID твоего Gist
   GIST_FILENAME: 'candles_cache.json',
  
+  COMBO_WEIGHTS: {
+    "Volume Breakout": 3,
+    "Exhaustion Top": 2,
+    "Short Reversal Trap": 1
+  },
                                           // === RSI Settings ===
   //**************************************************************************************************************************
   RSI_PERIOD: 14,
