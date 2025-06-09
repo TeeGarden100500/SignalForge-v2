@@ -5,6 +5,7 @@ const { CACHE_LIMITS } = require('./config');
 const { checkMACDStrategy } = require('./core/strategyMACD');
 const { applyStrategies } = require('./core/applyStrategies');
 const { checkComboStrategies } = require('./core/checkCombo');
+const { resolveSignalConflicts } = require('./signalConflictResolver');
 const { saveCacheToFile } = require('./cache/cacheSaver');
 const { loadCacheFromFile } = require('./cache/cacheLoader');
 const { loadFromGist, saveToGist } = require('./cache/gistSync');
@@ -86,10 +87,11 @@ const candles = candleCache[symbol]?.[interval];
   const { signalTags, messages } = applyStrategies(symbol, candles, interval);
   messages.forEach(msg => log(`📢 ${msg}`));
 
-  const combos = checkComboStrategies(symbol, signalTags, interval, candles);
-  combos.forEach(combo => {
-    console.log(combo.message);
-  });
+    const combos = checkComboStrategies(symbol, signalTags, interval, candles);
+    const resolved = resolveSignalConflicts(combos);
+    resolved.forEach(combo => {
+      console.log(combo.message);
+    });
       });
 
     ws.on('error', err => {

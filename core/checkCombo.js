@@ -77,7 +77,8 @@ function checkComboStrategies(symbol, signals, timeframe, candles = [], indicato
         timeframe,
         name: combo.name,
         message: msg,
-        direction: combo.direction
+        direction: (combo.direction || 'NEUTRAL').toUpperCase(),
+        weight: combo.weight || 1
       });
     } else if (DEBUG_LOG_LEVEL === 'verbose') {
       const missing = combo.conditions.filter(cond => !signals.includes(cond));
