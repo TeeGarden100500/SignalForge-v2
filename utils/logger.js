@@ -6,6 +6,13 @@ function verboseLog(...args) {
   }
 }
 
+// alias for verbose logging using a more explicit name
+function logVerbose(...args) {
+  if (DEBUG_LOG_LEVEL === 'verbose') {
+    console.debug(...args);
+  }
+}
+
 function basicLog(...args) {
   if (DEBUG_LOG_LEVEL !== 'none') {
     console.log(...args);
@@ -14,5 +21,6 @@ function basicLog(...args) {
 
 module.exports = {
   verboseLog,
+  logVerbose,
   basicLog
 };

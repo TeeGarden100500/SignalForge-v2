@@ -1,4 +1,5 @@
 const { RSI_PERIOD, DEBUG_LOG_LEVEL } = require('../config');
+const { logVerbose } = require('../utils/logger');
 
                                                                             // === RSI ===
 function calculateRSI(candles, period = RSI_PERIOD) {
@@ -57,14 +58,14 @@ function calculateEMAAngle(candles) {
   const EMA_DEPTH = EMA_SETTINGS.DEPTH;
 
   if (DEBUG_LOG_LEVEL === 'verbose') {
-  console.log('🧪 [DEBUG] Всего свечей:', candles.length);
-}
+    logVerbose('🧪 [DEBUG] Всего свечей:', candles.length);
+  }
 
   if (candles.length < EMA_PERIOD + EMA_DEPTH) {
     
     if (DEBUG_LOG_LEVEL === 'verbose') {
-    console.log('⛔ [DEBUG] Недостаточно свечей для EMA уголка');
-  }
+      logVerbose('⛔ [DEBUG] Недостаточно свечей для EMA уголка');
+    }
     return null;
   }
 
@@ -78,28 +79,28 @@ function calculateEMAAngle(candles) {
   const emaEnd = emaEndSeries.at(-1);
 
   if (DEBUG_LOG_LEVEL === 'verbose') {
-  console.log('📈 [DEBUG] firstSlice.length:', firstSlice.length);
-  console.log('📉 [DEBUG] lastSlice.length:', lastSlice.length);
-  console.log('🧮 [DEBUG] emaStartSeries:', emaStartSeries);
-  console.log('🧮 [DEBUG] emaEndSeries:', emaEndSeries);
+    logVerbose('📈 [DEBUG] firstSlice.length:', firstSlice.length);
+    logVerbose('📉 [DEBUG] lastSlice.length:', lastSlice.length);
+    logVerbose('🧮 [DEBUG] emaStartSeries:', emaStartSeries);
+    logVerbose('🧮 [DEBUG] emaEndSeries:', emaEndSeries);
   }
   
-  if (DEBUG_LOG_LEVEL !== 'none') {
-  console.log('🎯 [DEBUG] emaStart:', emaStart, 'emaEnd:', emaEnd);
+  if (DEBUG_LOG_LEVEL === 'verbose') {
+    logVerbose('🎯 [DEBUG] emaStart:', emaStart, 'emaEnd:', emaEnd);
   }
 
   if (!emaStart || !emaEnd || isNaN(emaStart) || isNaN(emaEnd)) {
-    if (DEBUG_LOG_LEVEL !== 'none') {
-    console.log('[DEBUG] Invalid EMA values:', { emaStart, emaEnd });
-  }
+    if (DEBUG_LOG_LEVEL === 'verbose') {
+      logVerbose('[DEBUG] Invalid EMA values:', { emaStart, emaEnd });
+    }
     return null;
   }
 
   const delta = emaEnd - emaStart;
   const angle = +(delta / EMA_DEPTH).toFixed(4);
 
-  if (DEBUG_LOG_LEVEL !== 'none') {
-  console.log(`📐 [DEBUG] EMA angle: ${angle}`);
+  if (DEBUG_LOG_LEVEL === 'verbose') {
+    logVerbose(`📐 [DEBUG] EMA angle: ${angle}`);
   }
   return {
     emaStart,
@@ -119,22 +120,22 @@ function calculateMACD(candles) {
 
   for (let i = 0; i < candles.length; i++) {
     if (DEBUG_LOG_LEVEL === 'verbose') {
-  console.log(`[DEBUG] macdLineArr.length: ${macdLineArr.length}`);
-}
+      logVerbose(`[DEBUG] macdLineArr.length: ${macdLineArr.length}`);
+    }
 
     if (macdLineArr.length < SIGNAL_PERIOD + 2) {
-    if (DEBUG_LOG_LEVEL !== 'none') {
-    console.log('[DEBUG] MACD Divergence: недостаточно значений в macdLineArr');
-  }
-    return null;
+      if (DEBUG_LOG_LEVEL === 'verbose') {
+        logVerbose('[DEBUG] MACD Divergence: недостаточно значений в macdLineArr');
+      }
+      return null;
     }
     const slice = candles.slice(0, i + 1);
     const fastEMA = calculateEMA(slice, FAST_PERIOD);
     const slowEMA = calculateEMA(slice, SLOW_PERIOD);
-    
+
     if (DEBUG_LOG_LEVEL === 'verbose') {
-  console.log(`[DEBUG][${i}] slice.length: ${slice.length}, fastEMA: ${fastEMA}, slowEMA: ${slowEMA}`);
-}
+      logVerbose(`[DEBUG][${i}] slice.length: ${slice.length}, fastEMA: ${fastEMA}, slowEMA: ${slowEMA}`);
+    }
     if (fastEMA != null && slowEMA != null) {
       macdLineArr.push(fastEMA - slowEMA);
     }
