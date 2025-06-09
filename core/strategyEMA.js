@@ -1,8 +1,8 @@
 const { calculateEMA } = require('./indicators');
 const { calculateEMAAngle } = require('./indicators');
-const { DEBUG_LOG_LEVEL } = require('../config');
-const { EMA_ANGLE_THRESHOLD } = require('../config');
+const { DEBUG_LOG_LEVEL, STRATEGY_REQUIREMENTS, EMA_ANGLE_THRESHOLD } = require('../config');
 const { EMA_PERIOD, EMA_DEPTH, EMA_REQUIRED_CANDLES, EMA_SHORT_PERIOD, EMA_LONG_PERIOD } = require('../config');
+const { hasEnoughCandles } = require('../utils/candleValidator');
 
 let lastDirection = {}; // для хранения предыдущего пересечения
 
@@ -29,11 +29,12 @@ function checkEMACrossStrategy(symbol, candles, timeframe) {
 }
 
   function checkEMAAngleStrategy(symbol, candles, timeframe) {
+  const minRequiredCandles = STRATEGY_REQUIREMENTS.EMA_ANGLE || 40;
+  if (!hasEnoughCandles(candles, minRequiredCandles, 'EMA_ANGLE')) return null;
+
   const result = calculateEMAAngle(candles, EMA_PERIOD, EMA_DEPTH);
 
   if (!result) return null;
-
-    return null;
 
   const { angle, emaStart, emaEnd } = result;
   const threshold = EMA_ANGLE_THRESHOLD; 

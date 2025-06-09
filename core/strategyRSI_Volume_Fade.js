@@ -1,14 +1,17 @@
-const { RSI_VOLUME_FADE } = require('../config');
+const { RSI_VOLUME_FADE, STRATEGY_REQUIREMENTS, DEBUG_LOG_LEVEL } = require('../config');
+const { hasEnoughCandles } = require('../utils/candleValidator');
 
 function checkRSIVolumeFade(symbol, candles, interval) {
   const signals = [];
+  const minRequired = STRATEGY_REQUIREMENTS.RSI_VOLUME_FADE || 25;
 
   for (const timeframe of RSI_VOLUME_FADE.TIMEFRAMES) {
     const rsi = candles.indicators?.RSI?.[timeframe];
     const volume = candles.indicators?.volume?.[timeframe];
     const tfCandles = candles?.[timeframe];
 
-    if (!rsi || !volume || !tfCandles || tfCandles.length < 3) continue;
+    if (!rsi || !volume || !tfCandles) continue;
+    if (!hasEnoughCandles(tfCandles, minRequired, `RSI_VOLUME_FADE:${timeframe}`)) continue;
 
     const lastRSI = rsi[rsi.length - 1];
     const volNow = volume[volume.length - 1];

@@ -23,8 +23,10 @@ const {
 } = require('./allStrategies'); // можно объединить импорты
 const { DEBUG_LOG_LEVEL } = require('../config');
 const liquidityLevels = require('../liquidityLevels.json');
+const { getSkippedStrategies, resetSkippedStrategies } = require('../utils/candleValidator');
 
 function applyStrategies(symbol, candles, interval) {
+  resetSkippedStrategies();
   if (DEBUG_LOG_LEVEL === 'verbose') {
   console.log('[DEBUG] candles type:', typeof candles);
   console.log('[DEBUG] Array.isArray:', Array.isArray(candles));
@@ -86,9 +88,13 @@ function applyStrategies(symbol, candles, interval) {
   
   add(checkADXStrengthStrategy(symbol, candles, interval), 'ADX_TREND');
   add(checkADXStrengthStrategy(symbol, candles, interval), 'ADX_FLAT');
-  
 
-  
+
+  const skipped = getSkippedStrategies();
+  if (skipped && DEBUG_LOG_LEVEL !== 'none') {
+    console.log(`[INFO] Пропущено стратегий по нехватке данных: ${skipped}`);
+  }
+
   return { signalTags, messages, results };
 }
 

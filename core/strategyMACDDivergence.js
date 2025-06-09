@@ -1,8 +1,10 @@
-const { MACD_MIN_SIGNAL, DEBUG_LOG_LEVEL } = require('../config');
+const { MACD_MIN_SIGNAL, DEBUG_LOG_LEVEL, STRATEGY_REQUIREMENTS } = require('../config');
+const { hasEnoughCandles } = require('../utils/candleValidator');
 const { calculateMACDSeries } = require('./calculateMACDSeries');
 
 function checkMACDDivergence(symbol, candles, timeframe) {
-  if (!candles || candles.length < 50) return null;
+  const minRequiredCandles = STRATEGY_REQUIREMENTS.MACD_DIVERGENCE || 60;
+  if (!hasEnoughCandles(candles, minRequiredCandles, 'MACD_DIVERGENCE')) return null;
 
   const macdSeries = calculateMACDSeries(candles);
   const validSeries = macdSeries.filter(entry => entry && entry.macd !== null && entry.signal !== null);
