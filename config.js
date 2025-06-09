@@ -8,6 +8,11 @@ module.exports = {
 
   DOJI_BODY_RATIO: 0.2, // 🔧 Условие для Doji: тело составляет менее 20% от полного диапазона свечи
 
+  VOLUME_FILTER: {
+    ENABLED: true,
+    MIN_VOLUME_5M_USD: 30000
+  },
+
   GITHUB_CACHE_ENABLED: true,
   GITHUB_TOKEN: process.env.GITHUB_TOKEN,
   GIST_ID: '8d44a82bf2917e2560b5e1ed6eb9a831', // ID твоего Gist
