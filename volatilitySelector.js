@@ -1,19 +1,22 @@
 const axios = require('axios');
 const { TOP_N_PAIRS, DEBUG_LOG_LEVEL, VOLUME_FILTER } = require('./config');
 const { pruneObsoleteSymbols } = require('./utils/pruneCache');
-const { loadFuturesSymbols, isFuturesTradable, hasFuturesData } = require('./futuresSymbols');
+const { loadFuturesSymbols, hasFuturesData, getFuturesSymbols } = require('./futuresSymbols');
 const { verboseLog, basicLog } = require('./utils/logger');
 const { filterSymbolsByVolume } = require('./utils/volumeFilter');
 
 async function getTopVolatilePairs(candleCache) {
   try {
-    if (!hasFuturesData()) await loadFuturesSymbols();
+    if (!hasFuturesData()) await loadFuturesSymbols(candleCache);
 
     const url = 'https://api.binance.com/api/v3/ticker/24hr';
     const response = await axios.get(url);
 
-    const allPairs = response.data
-      .filter(pair => !pair.symbol.includes('UP') && !pair.symbol.includes('DOWN'))
+    const futuresSet = new Set(getFuturesSymbols());
+
+    let pairs = response.data
+      .filter(p => futuresSet.has(p.symbol))
+      .filter(p => !p.symbol.includes('UP') && !p.symbol.includes('DOWN'))
       .map(pair => {
         const high = parseFloat(pair.highPrice);
         const low = parseFloat(pair.lowPrice);
@@ -27,32 +30,27 @@ async function getTopVolatilePairs(candleCache) {
           volatility: +volatility.toFixed(2),
         };
       })
-      .filter(Boolean)
-      .sort((a, b) => b.volatility - a.volatility);
-
-    let topSymbols = allPairs.slice(0, TOP_N_PAIRS);
-
-    const excluded = topSymbols.filter(p => !isFuturesTradable(p.symbol));
-    topSymbols = topSymbols.filter(p => isFuturesTradable(p.symbol));
+      .filter(Boolean);
 
     if (VOLUME_FILTER?.ENABLED) {
-      topSymbols = filterSymbolsByVolume(topSymbols, candleCache);
+      pairs = filterSymbolsByVolume(pairs, candleCache);
+      basicLog(`[INFO] Фильтрация по объёму $${VOLUME_FILTER.MIN_VOLUME_5M_USD} → осталось ${pairs.length} пар`);
     }
 
-    if (DEBUG_LOG_LEVEL === 'verbose' && excluded.length) {
-      const names = excluded.map(r => r.symbol).join(', ');
-      verboseLog(`[FILTER] Исключены недоступные на фьючерсах пары: ${names}`);
+    pairs.sort((a, b) => b.volatility - a.volatility);
+
+    const topSymbols = pairs.slice(0, TOP_N_PAIRS);
+
+    if (DEBUG_LOG_LEVEL !== 'none') {
+      basicLog(`[INFO] Отобрано ${topSymbols.length} самых волатильных`);
+      basicLog(`📊 Топ ${topSymbols.length} волатильных пар:`);
+      topSymbols.forEach(p => basicLog(`${p.symbol}: ${p.volatility}%`));
     }
 
     const topVolatileSymbols = topSymbols.map(p => p.symbol);
 
     if (typeof candleCache !== 'undefined') {
       pruneObsoleteSymbols(candleCache, topVolatileSymbols);
-    }
-
-    if (DEBUG_LOG_LEVEL !== 'none') {
-      basicLog(`📊 Топ ${TOP_N_PAIRS} волатильных пар:`);
-      topSymbols.forEach(p => basicLog(`${p.symbol}: ${p.volatility}%`));
     }
 
     return topSymbols;

@@ -9,12 +9,13 @@ async function runVolatilityScanLoop() {
   const intervalMs = VOLATILITY_UPDATE_INTERVAL_HOURS * 60 * 60 * 1000;
   setInterval(async () => {
     console.log(`\n🔁 Обновление списка волатильных пар...`);
-    await getTopVolatilePairs();
+    await loadFuturesSymbols(candleCache);
+    await getTopVolatilePairs(candleCache);
   }, intervalMs);
 }
 
 (async () => {
-  await loadFuturesSymbols();
+  await loadFuturesSymbols(candleCache);
   const topPairs = await getTopVolatilePairs(candleCache);
   await startCandleCollector(topPairs);
 
@@ -22,7 +23,7 @@ async function runVolatilityScanLoop() {
 
   timeframes.forEach((tf, i) => {
     setTimeout(() => {
-      analyzeAllSymbols(topPairs, tf);
+      analyzeAllSymbols(topPairs.map(p => p.symbol || p), tf);
     }, i * 30000); // 30 секунд между фреймами
   });
 })();
