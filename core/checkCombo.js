@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { comboStrategies } = require('../comboStrategies');
-const { DEBUG_LOG_LEVEL, DEFAULT_DEPOSIT_USD } = require('../config');
+const { DEBUG_LOG_LEVEL, DEFAULT_DEPOSIT_USD, DEBUG_COMBO_SKIP_REASON } = require('../config');
 const { estimateSafeLeverage } = require('../utils/riskAnalyzer');
 
 const logFilePath = path.join(__dirname, '../logs/combo_debug.log');
@@ -80,11 +80,20 @@ function checkComboStrategies(symbol, signals, timeframe, candles = [], indicato
         direction: (combo.direction || 'NEUTRAL').toUpperCase(),
         weight: combo.weight || 1
       });
-    } else if (DEBUG_LOG_LEVEL === 'verbose') {
+    } else {
       const missing = combo.conditions.filter(cond => !signals.includes(cond));
-      const msg = `❌ COMBO "${combo.name}" НЕ сработала для ${symbol}: не хватает тегов: ${missing.join(', ')} (${matches.length}/${minMatch})`;
-      console.log(msg);
-      logToFile(msg);
+
+      if (DEBUG_COMBO_SKIP_REASON) {
+        const info = `[INFO] \u23ED\uFE0F COMBO-стратегия [${combo.name}] пропущена: отсутствуют теги: ${missing.join(', ')}`;
+        console.log(info);
+        logToFile(info);
+      }
+
+      if (DEBUG_LOG_LEVEL === 'verbose') {
+        const msg = `❌ COMBO "${combo.name}" НЕ сработала для ${symbol}: не хватает тегов: ${missing.join(', ')} (${matches.length}/${minMatch})`;
+        console.log(msg);
+        logToFile(msg);
+      }
     }
   }
 
