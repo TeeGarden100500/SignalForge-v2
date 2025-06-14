@@ -3,6 +3,7 @@ module.exports = {
   PAIR_SUFFIX: 'USDT',
   SYMBOL_ANALYSIS_DELAY_MS: 500, // 0.5 сек между монетами (на 50 монет ≈ 25 сек)
   DEBUG_LOG_LEVEL: 'basic', // 'none' | 'basic' | 'verbose'
+  DEBUG_COMBO_SKIP_REASON: true,
   DEFAULT_DEPOSIT_USD: 100,
   VOLATILITY_UPDATE_INTERVAL_HOURS: 6, // обновление каждые 6 часов после тестов поставить цифру 6
 
