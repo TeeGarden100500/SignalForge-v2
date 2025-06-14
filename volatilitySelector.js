@@ -52,7 +52,9 @@ async function getTopVolatilePairs(candleCache, skipVolumeFilter = false) {
     if (DEBUG_LOG_LEVEL !== 'none') {
       basicLog(`[INFO] Отобрано ${topSymbols.length} самых волатильных`);
       basicLog(`📊 Топ ${topSymbols.length} волатильных пар:`);
-      topSymbols.forEach(p => basicLog(`${p.symbol}: ${p.volatility}%`));
+      if (DEBUG_LOG_LEVEL === 'verbose') {
+        topSymbols.forEach(p => basicLog(`${p.symbol}: ${p.volatility}%`));
+      }
     }
 
     const topVolatileSymbols = topSymbols.map(p => p.symbol);
