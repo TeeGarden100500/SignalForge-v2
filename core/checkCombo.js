@@ -1,7 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 const { comboStrategies } = require('../comboStrategies');
-const { DEBUG_LOG_LEVEL, DEFAULT_DEPOSIT_USD, DEBUG_COMBO_SKIP_REASON } = require('../config');
+const {
+  DEBUG_LOG_LEVEL,
+  DEFAULT_DEPOSIT_USD,
+  DEBUG_COMBO_SKIP_REASON,
+  LOG_SKIPPED_COMBO
+} = require('../config');
 const { estimateSafeLeverage } = require('../utils/riskAnalyzer');
 
 const logFilePath = path.join(__dirname, '../logs/combo_debug.log');
@@ -65,7 +70,7 @@ function checkComboStrategies(symbol, signals, timeframe, candles = [], indicato
       const safeLine = `\u{1F4BC} Safe Leverage: до ${maxLeverage}x (порог \u2248 $${maxPositionSizeUSD.toFixed(0)} при депозите $${DEFAULT_DEPOSIT_USD}, объём монеты: $${avg1mVolumeUSD.toFixed(2)}/мин)`;
       const msg = `${baseMsg}\n${safeLine}`;
 
-      const logLine = `✅ COMBO "${combo.name}" сработала для ${symbol} [${timeframe}]: ${baseMsg}`;
+      const logLine = `[COMBO] ✅ COMBO-стратегия [${combo.name}] для ${symbol} сработала: ${baseMsg}`;
       console.log(logLine);
       logToFile(logLine);
       logToFile(safeLine);
@@ -81,7 +86,7 @@ function checkComboStrategies(symbol, signals, timeframe, candles = [], indicato
     } else {
       const missing = combo.conditions.filter(cond => !signals.includes(cond));
 
-      if (DEBUG_COMBO_SKIP_REASON) {
+      if (LOG_SKIPPED_COMBO && DEBUG_COMBO_SKIP_REASON) {
         const info = `[INFO] \u23ED\uFE0F COMBO-стратегия [${combo.name}] пропущена: отсутствуют теги: ${missing.join(', ')}`;
         console.log(info);
         logToFile(info);
