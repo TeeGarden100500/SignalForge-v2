@@ -14,9 +14,22 @@ async function getTopVolatilePairs(candleCache) {
 
     const futuresSet = new Set(getFuturesSymbols());
 
-    let pairs = response.data
+    let eligible = response.data
       .filter(p => futuresSet.has(p.symbol))
+      .filter(p => p.symbol.includes('USDT'))
       .filter(p => !p.symbol.includes('UP') && !p.symbol.includes('DOWN'))
+      .map(pair => ({ symbol: pair.symbol, highPrice: pair.highPrice, lowPrice: pair.lowPrice }));
+
+    if (VOLUME_FILTER?.ENABLED) {
+      eligible = filterSymbolsByVolume(eligible, candleCache);
+      basicLog(`[INFO] Фильтрация по объёму $${VOLUME_FILTER.MIN_VOLUME_5M_USD} → осталось ${eligible.length} пар`);
+      if (eligible.length === 0) {
+        console.warn('[INFO] ❗ Ни одна пара не прошла фильтр по объёму.');
+        return [];
+      }
+    }
+
+    let pairs = eligible
       .map(pair => {
         const high = parseFloat(pair.highPrice);
         const low = parseFloat(pair.lowPrice);
@@ -32,11 +45,6 @@ async function getTopVolatilePairs(candleCache) {
       })
       .filter(Boolean);
 
-    if (VOLUME_FILTER?.ENABLED) {
-      pairs = filterSymbolsByVolume(pairs, candleCache);
-      basicLog(`[INFO] Фильтрация по объёму $${VOLUME_FILTER.MIN_VOLUME_5M_USD} → осталось ${pairs.length} пар`);
-    }
-
     pairs.sort((a, b) => b.volatility - a.volatility);
 
     const topSymbols = pairs.slice(0, TOP_N_PAIRS);
@@ -49,7 +57,7 @@ async function getTopVolatilePairs(candleCache) {
 
     const topVolatileSymbols = topSymbols.map(p => p.symbol);
 
-    if (typeof candleCache !== 'undefined') {
+    if (typeof candleCache !== 'undefined' && topVolatileSymbols.length > 0) {
       pruneObsoleteSymbols(candleCache, topVolatileSymbols);
     }
 

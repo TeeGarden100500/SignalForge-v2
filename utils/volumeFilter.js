@@ -30,7 +30,9 @@ function filterSymbolsByVolume(symbols = [], candleCache) {
 
   if (candleCache) {
     const filteredSymbols = filtered.map(p => p.symbol);
-    pruneObsoleteSymbols(candleCache, filteredSymbols);
+    if (filteredSymbols.length > 0) {
+      pruneObsoleteSymbols(candleCache, filteredSymbols);
+    }
   }
 
   return filtered;
