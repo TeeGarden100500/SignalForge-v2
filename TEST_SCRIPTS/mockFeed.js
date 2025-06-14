@@ -27,14 +27,14 @@ const mockData = {
   ...mock11, 
 };
 
-Object.entries(mockData).forEach(([key, candles]) => {
+Object.entries(mockData).forEach(async ([key, candles]) => {
   const [symbol, interval] = key.split('_');
   console.log(`\n🧪 Проверка: ${symbol} [${interval}]`);
 
   const { signalTags, messages } = applyStrategies(symbol, candles, interval);
   messages.forEach(msg => console.log(`📢 ${msg}`));
 
-  const combos = checkComboStrategies(symbol, signalTags, interval, candles);
+  const combos = await checkComboStrategies(symbol, signalTags, interval, candles);
   console.log('📌 COMBO TAGS:', signalTags);
   combos.forEach(c => {
     console.log(c.message);

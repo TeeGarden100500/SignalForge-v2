@@ -50,7 +50,7 @@ function subscribeToKlines(symbol) {
 //      log(`🔌 [WS] Подключено: ${socketKey}`);
     });
 
-    ws.on('message', (data) => {
+    ws.on('message', async (data) => {
       try {
         const json = JSON.parse(data);
         const kline = json.k;
@@ -88,7 +88,7 @@ const candles = candleCache[symbol]?.[interval];
   const { signalTags, messages } = applyStrategies(symbol, candles, interval);
   messages.forEach(msg => verboseLog(`📢 ${msg}`));
 
-    const combos = checkComboStrategies(symbol, signalTags, interval, candles);
+    const combos = await checkComboStrategies(symbol, signalTags, interval, candles);
     const resolved = resolveSignalConflicts(combos);
     resolved.forEach(combo => {
       basicLog(combo.message);

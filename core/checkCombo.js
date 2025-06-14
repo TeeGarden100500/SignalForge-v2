@@ -8,6 +8,7 @@ const {
   LOG_SKIPPED_COMBO
 } = require('../config');
 const { estimateSafeLeverage } = require('../utils/riskAnalyzer');
+const { fetchFundingRate } = require('../utils/fundingRate');
 
 const logFilePath = path.join(__dirname, '../logs/combo_debug.log');
 
@@ -34,7 +35,7 @@ function calcAvg1mVolumeUSD(candles, timeframe, lookbackMinutes = 10) {
   return totalMinutes ? totalVolumeUSD / totalMinutes : 0;
 }
 
-function checkComboStrategies(symbol, signals, timeframe, candles = [], indicators = {}) {
+async function checkComboStrategies(symbol, signals, timeframe, candles = [], indicators = {}) {
   const fired = [];
   let firedCount = 0;
 
@@ -68,18 +69,24 @@ function checkComboStrategies(symbol, signals, timeframe, candles = [], indicato
         price
       );
       const safeLine = `\u{1F4BC} Safe Leverage: до ${maxLeverage}x (порог \u2248 $${maxPositionSizeUSD.toFixed(0)} при депозите $${DEFAULT_DEPOSIT_USD}, объём монеты: $${avg1mVolumeUSD.toFixed(2)}/мин)`;
-      const msg = `${baseMsg}\n${safeLine}`;
+      const frInfo = await fetchFundingRate(symbol);
+      const frLine = frInfo && typeof frInfo.rate === 'number'
+        ? `\u{1F4B8} Funding Rate (${frInfo.intervalHours}h): ${(frInfo.rate * 100).toFixed(4)}%`
+        : '\u{1F4B8} Funding Rate: недоступен';
+      const msg = `${baseMsg}\n${safeLine}\n${frLine}`;
 
       const logLine = `[COMBO] ✅ COMBO-стратегия [${combo.name}] для ${symbol} сработала: ${baseMsg}`;
       console.log(logLine);
       logToFile(logLine);
       logToFile(safeLine);
+      logToFile(frLine);
 
       fired.push({
         symbol,
         timeframe,
         name: combo.name,
         message: msg,
+        fundingRate: frInfo ? frInfo.rate : null,
         direction: (combo.direction || 'NEUTRAL').toUpperCase(),
         weight: combo.weight || 1
       });
