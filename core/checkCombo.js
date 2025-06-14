@@ -86,7 +86,7 @@ function checkComboStrategies(symbol, signals, timeframe, candles = [], indicato
     } else {
       const missing = combo.conditions.filter(cond => !signals.includes(cond));
 
-      if (LOG_SKIPPED_COMBO && DEBUG_COMBO_SKIP_REASON) {
+      if (LOG_SKIPPED_COMBO && DEBUG_COMBO_SKIP_REASON && DEBUG_LOG_LEVEL === 'verbose') {
         const info = `[INFO] \u23ED\uFE0F COMBO-стратегия [${combo.name}] пропущена: отсутствуют теги: ${missing.join(', ')}`;
         console.log(info);
         logToFile(info);
