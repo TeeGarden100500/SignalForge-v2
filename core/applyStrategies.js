@@ -23,7 +23,7 @@ const {
   checkMarketCompression,
 } = require('./allStrategies'); // можно объединить импорты
 const { DEBUG_LOG_LEVEL } = require('../config');
-const { logVerbose, basicLog } = require('../utils/logger');
+const { logVerbose } = require('../utils/logger');
 const liquidityLevels = require('../liquidityLevels.json');
 const { getSkippedStrategies, resetSkippedStrategies } = require('../utils/candleValidator');
 
@@ -94,8 +94,8 @@ function applyStrategies(symbol, candles, interval) {
 
 
   const skipped = getSkippedStrategies();
-  if (skipped && DEBUG_LOG_LEVEL !== 'none') {
-    basicLog(`[INFO] Пропущено стратегий по нехватке данных: ${skipped}`);
+  if (skipped && DEBUG_LOG_LEVEL === 'verbose') {
+    console.log(`[INFO] Пропущено стратегий по нехватке данных: ${skipped}`);
   }
 
   return { signalTags, messages, results };

@@ -65,12 +65,10 @@ function checkComboStrategies(symbol, signals, timeframe, candles = [], indicato
       const safeLine = `\u{1F4BC} Safe Leverage: до ${maxLeverage}x (порог \u2248 $${maxPositionSizeUSD.toFixed(0)} при депозите $${DEFAULT_DEPOSIT_USD}, объём монеты: $${avg1mVolumeUSD.toFixed(2)}/мин)`;
       const msg = `${baseMsg}\n${safeLine}`;
 
-      if (DEBUG_LOG_LEVEL !== 'none') {
-        const logLine = `✅ COMBO "${combo.name}" сработала для ${symbol} [${timeframe}]: ${baseMsg}`;
-        console.log(logLine);
-        logToFile(logLine);
-        logToFile(safeLine);
-      }
+      const logLine = `✅ COMBO "${combo.name}" сработала для ${symbol} [${timeframe}]: ${baseMsg}`;
+      console.log(logLine);
+      logToFile(logLine);
+      logToFile(safeLine);
 
       fired.push({
         symbol,
@@ -97,7 +95,7 @@ function checkComboStrategies(symbol, signals, timeframe, candles = [], indicato
     }
   }
 
-  if (DEBUG_LOG_LEVEL !== 'none') {
+  if (DEBUG_LOG_LEVEL === 'verbose') {
     const summary = `📊 Проверено COMBO стратегий: ${comboStrategies.length} | Сработало: ${firedCount}`;
     console.log(summary);
     logToFile(summary);
