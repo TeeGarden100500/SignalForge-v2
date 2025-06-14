@@ -5,7 +5,7 @@ const { loadFuturesSymbols, hasFuturesData, getFuturesSymbols } = require('./fut
 const { verboseLog, basicLog } = require('./utils/logger');
 const { filterSymbolsByVolume } = require('./utils/volumeFilter');
 
-async function getTopVolatilePairs(candleCache) {
+async function getTopVolatilePairs(candleCache, skipVolumeFilter = false) {
   try {
     if (!hasFuturesData()) await loadFuturesSymbols(candleCache);
 
@@ -20,7 +20,7 @@ async function getTopVolatilePairs(candleCache) {
       .filter(p => !p.symbol.includes('UP') && !p.symbol.includes('DOWN'))
       .map(pair => ({ symbol: pair.symbol, highPrice: pair.highPrice, lowPrice: pair.lowPrice }));
 
-    if (VOLUME_FILTER?.ENABLED) {
+    if (VOLUME_FILTER?.ENABLED && !skipVolumeFilter) {
       eligible = filterSymbolsByVolume(eligible, candleCache);
       basicLog(`[INFO] Фильтрация по объёму $${VOLUME_FILTER.MIN_VOLUME_5M_USD} → осталось ${eligible.length} пар`);
       if (eligible.length === 0) {

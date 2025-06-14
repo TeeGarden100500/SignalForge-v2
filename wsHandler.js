@@ -22,6 +22,7 @@ const sockets = {};     // { BTCUSDT_5m: WebSocket }
 const LAST_UPDATE_TIMEOUT_MS = 1000 * 60 * 60 * 6; // 6 часов без свечей = удалить
 const LOG_CACHE_INTERVAL_MS = 5 * 60 * 1000; // каждые 5 минут
 const lastUpdatedAt = {}; // { BTCUSDT_5m: timestamp }
+const candlesReceived = {}; // { BTCUSDT: { '5m': true } }
 
 function removeSymbolData(symbol) {
   removeSymbolsFromCache(candleCache, symbol);
@@ -70,6 +71,11 @@ function subscribeToKlines(symbol) {
 
         const cache = candleCache[symbol][interval];
         cache.push(candle);
+
+        if (!candlesReceived[symbol]) candlesReceived[symbol] = {};
+        candlesReceived[symbol][interval] = true;
+
+        lastUpdatedAt[socketKey] = Date.now();
 
         if (cache.length > CACHE_LIMITS) cache.shift();
         
@@ -174,7 +180,8 @@ module.exports = {
   startCandleCollector,
   getCandleCache,
   candleCache,
-  removeSymbolData
+  removeSymbolData,
+  candlesReceived
 };
 
 setInterval(() => {
