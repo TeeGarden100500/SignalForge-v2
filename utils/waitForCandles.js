@@ -10,7 +10,6 @@ function waitForCandles(candlesReceived, symbols, interval = '5m', timeoutMs = 6
           console.warn('⚠ [WARN] Некоторые пары не получают свечи. Отбор будет выполнен по доступным.');
         }
         console.log(`✅ Получено свечей: ${ready.length} из ${symbols.length} пар`);
-        console.log('🔁 Отбор начат...');
         resolve(ready);
       }
     }, 1000);
