@@ -1,3 +1,6 @@
+const axios = require('axios');
+const { basicLog } = require('./logger');
+
 const cache = {};
 
 async function fetchFundingRate(symbol) {
@@ -23,4 +26,46 @@ async function fetchFundingRate(symbol) {
   }
 }
 
-module.exports = { fetchFundingRate };
+
+async function fetchLatestFundingRate(symbol) {
+  try {
+    const url = `https://fapi.binance.com/fapi/v1/fundingRate?symbol=${symbol}&limit=1`;
+    const response = await axios.get(url);
+    const data = Array.isArray(response.data) ? response.data[0] : null;
+    return data ? parseFloat(data.fundingRate) : null;
+  } catch (_) {
+    return null;
+  }
+}
+
+async function getFundingRates(symbols = []) {
+  const rates = [];
+  for (const sym of symbols) {
+    const rate = await fetchLatestFundingRate(sym);
+    if (typeof rate === 'number') {
+      rates.push({ symbol: sym, rate });
+    }
+  }
+  return rates;
+}
+
+function logTopFundingRates(rates = []) {
+  if (!Array.isArray(rates) || rates.length === 0) return;
+  const lines = ['🏆 ТОП Funding Rate (LONG):'];
+  rates.forEach((r, i) => {
+    const pct = (r.rate * 100).toFixed(3);
+    lines.push(`#${i + 1} ${r.symbol} → +${pct}%`);
+  });
+  basicLog(lines.join('\n'));
+}
+
+async function showTopFundingRates(symbols = []) {
+  const data = await getFundingRates(symbols);
+  const positive = data.filter(d => d.rate > 0);
+  positive.sort((a, b) => b.rate - a.rate);
+  const top20 = positive.slice(0, 20);
+  logTopFundingRates(top20);
+}
+
+module.exports = { fetchFundingRate, showTopFundingRates };
+
