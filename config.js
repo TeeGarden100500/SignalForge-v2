@@ -25,7 +25,8 @@ module.exports = {
   COMBO_WEIGHTS: {
     "Volume Breakout": 3,
     "Exhaustion Top": 2,
-    "Short Reversal Trap": 1
+    "Short Reversal Trap": 1,
+    "Compression Impulse": 1
   },
                                           // === RSI Settings ===
   //**************************************************************************************************************************
@@ -114,8 +115,10 @@ MACD_SETTINGS: {
 
   MARKET_COMPRESSION: {
   ENABLED: true,
-  COMPRESSION_THRESHOLD: 0.000002,
-  MIN_CANDLE_BODY: 0.00001,
+  COMPRESSION_VOLUME_DROP: 0.6,        // Насколько должен упасть объём
+  COMPRESSION_BODY_DROP: 0.4,          // Насколько должен сократиться размер тела
+  TINY_BODY_THRESHOLD: 0.1,            // Размер тела относительно диапазона свечи
+  RSI_MAX: 55,                         // Верхний порог RSI для сигнала
   APPLY_ON: ['5m', '15m']
   },
 

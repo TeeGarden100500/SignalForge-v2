@@ -85,6 +85,15 @@ const comboStrategies = [
     weight: COMBO_WEIGHTS["Long Reversal Bounce"] || 1,
     message: (symbol, tf) =>
       `COMBO [Long Reversal Bounce] для ${symbol} на ${tf} — Сильный отскок от зоны ликвидности. Возможен разворот. ✅ LONG.`
+  },
+  {
+    name: "Compression Impulse",
+    conditions: ["MARKET_COMPRESSION", "VOLUME_SPIKE", "EMA_ANGLE"],
+    minMatch: 2,
+    direction: "LONG",
+    weight: COMBO_WEIGHTS["Compression Impulse"] || 1,
+    message: (symbol, tf) =>
+      `COMBO [Compression Impulse] для ${symbol} на ${tf} — Сжатие рынка с подтверждением объёма. Возможен импульс вверх. ✅ LONG.`
   }
 ];
 

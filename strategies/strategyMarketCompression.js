@@ -1,32 +1,44 @@
 const { MARKET_COMPRESSION } = require('../config');
+const { calculateRSI } = require('../core/indicators');
+const { basicLog } = require('../utils/logger');
 
 function checkMarketCompression(candles, timeframe) {
-  if (!Array.isArray(candles) || candles.length < 2) return null;
-  const { ENABLED, COMPRESSION_THRESHOLD, MIN_CANDLE_BODY, APPLY_ON } = MARKET_COMPRESSION || {};
+  if (!Array.isArray(candles) || candles.length < 3) return null;
+  const {
+    ENABLED,
+    COMPRESSION_VOLUME_DROP,
+    COMPRESSION_BODY_DROP,
+    TINY_BODY_THRESHOLD,
+    RSI_MAX,
+    APPLY_ON
+  } = MARKET_COMPRESSION || {};
+
   if (!ENABLED) return null;
   if (Array.isArray(APPLY_ON) && APPLY_ON.length && !APPLY_ON.includes(timeframe)) return null;
 
-  const c1 = candles.at(-2); // previous closed candle
-  const c2 = candles.at(-1); // latest closed candle
+  const prev = candles.at(-2);
+  const curr = candles.at(-1);
 
-  const body1 = Math.abs(c1.close - c1.open);
-  const body2 = Math.abs(c2.close - c2.open);
-  if (body1 < MIN_CANDLE_BODY || body2 < MIN_CANDLE_BODY) return null;
+  const volumeDrop = curr.volume < prev.volume * (COMPRESSION_VOLUME_DROP || 1);
+  const bodyPrev = Math.abs(prev.close - prev.open);
+  const bodyCurr = Math.abs(curr.close - curr.open);
+  const bodyDrop = bodyCurr < bodyPrev * (COMPRESSION_BODY_DROP || 1);
+  const range = curr.high - curr.low || 1;
+  const tinyBody = (bodyCurr / range) <= (TINY_BODY_THRESHOLD || 1);
 
-  const ratio1 = body1 / (c1.volume || 1);
-  const ratio2 = body2 / (c2.volume || 1);
+  const rsi = calculateRSI(candles);
+  const rsiOk = rsi !== null ? rsi < (RSI_MAX || 55) : false;
 
-  if (
-    ratio2 < ratio1 &&
-    ratio2 < COMPRESSION_THRESHOLD &&
-    body2 < body1 &&
-    c2.volume < c1.volume
-  ) {
+  const priceStable = curr.close >= prev.close || curr.close >= curr.open;
+
+  if (volumeDrop && bodyDrop && tinyBody && priceStable && rsiOk) {
+    const msg = `🧊 MARKET COMPRESSION detected (${timeframe}): Продавцы ослабли, возможен импульс вверх.`;
+    basicLog(msg);
     return {
       timeframe,
       strategy: 'MARKET_COMPRESSION',
       tag: 'MARKET_COMPRESSION',
-      message: '📉 Market Compression — рынок сжался: тело ↓, объём ↓. Возможен пробой.'
+      message: msg
     };
   }
 
