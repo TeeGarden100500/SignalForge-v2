@@ -1,11 +1,12 @@
 console.log(`🚀 [BOOT] Старт SignalForge @ ${new Date().toISOString()}`);
 const { getTopVolatilePairs } = require('./volatilitySelector');
-const { loadFuturesSymbols } = require('./futuresSymbols');
-const { VOLATILITY_UPDATE_INTERVAL_HOURS, MIN_READY_SYMBOLS, DEBUG_LOG_LEVEL } = require('./config');
+const { loadFuturesSymbols, getFuturesSymbols } = require('./futuresSymbols');
+const { VOLATILITY_UPDATE_INTERVAL_HOURS, FUNDING_RATE_UPDATE_INTERVAL_HOURS, MIN_READY_SYMBOLS, DEBUG_LOG_LEVEL } = require('./config');
 const { startCandleCollector, candleCache, candlesReceived } = require('./wsHandler');
 const { analyzeAllSymbols } = require('./startAnalysisCycle');
 const { filterSymbolsByVolume } = require('./utils/volumeFilter');
 const { waitForCandles } = require('./utils/waitForCandles');
+const { showTopFundingRates } = require('./utils/fundingRate');
 
 async function runVolatilityScanLoop() {
   const intervalMs = VOLATILITY_UPDATE_INTERVAL_HOURS * 60 * 60 * 1000;
@@ -14,6 +15,17 @@ async function runVolatilityScanLoop() {
     await loadFuturesSymbols(candleCache);
     await getTopVolatilePairs(candleCache);
   }, intervalMs);
+}
+
+async function runFundingRateLoop() {
+  const intervalMs = FUNDING_RATE_UPDATE_INTERVAL_HOURS * 60 * 60 * 1000;
+  const execute = async () => {
+    await loadFuturesSymbols();
+    const symbols = getFuturesSymbols().slice(0, 20);
+    await showTopFundingRates(symbols);
+  };
+  await execute();
+  setInterval(execute, intervalMs);
 }
 
 
@@ -69,3 +81,4 @@ async function startAnalysis(attempt = 1, existingPairs) {
 })();
 
 runVolatilityScanLoop();
+runFundingRateLoop();
