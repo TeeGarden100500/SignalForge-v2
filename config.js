@@ -14,7 +14,7 @@ module.exports = {
 
   VOLUME_FILTER: {
     ENABLED: true,
-    MIN_VOLUME_5M_USD: 30000
+    MIN_VOLUME_5M_USD: 5000
   },
 
   GITHUB_CACHE_ENABLED: true,
