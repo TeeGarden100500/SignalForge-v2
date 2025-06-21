@@ -1,5 +1,5 @@
 module.exports = {
-  TOP_N_PAIRS: 50,
+  TOP_N_PAIRS: 40,
   PAIR_SUFFIX: 'USDT',
   SYMBOL_ANALYSIS_DELAY_MS: 500, // 0.5 сек между монетами (на 50 монет ≈ 25 сек)
   DEBUG_LOG_LEVEL: 'basic', // 'none' | 'basic' | 'verbose'
